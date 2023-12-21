@@ -47,5 +47,4 @@ export default {
     mainLabels: 18,
     inputLabels: 16,
   },
-  fontFamily: {},
 };
