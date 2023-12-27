@@ -1,18 +1,15 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { StyleSheet, View, SafeAreaView, Platform } from "react-native";
 import defaultStyle from "./src/defaultStyle";
+
+import Login from "./src/components/pages/Login";
 
 export default function App() {
   return (
-    <SafeAreaProvider>
-      <View style={styles.container}>
-        <StatusBar
-          backgroundColor={defaultStyle.colors.blueDarkColor4}
-          barStyle="light-content"
-        />
+    <SafeAreaView style={styles.container}>
+      <View>
+        <Login />
       </View>
-    </SafeAreaProvider>
+    </SafeAreaView>
   );
 }
 
@@ -20,7 +17,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: defaultStyle.colors.white,
-    alignItems: "center",
-    justifyContent: "center",
+    paddingTop: Platform.OS == "android" ? 40 : 0,
   },
 });

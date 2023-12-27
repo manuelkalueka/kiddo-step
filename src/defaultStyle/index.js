@@ -41,7 +41,7 @@ export default {
 
   sizes: {
     title: 24,
-    subtitle: 18,
+    subtitle: 16,
     bodyText: 14,
     secondText: 12,
     mainLabels: 18,
