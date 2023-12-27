@@ -3,8 +3,6 @@ import defaultStyle from "../../../defaultStyle";
 
 const styles = StyleSheet.create({
   containerLogin: {
-    justifyContent: "center",
-    alignItems: "center",
     height:"100%"
   },
 });
