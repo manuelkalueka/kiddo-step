@@ -3,7 +3,7 @@ import { View, TextInput, Text, TouchableOpacity } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import styles from "./styles";
 
-import Title from "./Title";
+import Title from "../../shared/Title";
 export default function Login() {
   const {
     control,
@@ -17,7 +17,7 @@ export default function Login() {
 
   return (
     <View style={styles.containerLogin}>
-      <Title />
+      <Title title="Seja Bem-Vindo!" subtitle="Entra na sua conta" />
       <View>
         <Controller
           control={control}
@@ -42,7 +42,7 @@ export default function Login() {
               value={value}
               autoCapitalize="none"
               placeholder="Digite sua Senha"
-            /> 
+            />
           )}
         />
         <TouchableOpacity onPress={handleSubmit(handleSignin)}>

@@ -40,6 +40,7 @@ export default {
   },
 
   sizes: {
+    bigTitle:30,
     title: 24,
     subtitle: 16,
     bodyText: 14,

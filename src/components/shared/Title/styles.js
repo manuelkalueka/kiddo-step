@@ -1,9 +1,9 @@
 import { StyleSheet } from "react-native";
-import defaultStyle from "../../../../defaultStyle"
+import defaultStyle from "../../../defaultStyle"
 
 const styles = StyleSheet.create({
   mainTitle: {
-    fontSize: defaultStyle.sizes.title,
+    fontSize: defaultStyle.sizes.bigTitle,
     fontWeight: "bold",
     color:defaultStyle.colors.dark,
     marginVertical:5
@@ -11,8 +11,9 @@ const styles = StyleSheet.create({
 
   description:{
     color:defaultStyle.colors.grayAccent2,
-    fontSize:defaultStyle.sizes.subtitle,
+    fontSize:defaultStyle.sizes.title,
     marginBottom:50,
+    fontWeight:"400"
   }
 })
 
