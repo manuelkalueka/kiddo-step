@@ -13,5 +13,15 @@ export default function Login(){
   return(
     <View>
 
+      <TextInput
+      
+      />
+
+      <TextInput
+      />
+
+      <TouchableOpacity>
+        <Text></Text>
+      </TouchableOpacity>
     </View>
   )}
