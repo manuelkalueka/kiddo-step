@@ -11,17 +11,37 @@ import {styles} from './style'
 
 export default function Login(){
   return(
-    <View>
+    <View style={styles.containerLogin}>
 
-      <TextInput
-      
-      />
+      <View style={styles.containerTxtEmail}>
+            <TextInput
+            placeholder='Email'
+            />
+      </View>
 
-      <TextInput
-      />
+     <View style={styles.containerTxtPassword}>
+            <TextInput
+              placeholder='Senha'
+              secureTextEntry={true}
+              />
+     </View>
 
-      <TouchableOpacity>
-        <Text></Text>
+      <TouchableOpacity style={styles.buttonSigIn}>
+        <Text style={styles.TextSigIn}>Entrar</Text>
       </TouchableOpacity>
+
+        <TouchableOpacity>
+            <Text>Esqueci a minha senha</Text>
+        </TouchableOpacity>
+
+        <View style={styles.containerNewAccount}>
+          <Text>Deseja criar uma conta?</Text>
+          <TouchableOpacity>
+            <Text>Criar</Text>
+          </TouchableOpacity>
+        </View>
+
     </View>
   )}
+
+  export {Login}
