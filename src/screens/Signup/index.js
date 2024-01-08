@@ -7,14 +7,15 @@ import {
   Keyboard,
   Pressable,
 } from "react-native";
+
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 // import { RadioButton } from "react-native-paper";
 import styles from "./styles";
 
-import Title from "../../shared/Title";
-import defaultStyle from "../../../defaultStyle";
+import Title from "../../components/shared/Title";
+import defaultStyle from "../../defaultStyle";
 
-export default function Signup() {
+export default function Signup({ navigation }) {
   const [isFocused, setIsFocused] = useState(false);
 
   const handleFocus = () => {
@@ -98,8 +99,13 @@ export default function Signup() {
             secureTextEntry={true}
           />
         </View>
-        <TouchableOpacity style={styles.MainButton}>
-          <Text style={styles.textButton}>Continuar</Text>
+        <TouchableOpacity
+          style={styles.MainButton}
+          onPress={() => {
+            navigation.navigate("VerifyId");
+          }}
+        >
+          <Text style={styles.textButton}>Registar</Text>
         </TouchableOpacity>
       </Pressable>
 
@@ -108,7 +114,12 @@ export default function Signup() {
         style={styles.haveAccountContainer}
       >
         <Text style={styles.haveAccountText}>Já tem uma conta?</Text>
-        <TouchableOpacity style={styles.buttonAction}>
+        <TouchableOpacity
+          style={styles.buttonAction}
+          onPress={() => {
+            navigation.navigate("Login");
+          }}
+        >
           <Text style={styles.haveAccounAction}>Entrar</Text>
         </TouchableOpacity>
       </Pressable>

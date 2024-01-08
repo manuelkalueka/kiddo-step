@@ -3,7 +3,7 @@ import { View, TextInput, Text, TouchableOpacity } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import styles from "./styles";
 
-import Title from "../../shared/Title";
+import Title from "../../components/shared/Title";
 export default function Login() {
   const {
     control,
