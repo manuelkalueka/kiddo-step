@@ -28,6 +28,7 @@ export default {
     grayAccent2: "#b3b3b3",
     grayAccent3: "#8a8a8a",
     grayAccent4: "#616161",
+    link:'blue'
   },
 
   borderRadio: {
@@ -49,10 +50,12 @@ export default {
     secondText: 12,
     mainLabels: 18,
     inputLabels: 16,
+    inputText:16,
+    button: 18
   },
 
   heights: {
-    heightInput:40
+    heightInput:42
   },
 
   Widths: {
