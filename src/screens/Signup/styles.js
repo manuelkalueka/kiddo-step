@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import defaultStyles from "../../../defaultStyle";
+import defaultStyles from "../../defaultStyle";
 
 const styles = StyleSheet.create({
   loginContainer: {
