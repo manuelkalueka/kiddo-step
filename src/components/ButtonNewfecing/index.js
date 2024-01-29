@@ -10,7 +10,9 @@ const ButtonNewfecing = (props) => {
         name="plus"
         size={props.size}
         color={
-          props.focused ? defaultStyle.colors.blueDarkColor3 : defaultStyle.colors.light
+          props.focused
+            ? defaultStyle.colors.blueLightColor1
+            : defaultStyle.colors.light
         }
       />
     </View>

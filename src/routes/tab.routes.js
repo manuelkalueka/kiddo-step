@@ -1,12 +1,11 @@
 import React from "react";
-import { View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import defaultStyle from "../defaultStyle";
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 
 import Map from "../screens/Map";
 import AlertScreen from "../screens/AlertScreen";
-import SettingsScreen from "../screens/SettingsScreen";
+import LocationHistoryScreen from "../screens/LocationHistoryScreen";
 import Profile from "../screens/Profile";
 
 import NewFecing from "../screens/NewFecing";
@@ -69,20 +68,21 @@ export default function TabRoutes() {
         }}
       />
       <Screen
+        name="locationHistory"
+        component={LocationHistoryScreen}
+        options={{
+          tabBarIcon: ({ size, color }) => (
+            <Entypo name="compass" size={size} color={color} />
+          ),
+          tabBarLabel: "Histórico",
+        }}
+      />
+      <Screen
         name="Perfil"
         component={Profile}
         options={{
           tabBarIcon: ({ size, color }) => (
             <FontAwesome5 name="user" size={size} color={color} />
-          ),
-        }}
-      />
-      <Screen
-        name="Configurações"
-        component={SettingsScreen}
-        options={{
-          tabBarIcon: ({ size, color }) => (
-            <FontAwesome5 name="cog" size={size} color={color} />
           ),
         }}
       />
