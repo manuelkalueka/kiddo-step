@@ -84,6 +84,30 @@ export default function Signup({ navigation }) {
         >
           <FontAwesome
             style={styles.inputIcon}
+            name="phone"
+            size={20}
+            color={defaultStyle.colors.grayAccent1}
+          />
+          <TextInput
+            onFocus={handleFocus}
+            onBlur={handleFocus}
+            placeholder="Número de Telefone"
+            style={[
+              styles.input,
+              isFocused ? styles.inputFocused : styles.inputDefault,
+            ]}
+            keyboardType="phone-pad"
+          />
+        </View>
+
+        <View
+          style={[
+            styles.inputContainer,
+            isFocused ? styles.inputFocused : styles.inputDefault,
+          ]}
+        >
+          <FontAwesome
+            style={styles.inputIcon}
             name="lock"
             size={25}
             color={defaultStyle.colors.grayAccent1}
