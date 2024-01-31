@@ -1,12 +1,11 @@
-import { Fragment } from "react";
-import {Text } from "react-native";
-import styles from "./styles";
+import { View, Text } from "react-native";
 
-export default function Title(props) {
+import styles from "../Title/styles";
+export default function Title() {
   return (
-    <Fragment>
-      <Text style={styles.mainTitle}>{props.title}</Text>
-      <Text style={styles.description}>{props.subtitle}</Text>
-    </Fragment>
+    <View>
+      <Text style={styles.mainTitle}>Seja Bem-Vindo!</Text>
+      <Text style={styles.description}>Entra na sua conta</Text>
+    </View>
   );
 }

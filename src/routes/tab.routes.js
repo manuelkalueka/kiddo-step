@@ -64,7 +64,7 @@ export default function TabRoutes() {
           tabBarIcon: ({ focused, size, color }) => (
             <ButtonNewfecing size={size} color={color} focused={focused} />
           ),
-          tabBarLabel: "",
+          tabBarLabel: "Kalueka",
         }}
       />
       <Screen

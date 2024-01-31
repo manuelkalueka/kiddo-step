@@ -1,9 +1,15 @@
-import { View, Text } from "react-native";
+import {
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity
+} from 'react-native';
+import {AntDesign} from '@expo/vector-icons';
 
-export default function Profile() {
+import {styles} from './style';
+
+export default function Profile(){
   return(
-    <View>
-    <Text>Tela de Perfil</Text>
-   </View>
-  )
-}
+    <View></View>
+  )}
+export {Profile}  

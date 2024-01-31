@@ -6,6 +6,7 @@ const { Screen, Navigator } = createNativeStackNavigator();
 
 import Signup from "../screens/Signup";
 import VerifyId from "../screens/VerifyId";
+import Login from "../screens/Login"
 
 const SignupNavigation = () => {
   return (
@@ -24,6 +25,11 @@ const SignupNavigation = () => {
               }
             }
           } />
+             <Screen name="Login" component={Login} options={
+            {
+              headerShown:false
+            }
+          }/>
         </Navigator>
     </Fragment>
   );

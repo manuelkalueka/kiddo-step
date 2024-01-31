@@ -20,6 +20,7 @@ export default {
     success: "#28a745",
     info: "#3e8ed0",
     white: "#fff",
+    whiteSmooke:"#f5f5f5",
     black: "#000",
     light: "#f8f9fa",
     dark: "#343a40",
@@ -27,6 +28,7 @@ export default {
     grayAccent2: "#b3b3b3",
     grayAccent3: "#8a8a8a",
     grayAccent4: "#616161",
+    link:'blue'
   },
 
   borderRadio: {
@@ -37,6 +39,7 @@ export default {
     cards: [10, 20],
     borderRadioInput: 8,
     icons: 4,
+    iconInput:18
   },
 
   sizes: {
@@ -47,5 +50,15 @@ export default {
     secondText: 12,
     mainLabels: 18,
     inputLabels: 16,
+    inputText:16,
+    button: 18
   },
-};
+
+  heights: {
+    heightInput:42
+  },
+
+  Widths: {
+    widthInput:'97%' //97% da tela
+  }
+}
