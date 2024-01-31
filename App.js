@@ -1,26 +1,34 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import {Login} from './src/components/pages/Login';
+import { StyleSheet } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
 
-import {Title} from './src/components/Shared/Title'
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import defaultStyle from "./src/defaultStyle";
+
+import SignupNavigation from "./src/routes/stack.signup.routes";
+import TabRoutes from "./src/routes/tab.routes";
+
+const isAuthenticated = true;
+const userName = "kalueka";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Title/>
-      <Login/>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        <NavigationContainer>
+          {isAuthenticated && userName === "kalueka" ? (
+            <TabRoutes />
+          ) : (
+            <SignupNavigation />
+          )}
+        </NavigationContainer>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    paddingTop:60,
-    backgroundColor:'#2196f3'
-    //justifyContent: 'center',
+    backgroundColor: defaultStyle.colors.white,
   },
 });
