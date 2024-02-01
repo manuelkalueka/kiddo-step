@@ -12,7 +12,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 // import { RadioButton } from "react-native-paper";
 import styles from "./styles";
 
-import Title from "../../components/shared/Title";
+import Title from "../../components/Title";
 import defaultStyle from "../../defaultStyle";
 
 export default function Signup({ navigation }) {
