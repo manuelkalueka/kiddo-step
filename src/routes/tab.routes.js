@@ -35,7 +35,7 @@ export default function TabRoutes() {
           },
         },
         tabBarShowLabel: false,
-        tabBarActiveTintColor: defaultStyle.colors.mainColorBue,
+        tabBarActiveTintColor: defaultStyle.colors.mainColorBlue,
         tabBarInactiveTintColor: defaultStyle.colors.grayAccent4,
       }}
     >

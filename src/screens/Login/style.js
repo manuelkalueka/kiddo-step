@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     borderColor:defaultStyle.colors.blueLightColor1,
     padding:10,
     borderRadius:10,
-    backgroundColor: defaultStyle.colors.mainColorBue2,
+    backgroundColor: defaultStyle.colors.mainColorBlue,
     marginBottom:15
   },
 
