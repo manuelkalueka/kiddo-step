@@ -18,7 +18,7 @@ const Schema = yup.object({
     .required("Informe a sua senha por favor"),
 });
 
-export default function Login({navigation}) {
+export default function Login({ navigation }) {
   const {
     control,
     handleSubmit,
@@ -86,9 +86,7 @@ export default function Login({navigation}) {
 
       <View style={styles.containerNewAccount}>
         <Text style={styles.textDoYouNeed}>Deseja criar uma conta?</Text>
-        <TouchableOpacity
-        onPress={()=>navigation.navigate("Signup")}
-        >
+        <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
           <Text style={styles.textCreateAccount}>Criar</Text>
         </TouchableOpacity>
       </View>

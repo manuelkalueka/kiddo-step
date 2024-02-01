@@ -21,7 +21,7 @@ const SignupNavigation = () => {
             {
               title:"Verificar Conta",
               headerStyle:{
-                headerBackgroundColor:defaultStyle.colors.mainColorBue
+                headerBackgroundColor:defaultStyle.colors.mainColorBlue
               }
             }
           } />

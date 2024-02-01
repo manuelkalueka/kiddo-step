@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   },
 
   inputFocused: {
-    borderColor: defaultStyles.colors.mainColorBue,
+    borderColor: defaultStyles.colors.mainColorBlue,
   },
 
   inputDefault: {
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     width: "100%",
     marginTop: 15,
     padding: 16,
-    backgroundColor: defaultStyles.colors.mainColorBue,
+    backgroundColor: defaultStyles.colors.mainColorBlue,
     borderRadius: defaultStyles.borderRadio.borderRadioButton.small,
   },
   textButton: {
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   haveAccounAction: {
-    color: defaultStyles.colors.mainColorBue,
+    color: defaultStyles.colors.mainColorBlue,
     fontWeight: "bold",
     fontSize: defaultStyles.sizes.subtitle,
   },

@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     width: "100%",
     marginTop: 15,
     padding: 16,
-    backgroundColor: defaultStyle.colors.mainColorBue,
+    backgroundColor: defaultStyle.colors.mainColorBlue,
     borderRadius: defaultStyle.borderRadio.borderRadioButton.small,
   },
   textButton: {

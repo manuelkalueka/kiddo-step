@@ -8,7 +8,7 @@ import {
   Pressable,
 } from "react-native";
 
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 // import { RadioButton } from "react-native-paper";
 import styles from "./styles";
 
@@ -38,7 +38,7 @@ export default function Signup({ navigation }) {
             isFocused ? styles.inputFocused : styles.inputDefault,
           ]}
         >
-          <FontAwesome
+          <FontAwesome5
             style={styles.inputIcon}
             name="user"
             size={25}
@@ -58,7 +58,7 @@ export default function Signup({ navigation }) {
             isFocused ? styles.inputFocused : styles.inputDefault,
           ]}
         >
-          <FontAwesome
+          <FontAwesome5
             style={styles.inputIcon}
             name="envelope"
             size={20}
@@ -82,7 +82,7 @@ export default function Signup({ navigation }) {
             isFocused ? styles.inputFocused : styles.inputDefault,
           ]}
         >
-          <FontAwesome
+          <FontAwesome5
             style={styles.inputIcon}
             name="phone"
             size={20}
@@ -106,7 +106,7 @@ export default function Signup({ navigation }) {
             isFocused ? styles.inputFocused : styles.inputDefault,
           ]}
         >
-          <FontAwesome
+          <FontAwesome5
             style={styles.inputIcon}
             name="lock"
             size={25}
