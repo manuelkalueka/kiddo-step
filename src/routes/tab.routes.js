@@ -10,6 +10,7 @@ import Profile from "../screens/Profile";
 
 import NewFecing from "../screens/NewFecing";
 import ButtonNewfecing from "../components/ButtonNewfecing";
+import KiddoDetailsScreen from "../screens/KiddoDetailsScreen";
 
 const Tab = createBottomTabNavigator();
 const { Navigator, Screen } = Tab;
@@ -34,14 +35,15 @@ export default function TabRoutes() {
             height: 10,
           },
         },
+        headerShown: false,
         tabBarShowLabel: false,
         tabBarActiveTintColor: defaultStyle.colors.mainColorBlue,
         tabBarInactiveTintColor: defaultStyle.colors.grayAccent4,
       }}
     >
       <Screen
-        name="Mapa"
-        component={Map}
+        name="KiddoDetails"
+        component={KiddoDetailsScreen}
         options={{
           tabBarIcon: ({ size, color }) => (
             <Entypo name="location" size={size} color={color} />
@@ -55,6 +57,7 @@ export default function TabRoutes() {
           tabBarIcon: ({ size, color }) => (
             <Entypo name="notification" size={size} color={color} />
           ),
+          tabBarBadge: 3,
         }}
       />
       <Screen
