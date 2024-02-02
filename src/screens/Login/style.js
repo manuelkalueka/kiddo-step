@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   txtEmail: {
     fontSize:defaultStyle.sizes.inputText,
     paddingLeft:5,
-    width:'94%'
+    width:'100%'
   },
 
   containerTxtPassword: {
