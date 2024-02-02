@@ -4,7 +4,7 @@ import defaultStyle from "../../defaultStyle";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: defaultStyle.colors.white,
+    backgroundColor: defaultStyle.colors.mainColorBlue,
   },
   picContainer: {
     justifyContent: "center",
@@ -64,6 +64,56 @@ const styles = StyleSheet.create({
   iconChangeImg: {
     color: defaultStyle.colors.white,
     fontWeight: "bold",
+  },
+  actionButtons: {
+    width: "80%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: "10%",
+    marginBottom: "2%",
+  },
+  actionItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    borderRadius: defaultStyle.borderRadio.cards[0],
+    backgroundColor: defaultStyle.colors.accentColor3,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+  },
+  textAction: {
+    color: defaultStyle.colors.white,
+    fontWeight: "bold",
+    marginLeft: 5,
+  },
+  bodyContainer: {
+    flex: 1,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    backgroundColor: defaultStyle.colors.light,
+    padding: 20,
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    height: "auto",
+    borderRadius: defaultStyle.borderRadio.borderRadioInput,
+    borderWidth: 1,
+    borderColor: defaultStyle.colors.grayAccent1,
+    marginVertical: 10,
+    paddingLeft: 10,
+    backgroundColor: defaultStyle.colors.white,
+  },
+
+  input: {
+    marginLeft: 10,
+    paddingVertical: 16,
+    fontSize: 16,
+    flex: 1,
+    backgroundColor: defaultStyle.colors.white,
   },
 });
 
