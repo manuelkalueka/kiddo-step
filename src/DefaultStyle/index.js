@@ -25,8 +25,8 @@ export default {
     light: "#f8f9fa",
     dark: "#343a40",
     grayAccent1: "#dbdbdb",
-    grayAccent2: "#b3b3b3",
-    grayAccent3: "#8a8a8a",
+    grayAccent2: "#dedede",
+    grayAccent3: "#ccc",
     grayAccent4: "#616161",
     link:'blue'
   },

@@ -10,6 +10,7 @@ import Profile from "../screens/Profile";
 
 import NewFecing from "../screens/NewFecing";
 import ButtonNewfecing from "../components/ButtonNewfecing";
+import KiddoDetailsScreen from "../screens/KiddoDetailsScreen";
 
 const Tab = createBottomTabNavigator();
 const { Navigator, Screen } = Tab;
@@ -28,20 +29,21 @@ export default function TabRoutes() {
           backgroundColor: defaultStyle.colors.light,
           borderTopColor: "transparent",
           shadowColor: defaultStyle.colors.black,
-          shadowOpacity: 0.06,
+          shadowOpacity: 0.2,
           shadowOffset: {
-            width: 10,
-            height: 10,
+            width: 2,
+            height: 2,
           },
         },
+        headerShown: false,
         tabBarShowLabel: false,
         tabBarActiveTintColor: defaultStyle.colors.mainColorBlue,
         tabBarInactiveTintColor: defaultStyle.colors.grayAccent4,
       }}
     >
       <Screen
-        name="Mapa"
-        component={Map}
+        name="KiddoDetails"
+        component={KiddoDetailsScreen}
         options={{
           tabBarIcon: ({ size, color }) => (
             <Entypo name="location" size={size} color={color} />
@@ -49,12 +51,13 @@ export default function TabRoutes() {
         }}
       />
       <Screen
-        name="Alertas"
-        component={AlertScreen}
+        name="locationHistory"
+        component={LocationHistoryScreen}
         options={{
           tabBarIcon: ({ size, color }) => (
-            <Entypo name="notification" size={size} color={color} />
+            <Entypo name="compass" size={size} color={color} />
           ),
+          tabBarLabel: "Histórico",
         }}
       />
       <Screen
@@ -68,13 +71,13 @@ export default function TabRoutes() {
         }}
       />
       <Screen
-        name="locationHistory"
-        component={LocationHistoryScreen}
+        name="Alertas"
+        component={AlertScreen}
         options={{
           tabBarIcon: ({ size, color }) => (
-            <Entypo name="compass" size={size} color={color} />
+            <Entypo name="notification" size={size} color={color} />
           ),
-          tabBarLabel: "Histórico",
+          tabBarBadge: 3,
         }}
       />
       <Screen
