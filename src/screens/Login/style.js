@@ -3,57 +3,47 @@ import defaultStyle from '../../defaultStyle'
 
 const styles = StyleSheet.create({
   containerLogin: {
-    paddingTop:50,
+    flex: 1,
     backgroundColor: defaultStyle.colors.white,
     width:'100%',
     height:'100%',
-    borderTopRightRadius: 35,
-    borderTopLeftRadius: 35,
-    alignItems:'center'
+    paddingVertical: "5%",
+    paddingHorizontal: "5%",
   },
 
-  containerTxtEmail: {
-    width:defaultStyle.Widths.widthInput,
-    height:defaultStyle.heights.heightInput,
+  headerLogin:{
+    //
+  },
+
+
+  containerInput: {
+    width: "100%",
+    padding:defaultStyle.inputs.container,
     borderWidth:1,
-    borderColor:defaultStyle.colors.blueLightColor1,
-    padding:10,
+    borderColor:defaultStyle.colors.grayAccent1,
     flexDirection: 'row',
-    borderRadius:10,
-    marginBottom:10
+    borderRadius:defaultStyle.borderRadio.borderRadioInput,
+    marginVertical: 10,
   },
 
-  txtEmail: {
+  textInput: {
     fontSize:defaultStyle.sizes.inputText,
-    paddingLeft:5,
-    width:'100%'
+    paddingLeft:10,
+    width:'90%'
   },
 
-  containerTxtPassword: {
-    marginTop:10,
-    width:defaultStyle.Widths.widthInput,
-    height:defaultStyle.heights.heightInput,
-    borderWidth:1,
-    borderColor:defaultStyle.colors.blueLightColor1,
-    padding:10,
-    flexDirection: 'row',
-    borderRadius:10,
-    marginBottom:10
-  },
-
-  txtPassword: {
-    fontSize:defaultStyle.sizes.inputText,
-    paddingLeft:5,
-    width:'94%'
+  showpasswordIcon: {
+    position: 'absolute',
+    right:5,
+    top: 18
   },
 
   buttonSigIn: {
     marginTop:10,
-    width:defaultStyle.Widths.widthInput,
-    height:defaultStyle.heights.heightInput,
+    width:'100%',
+    padding:defaultStyle.inputs.container,
     borderColor:defaultStyle.colors.blueLightColor1,
-    padding:10,
-    borderRadius:10,
+    borderRadius:defaultStyle.borderRadio.borderRadioInput,
     backgroundColor: defaultStyle.colors.mainColorBlue,
     marginBottom:15
   },
@@ -66,28 +56,30 @@ const styles = StyleSheet.create({
   },
 
   containerForgotPassword: {
-    marginBottom:10
+    marginBottom:10,
+    alignSelf: 'center'
   },
 
   textForgotPassword: {
-    fontSize: defaultStyle.sizes.inputLabels,
+    fontSize: defaultStyle.sizes.mainLabels,
     fontWeight:'bold',
-    color: defaultStyle.colors.blueDarkColor4
+    color: defaultStyle.colors.mainColorBlue
   },
 
   containerNewAccount: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    alignSelf: 'center'
   },
 
   textDoYouNeed: {
-    fontSize:defaultStyle.sizes.inputLabels,
-    color: defaultStyle.colors.grayAccent3
+    fontSize:defaultStyle.sizes.mainLabels,
+    color: defaultStyle.colors.grayAccent3,
   },
 
   textCreateAccount: {
-    fontSize:defaultStyle.sizes.inputLabels,
+    fontSize:defaultStyle.sizes.mainLabels,
     fontWeight: 'bold',
-    color: defaultStyle.colors.blueDarkColor4
+    color: defaultStyle.colors.mainColorBlue
   },
 
   msgAlerta: {

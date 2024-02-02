@@ -1,11 +1,11 @@
 import { View, Text } from "react-native";
 
 import styles from "./styles";
-export default function Title() {
+export default function Title(props) {
   return (
     <View>
-      <Text style={styles.mainTitle}>Seja Bem-Vindo!</Text>
-      <Text style={styles.description}>Entra na sua conta</Text>
+      <Text style={styles.mainTitle}>{props.title}</Text>
+      <Text style={styles.description}>{props.subtitle}</Text>
     </View>
   );
 }

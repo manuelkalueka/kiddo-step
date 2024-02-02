@@ -58,6 +58,10 @@ export default {
     heightInput:42
   },
 
+  inputs: {
+    container: 16
+  },
+
   Widths: {
     widthInput:'97%' //97% da tela
   }
