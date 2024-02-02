@@ -22,7 +22,6 @@ import { handleDisableKeyboard } from "../../utils/dismiss-keyboard";
 const KiddoSchema = yup.object({
   fullName: yup.string().required("Informe o Nome Completo"),
   gender: yup.string().required("Informe o Genero"),
-  birthDate: yup.date().require("Informe a data de nascimento"),
 });
 
 const KiddoDetailsScreen = ({ navigation }) => {
