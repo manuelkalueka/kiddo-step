@@ -1,6 +1,6 @@
 export default {
   colors: {
-    mainColorBlue: "#2396f3",
+    mainColorBlue: "#2396f1",
     blueLightColor1: "#a2c4e0",
     blueLightColor2: "#6594ba",
     blueLightColor3: "#7ac3ff",
@@ -32,6 +32,8 @@ export default {
   },
 
   borderRadio: {
+    normal:5,
+    big:30,
     borderRadioButton: {
       big: 20,
       small: 10,
@@ -46,7 +48,7 @@ export default {
     bigTitle:30,
     title: 24,
     subtitle: 16,
-    bodyText: 14,
+    bodyText: 13,
     secondText: 12,
     mainLabels: 18,
     inputLabels: 16,

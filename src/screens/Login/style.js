@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 import defaultStyle from '../../defaultStyle'
 
 const styles = StyleSheet.create({
@@ -7,20 +7,30 @@ const styles = StyleSheet.create({
     backgroundColor: defaultStyle.colors.white,
     width:'100%',
     height:'100%',
-    paddingVertical: "5%",
-    paddingHorizontal: "5%",
   },
 
   headerLogin:{
     //
+    
+  },
+
+  form: {
+    paddingVertical: "5%",
+    paddingHorizontal: "5%",
+    width: '100%',
+    height: '100%',
+    borderTopLeftRadius: defaultStyle.borderRadio.big,
+    borderTopRightRadius: defaultStyle.borderRadio.big,
+    backgroundColor: 'white'
+
   },
 
 
   containerInput: {
     width: "100%",
-    padding:defaultStyle.inputs.container,
+    padding:Platform.OS == 'ios'?defaultStyle.inputs.container:10,
     borderWidth:1,
-    borderColor:defaultStyle.colors.grayAccent1,
+    borderColor:defaultStyle.colors.blueLightColor1,
     flexDirection: 'row',
     borderRadius:defaultStyle.borderRadio.borderRadioInput,
     marginVertical: 10,
@@ -29,19 +39,19 @@ const styles = StyleSheet.create({
   textInput: {
     fontSize:defaultStyle.sizes.inputText,
     paddingLeft:10,
-    width:'90%'
+    width:'83%'
   },
 
   showpasswordIcon: {
     position: 'absolute',
     right:5,
-    top: 18
+    top:Platform.OS =='ios'?18:10
   },
 
   buttonSigIn: {
     marginTop:10,
     width:'100%',
-    padding:defaultStyle.inputs.container,
+    padding:Platform.OS == 'ios'?defaultStyle.inputs.container:10,
     borderColor:defaultStyle.colors.blueLightColor1,
     borderRadius:defaultStyle.borderRadio.borderRadioInput,
     backgroundColor: defaultStyle.colors.mainColorBlue,
@@ -61,7 +71,7 @@ const styles = StyleSheet.create({
   },
 
   textForgotPassword: {
-    fontSize: defaultStyle.sizes.mainLabels,
+    fontSize: Platform.OS == 'ios'?defaultStyle.sizes.mainLabels:defaultStyle.sizes.inputLabels,
     fontWeight:'bold',
     color: defaultStyle.colors.mainColorBlue
   },
@@ -72,12 +82,12 @@ const styles = StyleSheet.create({
   },
 
   textDoYouNeed: {
-    fontSize:defaultStyle.sizes.mainLabels,
+    fontSize: Platform.OS == 'ios'?defaultStyle.sizes.mainLabels:defaultStyle.sizes.inputLabels,
     color: defaultStyle.colors.grayAccent3,
   },
 
   textCreateAccount: {
-    fontSize:defaultStyle.sizes.mainLabels,
+    fontSize: Platform.OS == 'ios'?defaultStyle.sizes.mainLabels:defaultStyle.sizes.inputLabels,
     fontWeight: 'bold',
     color: defaultStyle.colors.mainColorBlue
   },
