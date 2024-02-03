@@ -7,11 +7,11 @@ const styles = StyleSheet.create({
     backgroundColor: defaultStyle.colors.white,
     width:'100%',
     height:'100%',
+    backgroundColor: defaultStyle.colors.mainColorBlue
   },
 
   headerLogin:{
-    //
-    
+    //    
   },
 
   form: {
@@ -29,17 +29,17 @@ const styles = StyleSheet.create({
   containerInput: {
     width: "100%",
     padding:Platform.OS == 'ios'?defaultStyle.inputs.container:10,
-    borderWidth:1,
-    borderColor:defaultStyle.colors.blueLightColor1,
     flexDirection: 'row',
     borderRadius:defaultStyle.borderRadio.borderRadioInput,
     marginVertical: 10,
+    backgroundColor: '#2394f128' //#2394f128 //#2394f142
   },
 
   textInput: {
     fontSize:defaultStyle.sizes.inputText,
     paddingLeft:10,
-    width:'83%'
+    width:'83%',
+    color: '#0009'
   },
 
   showpasswordIcon: {
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
 
   containerForgotPassword: {
     marginBottom:10,
-    alignSelf: 'center'
+    alignSelf: 'flex-end'
   },
 
   textForgotPassword: {

@@ -59,7 +59,7 @@ export default function Login({ navigation }) {
         <FontAwesome5 
         size={25} 
         name="envelope" 
-        color={defaultStyle.colors.blueLightColor1} 
+        color={defaultStyle.colors.mainColorBlue} 
         />
 
         <Controller
@@ -69,6 +69,8 @@ export default function Login({ navigation }) {
             <TextInput
               style={styles.textInput}
               placeholder="Email"
+              placeholderTextColor={'#0009'}
+              autoCapitalize="none"
               onChangeText={onChange}
               onBlur={onBlur}
               value={value}
@@ -85,7 +87,7 @@ export default function Login({ navigation }) {
         <FontAwesome5 
         size={25} 
         name="lock" 
-        color={defaultStyle.colors.blueLightColor1} 
+        color={defaultStyle.colors.mainColorBlue} 
         />
 
         <Controller
@@ -95,6 +97,7 @@ export default function Login({ navigation }) {
             <TextInput
               style={styles.textInput}
               placeholder="Senha"
+              placeholderTextColor={'#0009'}
               secureTextEntry={showpassword}
               onChangeText={onChange}
               onBlur={onBlur}
@@ -109,13 +112,13 @@ export default function Login({ navigation }) {
             <Ionicons
               name="eye-off"
               size={25}
-              color={defaultStyle.colors.blueLightColor1}
+              color={defaultStyle.colors.mainColorBlue}
             />
           ):(
             <Ionicons
               name="eye"
               size={25}
-              color={defaultStyle.colors.blueLightColor1}
+              color={defaultStyle.colors.mainColorBlue}
             />
           )
          }
