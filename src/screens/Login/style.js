@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
   },
 
   headerLogin:{
-    //    
+    padding: 10
   },
 
   form: {

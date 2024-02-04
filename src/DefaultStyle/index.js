@@ -34,6 +34,7 @@ export default {
   borderRadio: {
     normal:5,
     big:30,
+    max: 50,
     borderRadioButton: {
       big: 20,
       small: 10,
@@ -47,6 +48,7 @@ export default {
   sizes: {
     bigTitle:30,
     title: 24,
+    titleSmall: 20,
     subtitle: 16,
     bodyText: 13,
     secondText: 12,

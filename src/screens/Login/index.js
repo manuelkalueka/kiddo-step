@@ -1,6 +1,6 @@
 import React,{ useState } from "react";
 
-import { View, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Image } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Image, ImageBackground } from "react-native";
 import {handleDisableKeyboard} from "../../utils/dismiss-keyboard"
 
 import { Controller, useForm } from "react-hook-form";
@@ -48,9 +48,11 @@ export default function Login({ navigation }) {
     <View style={styles.containerLogin}>
 
     <View style={styles.headerLogin}>
-        <View>
+     
+        <View style={styles.containerTitles}>
           <Title title="Seja Bem-vindo" subtitle="Conecte-se"/>
         </View>
+
     </View>
 
     <View style={styles.form}>
