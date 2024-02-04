@@ -1,6 +1,6 @@
 import React,{ useState } from "react";
 
-import { View, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Image, ImageBackground } from "react-native";
 import {handleDisableKeyboard} from "../../utils/dismiss-keyboard"
 
 import { Controller, useForm } from "react-hook-form";
@@ -48,17 +48,20 @@ export default function Login({ navigation }) {
     <View style={styles.containerLogin}>
 
     <View style={styles.headerLogin}>
-        <View>
+     
+        <View style={styles.containerTitles}>
           <Title title="Seja Bem-vindo" subtitle="Conecte-se"/>
         </View>
+
     </View>
 
+    <View style={styles.form}>
       <View style={styles.containerInput}>
 
         <FontAwesome5 
         size={25} 
         name="envelope" 
-        color={defaultStyle.colors.grayAccent1} 
+        color={defaultStyle.colors.mainColorBlue} 
         />
 
         <Controller
@@ -68,6 +71,8 @@ export default function Login({ navigation }) {
             <TextInput
               style={styles.textInput}
               placeholder="Email"
+              placeholderTextColor={'#0009'}
+              autoCapitalize="none"
               onChangeText={onChange}
               onBlur={onBlur}
               value={value}
@@ -84,7 +89,7 @@ export default function Login({ navigation }) {
         <FontAwesome5 
         size={25} 
         name="lock" 
-        color={defaultStyle.colors.grayAccent1} 
+        color={defaultStyle.colors.mainColorBlue} 
         />
 
         <Controller
@@ -94,6 +99,7 @@ export default function Login({ navigation }) {
             <TextInput
               style={styles.textInput}
               placeholder="Senha"
+              placeholderTextColor={'#0009'}
               secureTextEntry={showpassword}
               onChangeText={onChange}
               onBlur={onBlur}
@@ -108,13 +114,13 @@ export default function Login({ navigation }) {
             <Ionicons
               name="eye-off"
               size={25}
-              color={defaultStyle.colors.grayAccent4}
+              color={defaultStyle.colors.mainColorBlue}
             />
           ):(
             <Ionicons
               name="eye"
               size={25}
-              color={defaultStyle.colors.grayAccent4}
+              color={defaultStyle.colors.mainColorBlue}
             />
           )
          }
@@ -132,7 +138,7 @@ export default function Login({ navigation }) {
         <Text style={styles.TextSigIn}>Entrar</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.containerForgotPassword}>
+      <TouchableOpacity style={styles.containerForgotPassword} onPress={()=>navigation.navigate('ForgotPassword')}>
         <Text style={styles.textForgotPassword}>Esqueci a minha senha</Text>
       </TouchableOpacity>
 
@@ -141,6 +147,7 @@ export default function Login({ navigation }) {
         <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
           <Text style={styles.textCreateAccount}> Criar</Text>
         </TouchableOpacity>
+      </View>
       </View>
 
     </View>

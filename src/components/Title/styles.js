@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
   mainTitle: {
     fontSize: defaultStyle.sizes.bigTitle,
     fontWeight: "bold",
-    color: defaultStyle.colors.dark,
+    color: defaultStyle.colors.white,
     marginVertical: 5,
   },
   description: {

@@ -7,11 +7,12 @@ const { Screen, Navigator } = createNativeStackNavigator();
 import Signup from "../screens/Signup";
 import VerifyId from "../screens/VerifyId";
 import Login from "../screens/Login"
+import ForgotPassword from '../screens/ForgotPassword'
 
 const SignupNavigation = () => {
   return (
     <Fragment>
-        <Navigator>
+        <Navigator initialRouteName="Login">
           <Screen name="Signup" component={Signup} options={
             {
               headerShown:false
@@ -30,6 +31,14 @@ const SignupNavigation = () => {
               headerShown:false
             }
           }/>
+          <Screen name="ForgotPassword" component={ForgotPassword} options={
+            {
+              title:"Recuperar senha",
+              headerStyle:{
+                headerBackgroundColor:defaultStyle.colors.mainColorBlue
+              }
+            }
+          } />
         </Navigator>
     </Fragment>
   );
