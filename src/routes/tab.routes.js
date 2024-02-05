@@ -35,7 +35,14 @@ export default function TabRoutes() {
             height: 2,
           },
         },
-        headerShown: false,
+        headerStyle: {
+          backgroundColor: defaultStyle.colors.mainColorBlue,
+        },
+        headerTitleStyle: {
+          color: defaultStyle.colors.white,
+          fontSize: 35,
+          fontWeight: "bold",
+        },
         tabBarShowLabel: false,
         tabBarActiveTintColor: defaultStyle.colors.mainColorBlue,
         tabBarInactiveTintColor: defaultStyle.colors.grayAccent4,
