@@ -48,16 +48,18 @@ export default function Login({ navigation }) {
     <View style={styles.containerLogin}>
 
     <View style={styles.headerLogin}>
-     
-        <View style={styles.containerTitles}>
-          <Title title="Seja Bem-vindo" subtitle="Conecte-se"/>
+     <Image
+          style={styles.imageLogin}
+          source={require('../../../assets/img/login-image.jpg')}
+     />
+      <View style={styles.containerTitles}>
         </View>
-
     </View>
 
-    <View style={styles.form}>
+      <View style={styles.form}>
+      <Text style={styles.subTitleLogin}>Conecte-se</Text>
+      
       <View style={styles.containerInput}>
-
         <FontAwesome5 
         size={25} 
         name="envelope" 
@@ -149,8 +151,9 @@ export default function Login({ navigation }) {
         </TouchableOpacity>
       </View>
       </View>
+      </View>
 
-    </View>
+
     </TouchableWithoutFeedback>
   );
 }

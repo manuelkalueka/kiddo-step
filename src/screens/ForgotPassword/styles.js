@@ -75,12 +75,12 @@ const styles = StyleSheet.create({
     containerInputs: {
       width: "90%",
       padding:Platform.OS == 'ios'?defaultStyle.inputs.container:10,
-      borderWidth:1,
       borderColor:defaultStyle.colors.mainColorBlue,
       flexDirection: 'row',
       borderRadius:defaultStyle.borderRadio.borderRadioInput,
       marginVertical: 10,
-      alignSelf: 'center'
+      alignSelf: 'center',
+      backgroundColor: '#2394f11e'
     },
 
     textInput: {

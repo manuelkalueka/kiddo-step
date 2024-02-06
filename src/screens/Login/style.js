@@ -7,22 +7,33 @@ const styles = StyleSheet.create({
     backgroundColor: defaultStyle.colors.white,
     width:'100%',
     height:'100%',
-    backgroundColor: defaultStyle.colors.mainColorBlue
+    backgroundColor: defaultStyle.colors.white,
+    paddingVertical: "5%",
+    paddingHorizontal: "5%",
   },
 
   headerLogin:{
-    padding: 10
+    width: '100%',
+    height: '28%',
+  },
+
+  imageLogin: {
+    width: '100%',
+    height: '100%'
   },
 
   form: {
-    paddingVertical: "5%",
-    paddingHorizontal: "5%",
     width: '100%',
     height: '100%',
     borderTopLeftRadius: defaultStyle.borderRadio.big,
     borderTopRightRadius: defaultStyle.borderRadio.big,
-    backgroundColor: 'white'
+    backgroundColor: defaultStyle.colors.white
+  },
 
+  subTitleLogin: {
+    padding: 10,
+    fontSize: defaultStyle.sizes.title,
+    color: defaultStyle.colors.grayAccent4
   },
 
 
@@ -32,7 +43,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     borderRadius:defaultStyle.borderRadio.borderRadioInput,
     marginVertical: 10,
-    backgroundColor: '#2394f128' //#2394f128 //#2394f142
+    backgroundColor: '#2394f11e' //#2394f128 //#2394f142
   },
 
   textInput: {
