@@ -55,7 +55,8 @@ export default {
     mainLabels: 18,
     inputLabels: 16,
     inputText:16,
-    button: 18
+    button: 18,
+    label: 15
   },
 
   heights: {

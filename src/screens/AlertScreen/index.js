@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, ScrollView } from "react-native";
 import { FontAwesome5 } from '@expo/vector-icons'
 
 import { styles } from './styles'
@@ -14,27 +14,30 @@ export default function AlertScreen() {
               size={30}
               color={'#fff'}
             />
-            <Text style={styles.titleSreen}>Configuração de alerta</Text>
+            <Text style={styles.titleSreen}>Alertas</Text>
       </View>
 
-        <TouchableOpacity style={styles.buttonHistoric}>
-         
-            <FontAwesome5
-              name='history'
-              size={25}
-              color={defaultStyle.colors.white}
-            />
-             <Text style={styles.textButtonHistoric}>
-            Histórico de alertas
-          </Text>
+      <View style={styles.body}>
+
+        <TouchableOpacity style={styles.buttonReadNotif} activeOpacity={0.4}>
+          <Text style={styles.textButtonReadNotif}>Marcar todas como visualizadas</Text>
         </TouchableOpacity>
 
-      <View style={styles.body}>
-        <TextInput
-          placeholder="Tipo de alerta"
-        />
-       
+        <View style={styles.mainNotifications}>
+          <ScrollView>
+            <Text style={styles.labelNotif}>Hoje</Text>
+              <View style={styles.notification}></View>
+              <View style={styles.notification}></View>
+              <View style={styles.notification}></View>
 
+              <Text style={styles.labelNotif}>Ontem</Text>
+              <View style={styles.notification}></View>
+              <View style={styles.notification}></View>
+              <View style={styles.notification}></View>
+              <View style={styles.notification}></View>
+
+          </ScrollView>
+        </View>
       </View>
 
    </View>
