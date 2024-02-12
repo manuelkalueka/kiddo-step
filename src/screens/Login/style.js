@@ -14,12 +14,14 @@ const styles = StyleSheet.create({
 
   headerLogin:{
     width: '100%',
-    height: '28%',
+    height: 130,
+    
   },
 
   imageLogin: {
     width: '100%',
-    height: '100%'
+    height: 130,
+    
   },
 
   form: {
@@ -31,7 +33,6 @@ const styles = StyleSheet.create({
   },
 
   subTitleLogin: {
-    padding: 10,
     fontSize: defaultStyle.sizes.title,
     color: defaultStyle.colors.grayAccent4
   },
@@ -106,7 +107,6 @@ const styles = StyleSheet.create({
   msgAlerta: {
     color: defaultStyle.colors.danger,
     fontSize: defaultStyle.sizes.bodyText,
-    fontWeight: 'bold',
     alignSelf:'flex-start',
     marginLeft:'2.5%'
   }

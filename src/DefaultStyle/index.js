@@ -50,7 +50,7 @@ export default {
     title: 24,
     titleSmall: 20,
     subtitle: 16,
-    bodyText: 13,
+    bodyText: 12,
     secondText: 12,
     mainLabels: 18,
     inputLabels: 16,

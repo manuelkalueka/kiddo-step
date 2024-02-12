@@ -1,6 +1,15 @@
 import React,{ useState } from "react";
 
-import { View, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Image, ImageBackground } from "react-native";
+import { View,
+   Text,
+   TextInput,
+   TouchableOpacity,
+   TouchableWithoutFeedback,
+   Keyboard,
+   Image,
+   KeyboardAvoidingView,
+   Platform
+} from "react-native";
 import {handleDisableKeyboard} from "../../utils/dismiss-keyboard"
 
 import { Controller, useForm } from "react-hook-form";
@@ -46,14 +55,14 @@ export default function Login({ navigation }) {
   return (
     <TouchableWithoutFeedback onPress={()=>handleDisableKeyboard(Keyboard)}>
     <View style={styles.containerLogin}>
+      <KeyboardAvoidingView enabled behavior={Platform.OS == 'ios'?'height':'padding'}>
 
     <View style={styles.headerLogin}>
      <Image
           style={styles.imageLogin}
           source={require('../../../assets/img/login-image.jpg')}
+          resizeMode="cover"
      />
-      <View style={styles.containerTitles}>
-        </View>
     </View>
 
       <View style={styles.form}>
@@ -82,9 +91,11 @@ export default function Login({ navigation }) {
           )}
         />
       </View>
-      {errors.email && (
+      {
+      errors.email && (
         <Text style={styles.msgAlerta}>{errors.email?.message}</Text>
-      )}
+      )
+      }
 
       <View style={styles.containerInput}>
 
@@ -106,6 +117,7 @@ export default function Login({ navigation }) {
               onChangeText={onChange}
               onBlur={onBlur}
               value={value}
+              autoCapitalize="none"
             />
           )}
         />
@@ -129,9 +141,13 @@ export default function Login({ navigation }) {
         </TouchableOpacity>
 
       </View>
-      {errors.password && (
+      {
+
+      errors.password && (
         <Text style={styles.msgAlerta}>{errors.password?.message}</Text>
-      )}
+      )
+      
+      }
 
       <TouchableOpacity
         style={styles.buttonSigIn}
@@ -151,9 +167,9 @@ export default function Login({ navigation }) {
         </TouchableOpacity>
       </View>
       </View>
+
+      </KeyboardAvoidingView>
       </View>
-
-
     </TouchableWithoutFeedback>
   );
 }
