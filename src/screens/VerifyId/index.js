@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, Pressable, TouchableOpacity } from "react-native";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 
@@ -6,6 +6,28 @@ import styles from "./styles";
 import defaultStyle from "../../defaultStyle";
 
 export default function VerifyId() {
+  const [isSelectedModeEmail, setSelectedModeEmail] = useState(false);
+  const [isSelectedModePhone, setSelectedModePhone] = useState(false);
+
+  function handleVerifyModeEmail() {
+    if (isSelectedModePhone) {
+      setSelectedModeEmail(false);
+    } else {
+      setSelectedModeEmail(true);
+    }
+
+    console.log("Email\n", isSelectedModeEmail);
+  }
+
+  function handleVerifyModePhone() {
+    if (isSelectedModeEmail) {
+      setSelectedModePhone(false);
+    } else {
+      setSelectedModePhone(true);
+    }
+    console.log("Phone\n", isSelectedModePhone);
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.containerTitle}>
@@ -16,12 +38,23 @@ export default function VerifyId() {
       </View>
 
       <View style={styles.pressContainer}>
-        <Pressable style={styles.pressItem}>
+        <Pressable
+          style={
+            isSelectedModeEmail
+              ? [styles.pressItem, styles.pressItemSelected]
+              : styles.pressItem
+          }
+          onPress={handleVerifyModeEmail}
+        >
           <View style={styles.iconContainer}>
             <FontAwesome
               name="envelope"
               size={25}
-              color={defaultStyle.colors.dark}
+              color={
+                isSelectedModeEmail
+                  ? defaultStyle.colors.mainColorBlue
+                  : defaultStyle.colors.dark
+              }
             />
           </View>
           <View style={styles.texts}>
@@ -29,12 +62,23 @@ export default function VerifyId() {
             <Text style={styles.descMethod}>Verificar com o seu email</Text>
           </View>
         </Pressable>
-        <Pressable style={styles.pressItem}>
+        <Pressable
+          style={
+            isSelectedModePhone
+              ? [styles.pressItem, styles.pressItemSelected]
+              : styles.pressItem
+          }
+          onPress={handleVerifyModePhone}
+        >
           <View style={styles.iconContainer}>
             <FontAwesome
               name="phone"
               size={25}
-              color={defaultStyle.colors.dark}
+              color={
+                isSelectedModePhone
+                  ? defaultStyle.colors.mainColorBlue
+                  : defaultStyle.colors.dark
+              }
             />
           </View>
           <View style={styles.texts}>

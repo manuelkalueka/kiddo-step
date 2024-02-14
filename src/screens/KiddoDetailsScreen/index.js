@@ -145,7 +145,7 @@ const KiddoDetailsScreen = ({ navigation }) => {
               )}
             />
           </View>
-          <View style={styles.inputContainer}>
+          {/* <View style={styles.inputContainer}>
             <FontAwesome5 size={18.5} name="lock" color={"#a2c4e0"} />
             <Controller
               name="birthDay"
@@ -154,13 +154,13 @@ const KiddoDetailsScreen = ({ navigation }) => {
                 <DateTimePicker
                   testID="dateTimePicker"
                   value={value}
-                  mode={mode}
+                  // mode={mode}
                   is24Hour={true}
                   onChange={onChange}
                 />
               )}
             />
-          </View>
+          </View> */}
           {errors.password && (
             <Text style={styles.msgAlerta}>{errors.password?.message}</Text>
           )}
