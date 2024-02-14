@@ -21,19 +21,12 @@ export default function TabRoutes() {
       initialRouteName="Mapa"
       screenOptions={{
         tabBarStyle: {
-          // position: "absolute",
-          // bottom: 30,
-          height: 50,
-          // borderRadius: 10,
+          height: 60,
+          paddingBottom:10,
           backgroundColor: defaultStyle.colors.light,
-          borderTopColor: "transparent",
-          // shadowColor: defaultStyle.colors.black,
-          // shadowOpacity: 0.2,
-          // shadowOffset: {
-          //   width: 2,
-          //   height: 2,
-          // },
+          // borderTopColor: "transparent",
         },
+        // headerShown:false,
         headerStyle: {
           backgroundColor: defaultStyle.colors.mainColorBlue,
         },
@@ -42,7 +35,6 @@ export default function TabRoutes() {
           fontSize: 35,
           fontWeight: "bold",
         },
-        // tabBarShowLabel: false,
         tabBarActiveTintColor: defaultStyle.colors.mainColorBlue,
         tabBarInactiveTintColor: defaultStyle.colors.grayAccent4,
       }}
@@ -54,6 +46,7 @@ export default function TabRoutes() {
           tabBarIcon: ({ size, color }) => (
             <Entypo name="location" size={size} color={color} />
           ),
+          tabBarLabel: "Mapa",
         }}
       />
       <Screen

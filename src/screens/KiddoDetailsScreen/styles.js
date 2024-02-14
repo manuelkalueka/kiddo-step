@@ -122,7 +122,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: defaultStyle.sizes.title,
     color: defaultStyle.colors.dark,
-    marginVertical: 10,
+    marginTop:30,
+    marginBottom: 10,
   },
   MainButton: {
     width: "100%",
@@ -136,6 +137,10 @@ const styles = StyleSheet.create({
     fontSize: defaultStyle.sizes.subtitle,
     color: defaultStyle.colors.white,
     fontWeight: "bold",
+  },
+  mainButtonContainer:{
+    marginTop:20,
+    marginBottom:"8%"
   },
   //   inputContainer: {
   //     flexDirection: "row",
