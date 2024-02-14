@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -8,7 +8,8 @@ import {
   Pressable,
   Keyboard,
 } from "react-native";
-import { Entypo, FontAwesome5 } from "@expo/vector-icons";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { Entypo, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -20,14 +21,8 @@ import { StatusBar } from "expo-status-bar";
 import { handleDisableKeyboard } from "../../utils/dismiss-keyboard";
 
 const KiddoSchema = yup.object({
-  email: yup
-    .string()
-    .email("Email inválido!")
-    .required("Informe o seu email por favor"),
-  password: yup
-    .string()
-    .min(6, "Senha inválida!")
-    .required("Informe a sua senha por favor"),
+  fullName: yup.string().required("Informe o Nome Completo"),
+  gender: yup.string().required("Informe o Genero"),
 });
 
 const KiddoDetailsScreen = ({ navigation }) => {
@@ -83,14 +78,22 @@ const KiddoDetailsScreen = ({ navigation }) => {
             style={[styles.actionItem]}
             onPress={() => navigation.navigate("Alertas")}
           >
-            <Entypo name="plus" size={25} color={defaultStyle.colors.white} />
+            <MaterialIcons
+              name="add-alert"
+              size={25}
+              color={defaultStyle.colors.white}
+            />
             <Text style={styles.textAction}>Definir Alerta</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.actionItem]}
             onPress={() => navigation.navigate("Cerca")}
           >
-            <Entypo name="cog" size={25} color={defaultStyle.colors.white} />
+            <MaterialIcons
+              name="add-location-alt"
+              size={25}
+              color={defaultStyle.colors.white}
+            />
             <Text style={styles.textAction}>Nova Geo-cerca</Text>
           </TouchableOpacity>
         </View>
@@ -108,7 +111,7 @@ const KiddoDetailsScreen = ({ navigation }) => {
               color={defaultStyle.colors.grayAccent1}
             />
             <Controller
-              name="email"
+              name="fullName"
               control={control}
               render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
@@ -125,7 +128,7 @@ const KiddoDetailsScreen = ({ navigation }) => {
             <Text style={styles.msgAlerta}>{errors.email?.message}</Text>
           )}
 
-          <View style={styles.containerTxtPassword}>
+          <View style={styles.inputContainer}>
             <FontAwesome5 size={18.5} name="lock" color={"#a2c4e0"} />
             <Controller
               name="password"
@@ -142,6 +145,22 @@ const KiddoDetailsScreen = ({ navigation }) => {
               )}
             />
           </View>
+          {/* <View style={styles.inputContainer}>
+            <FontAwesome5 size={18.5} name="lock" color={"#a2c4e0"} />
+            <Controller
+              name="birthDay"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <DateTimePicker
+                  testID="dateTimePicker"
+                  value={value}
+                  // mode={mode}
+                  is24Hour={true}
+                  onChange={onChange}
+                />
+              )}
+            />
+          </View> */}
           {errors.password && (
             <Text style={styles.msgAlerta}>{errors.password?.message}</Text>
           )}

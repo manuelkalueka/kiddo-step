@@ -1,6 +1,6 @@
-import React,{ useState } from "react";
+import React, { useState } from "react";
 
-import { View,
+import {
    Text,
    TextInput,
    TouchableOpacity,
@@ -10,7 +10,7 @@ import { View,
    KeyboardAvoidingView,
    Platform
 } from "react-native";
-import {handleDisableKeyboard} from "../../utils/dismiss-keyboard"
+import { handleDisableKeyboard } from "../../utils/dismiss-keyboard";
 
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -19,7 +19,7 @@ import * as yup from "yup";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 
 import { styles } from "./style";
-import defaultStyle from '../../defaultStyle'
+import defaultStyle from "../../defaultStyle";
 import Title from "../../components/Title";
 
 const Schema = yup.object({
@@ -34,8 +34,7 @@ const Schema = yup.object({
 });
 
 export default function Login({ navigation }) {
-
-  const [showpassword, setShowPassword]= useState(true)
+  const [showpassword, setShowPassword] = useState(true);
 
   // const dismissKeyboard = ()=>{
   //   Keyboard.dismiss()
@@ -53,6 +52,7 @@ export default function Login({ navigation }) {
     console.log(data);
   };
   return (
+
     <TouchableWithoutFeedback onPress={()=>handleDisableKeyboard(Keyboard)}>
     <View style={styles.containerLogin}>
       <KeyboardAvoidingView enabled behavior={Platform.OS == 'ios'?'height':'padding'}>
@@ -119,26 +119,34 @@ export default function Login({ navigation }) {
               value={value}
               autoCapitalize="none"
             />
+          </View>
+          {errors.email && (
+            <Text style={styles.msgAlerta}>{errors.email?.message}</Text>
           )}
-        />
 
-        <TouchableOpacity style={styles.showpasswordIcon} onPress={()=>setShowPassword(!showpassword)}>
-         {
-          showpassword == true?(
-            <Ionicons
-              name="eye-off"
+          <View style={styles.containerInput}>
+            <FontAwesome5
               size={25}
+              name="lock"
               color={defaultStyle.colors.mainColorBlue}
             />
-          ):(
-            <Ionicons
-              name="eye"
-              size={25}
-              color={defaultStyle.colors.mainColorBlue}
+
+            <Controller
+              name="password"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  style={styles.textInput}
+                  placeholder="Senha"
+                  placeholderTextColor={"#0009"}
+                  secureTextEntry={showpassword}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                />
+              )}
             />
-          )
-         }
-        </TouchableOpacity>
+
 
       </View>
       {
@@ -169,6 +177,7 @@ export default function Login({ navigation }) {
       </View>
 
       </KeyboardAvoidingView>
+
       </View>
     </TouchableWithoutFeedback>
   );
