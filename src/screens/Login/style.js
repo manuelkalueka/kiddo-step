@@ -14,13 +14,13 @@ const styles = StyleSheet.create({
 
   headerLogin:{
     width: '100%',
-    height: 130,
+    height: 200,
     
   },
 
   imageLogin: {
     width: '100%',
-    height: 130,
+    height: 200,
     
   },
 
@@ -31,12 +31,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: defaultStyle.borderRadio.big,
     backgroundColor: defaultStyle.colors.white
   },
-
-  subTitleLogin: {
-    fontSize: defaultStyle.sizes.title,
-    color: defaultStyle.colors.grayAccent4
-  },
-
 
   containerInput: {
     width: "100%",
@@ -79,7 +73,7 @@ const styles = StyleSheet.create({
 
   containerForgotPassword: {
     marginBottom:10,
-    alignSelf: 'flex-end'
+    alignSelf: 'center'
   },
 
   textForgotPassword: {

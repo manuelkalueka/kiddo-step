@@ -8,7 +8,7 @@ import SignupNavigation from "./src/routes/stack.signup.routes";
 import TabRoutes from "./src/routes/tab.routes";
 
 const isAuthenticated = true;
-const userName = "kalueaka";
+const userName = "kalueaka1";
 
 export default function App() {
   return (
