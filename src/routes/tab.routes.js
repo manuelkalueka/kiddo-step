@@ -21,19 +21,18 @@ export default function TabRoutes() {
       initialRouteName="Mapa"
       screenOptions={{
         tabBarStyle: {
-          position: "absolute",
-          bottom: 30,
+          // position: "absolute",
+          // bottom: 30,
           height: 50,
-          marginHorizontal: 20,
-          borderRadius: 10,
+          // borderRadius: 10,
           backgroundColor: defaultStyle.colors.light,
           borderTopColor: "transparent",
-          shadowColor: defaultStyle.colors.black,
-          shadowOpacity: 0.2,
-          shadowOffset: {
-            width: 2,
-            height: 2,
-          },
+          // shadowColor: defaultStyle.colors.black,
+          // shadowOpacity: 0.2,
+          // shadowOffset: {
+          //   width: 2,
+          //   height: 2,
+          // },
         },
         headerStyle: {
           backgroundColor: defaultStyle.colors.mainColorBlue,
@@ -43,7 +42,7 @@ export default function TabRoutes() {
           fontSize: 35,
           fontWeight: "bold",
         },
-        tabBarShowLabel: false,
+        // tabBarShowLabel: false,
         tabBarActiveTintColor: defaultStyle.colors.mainColorBlue,
         tabBarInactiveTintColor: defaultStyle.colors.grayAccent4,
       }}
@@ -62,7 +61,7 @@ export default function TabRoutes() {
         component={LocationHistoryScreen}
         options={{
           tabBarIcon: ({ size, color }) => (
-            <Entypo name="compass" size={size} color={color} />
+            <FontAwesome5 name="history" size={size} color={color} />
           ),
           tabBarLabel: "Histórico",
         }}
@@ -74,7 +73,7 @@ export default function TabRoutes() {
           tabBarIcon: ({ focused, size, color }) => (
             <ButtonNewfecing size={size} color={color} focused={focused} />
           ),
-          tabBarLabel: "Kalueka",
+          tabBarLabel: "",
         }}
       />
       <Screen

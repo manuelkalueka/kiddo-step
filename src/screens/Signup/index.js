@@ -34,7 +34,11 @@ export default function Signup({ navigation }) {
       style={styles.loginContainer}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <Pressable onPress={handleDisableKeyboard(Keyboard)}>
+      <Pressable
+        onPress={() => {
+          handleDisableKeyboard(Keyboard);
+        }}
+      >
         <View style={styles.titleContainer}>
           <Title title="Junta-se a Nós" subtitle="Criar uma conta" />
         </View>

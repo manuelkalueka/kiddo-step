@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import defaultStyle from "../../defaultStyle";
 
 const styles = StyleSheet.create({
@@ -96,34 +96,60 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginLeft: 5,
   },
-  bodyContainer: {
+  bodyDetails: {
     flex: 1,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     backgroundColor: defaultStyle.colors.light,
     padding: 20,
   },
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-    height: "auto",
-    borderRadius: defaultStyle.borderRadio.borderRadioInput,
-    borderWidth: 1,
-    borderColor: defaultStyle.colors.grayAccent1,
+  labels: {
+    fontSize: defaultStyle.sizes.inputLabels,
+    color: defaultStyle.colors.dark,
     marginVertical: 10,
-    paddingLeft: 10,
-    backgroundColor: defaultStyle.colors.white,
+    fontWeight: "300",
   },
 
   input: {
-    marginLeft: 10,
-    paddingVertical: 16,
+    paddingVertical: Platform.OS === "ios" ? 16 : 8,
+    paddingHorizontal: 5,
     fontSize: 16,
     flex: 1,
     backgroundColor: defaultStyle.colors.white,
+    borderRadius: defaultStyle.borderRadio.borderRadioInput,
   },
+  sectionTitle: {
+    fontWeight: "bold",
+    fontSize: defaultStyle.sizes.title,
+    color: defaultStyle.colors.dark,
+    marginVertical: 10,
+  },
+  MainButton: {
+    width: "100%",
+    marginVertical: 15,
+    padding: 16,
+    backgroundColor: defaultStyle.colors.mainColorBlue,
+    borderRadius: defaultStyle.borderRadio.borderRadioButton.small,
+  },
+  textButton: {
+    textAlign: "center",
+    fontSize: defaultStyle.sizes.subtitle,
+    color: defaultStyle.colors.white,
+    fontWeight: "bold",
+  },
+  //   inputContainer: {
+  //     flexDirection: "row",
+  //     alignItems: "center",
+  //     justifyContent: "center",
+  //     width: "100%",
+  //     height: "auto",
+  //     borderRadius: defaultStyle.borderRadio.borderRadioInput,
+  //     borderWidth: 1,
+  //     borderColor: defaultStyle.colors.grayAccent1,
+  //     marginVertical: 10,
+  //     paddingLeft: 10,
+  //     backgroundColor: defaultStyle.colors.white,
+  //   },
 });
 
 export default styles;
