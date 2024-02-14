@@ -8,7 +8,8 @@ import {
    Keyboard,
    Image,
    KeyboardAvoidingView,
-   Platform
+   Platform,
+   View
 } from "react-native";
 import { handleDisableKeyboard } from "../../utils/dismiss-keyboard";
 
@@ -96,34 +97,6 @@ export default function Login({ navigation }) {
         <Text style={styles.msgAlerta}>{errors.email?.message}</Text>
       )
       }
-
-      <View style={styles.containerInput}>
-
-        <FontAwesome5 
-        size={25} 
-        name="lock" 
-        color={defaultStyle.colors.mainColorBlue} 
-        />
-
-        <Controller
-          name="password"
-          control={control}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              style={styles.textInput}
-              placeholder="Senha"
-              placeholderTextColor={'#0009'}
-              secureTextEntry={showpassword}
-              onChangeText={onChange}
-              onBlur={onBlur}
-              value={value}
-              autoCapitalize="none"
-            />
-          </View>
-          {errors.email && (
-            <Text style={styles.msgAlerta}>{errors.email?.message}</Text>
-          )}
-
           <View style={styles.containerInput}>
             <FontAwesome5
               size={25}
