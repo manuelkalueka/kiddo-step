@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -38,6 +38,8 @@ const KiddoDetailsScreen = ({ navigation }) => {
     console.log(data);
   };
 
+  const getDeviceStatus = true;
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -64,13 +66,22 @@ const KiddoDetailsScreen = ({ navigation }) => {
               <Text style={styles.headerSurname}>Tiagão</Text>
               <Text style={styles.headerAge}>5 anos</Text>
             </View>
-            <TouchableOpacity style={styles.buttonMapContainer}>
-              <Entypo
-                name="map"
-                size={25}
-                color={defaultStyle.colors.blueLightColor1}
-              />
-            </TouchableOpacity>
+            <View style={styles.buttonStatusContainer}>
+              <View
+                style={[
+                  styles.buttonStatusIcon,
+                  {
+                    backgroundColor:
+                      getDeviceStatus === true
+                        ? defaultStyle.colors.success
+                        : defaultStyle.colors.grayAccent3,
+                  },
+                ]}
+              ></View>
+              <Text style={styles.textStatus}>
+                {getDeviceStatus === true ? "online" : "offline"}
+              </Text>
+            </View>
           </View>
         </View>
         <View style={styles.actionButtons}>

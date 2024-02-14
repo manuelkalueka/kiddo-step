@@ -41,14 +41,23 @@ const styles = StyleSheet.create({
   headerAge: {
     marginTop: 5,
     fontSize: defaultStyle.sizes.subtitle,
-    color: defaultStyle.colors.grayAccent2,
+    color: defaultStyle.colors.grayAccent3,
     fontWeight: "bold",
   },
-  buttonMapContainer: {
-    borderRadius: defaultStyle.borderRadio.cards[0],
-    backgroundColor: defaultStyle.colors.blueDarkColor1,
-    paddingVertical: 5,
-    paddingHorizontal: 10,
+  buttonStatusContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonStatusIcon: {
+    height: 10,
+    width: 10,
+    borderRadius: 5,
+  },
+  textStatus: {
+    color: defaultStyle.colors.white,
+    marginLeft: 10,
+    textAlign: "center",
   },
   buttonChangeImg: {
     position: "absolute",
@@ -66,7 +75,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   actionButtons: {
-    width: "80%",
+    width: "85%",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
