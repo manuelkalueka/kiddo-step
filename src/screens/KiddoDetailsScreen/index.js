@@ -9,8 +9,7 @@ import {
   Keyboard,
   ScrollView,
 } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { Entypo, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
+import { Entypo, MaterialIcons } from "@expo/vector-icons";
 
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -40,6 +39,10 @@ const KiddoDetailsScreen = ({ navigation }) => {
   };
 
   const STATUS_DEVICE = true;
+  const BIRTH_DATE = () => {
+    const date = new Date().toLocaleDateString();
+    return date;
+  };
 
   return (
     <View style={styles.container}>
@@ -75,7 +78,7 @@ const KiddoDetailsScreen = ({ navigation }) => {
                     backgroundColor:
                       STATUS_DEVICE === true
                         ? defaultStyle.colors.success
-                        : defaultStyle.colors.grayAccent3,
+                        : defaultStyle.colors.danger,
                   },
                 ]}
               ></View>
@@ -122,7 +125,7 @@ const KiddoDetailsScreen = ({ navigation }) => {
           </View>
           <View>
             <Text style={styles.labels}>Data de Nascimento</Text>
-            <TextInput value="TIAGO LUIS PEREIRA" style={styles.input} />
+            <TextInput value={BIRTH_DATE().toString()} style={styles.input} />
           </View>
           <View>
             <Text style={styles.labels}>Gênero</Text>
@@ -149,7 +152,7 @@ const KiddoDetailsScreen = ({ navigation }) => {
             />
           </View>
         </View>
-        <View>
+        <View style={styles.mainButtonContainer}>
           <TouchableOpacity style={styles.MainButton}>
             <Text style={styles.textButton}>Salvar Alterações</Text>
           </TouchableOpacity>

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import defaultStyle from "../../defaultStyle";
 
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     backgroundColor: defaultStyle.colors.mainColorBlue,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 10,
+    marginTop: 20,
   },
 });
 
