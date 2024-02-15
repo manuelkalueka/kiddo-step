@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: defaultStyle.colors.blueDarkColor3,
     width: "90%",
+    marginTop:40,
     paddingHorizontal: 10,
     paddingVertical: 10,
     borderRadius: defaultStyle.borderRadio.cards[0],
@@ -142,19 +143,6 @@ const styles = StyleSheet.create({
     marginTop:20,
     marginBottom:"8%"
   },
-  //   inputContainer: {
-  //     flexDirection: "row",
-  //     alignItems: "center",
-  //     justifyContent: "center",
-  //     width: "100%",
-  //     height: "auto",
-  //     borderRadius: defaultStyle.borderRadio.borderRadioInput,
-  //     borderWidth: 1,
-  //     borderColor: defaultStyle.colors.grayAccent1,
-  //     marginVertical: 10,
-  //     paddingLeft: 10,
-  //     backgroundColor: defaultStyle.colors.white,
-  //   },
 });
 
 export default styles;

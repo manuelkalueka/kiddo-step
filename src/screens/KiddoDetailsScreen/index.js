@@ -8,7 +8,10 @@ import {
   Pressable,
   Keyboard,
   ScrollView,
+  Platform,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+
 import { Entypo, MaterialIcons } from "@expo/vector-icons";
 
 import { Controller, useForm } from "react-hook-form";
@@ -25,7 +28,7 @@ const KiddoSchema = yup.object({
   gender: yup.string().required("Informe o Genero"),
 });
 
-const KiddoDetailsScreen = ({ navigation }) => {
+const KiddoDetailsScreen = () => {
   const {
     control,
     handleSubmit,
@@ -38,6 +41,8 @@ const KiddoDetailsScreen = ({ navigation }) => {
     console.log(data);
   };
 
+  const navigation = useNavigation();
+
   const STATUS_DEVICE = true;
   const BIRTH_DATE = () => {
     const date = new Date().toLocaleDateString();
@@ -46,7 +51,11 @@ const KiddoDetailsScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      {Platform.OS === "ios" ? (
+        <StatusBar style="light" />
+      ) : (
+        <StatusBar style="auto" backgroundColor="#000" />
+      )}
       <Pressable
         style={styles.picContainer}
         onPress={() => handleDisableKeyboard(Keyboard)}
