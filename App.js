@@ -12,17 +12,15 @@ const userName = "kalueka";
 
 export default function App() {
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.container}>
-        <NavigationContainer>
-          {isAuthenticated && userName === "kalueka" ? (
-            <TabRoutes />
-          ) : (
-            <SignupNavigation />
-          )}
-        </NavigationContainer>
-      </SafeAreaView>
-    </SafeAreaProvider>
+    <SafeAreaView style={styles.container}>
+      <NavigationContainer>
+        {isAuthenticated && userName === "kalueka" ? (
+          <TabRoutes />
+        ) : (
+          <SignupNavigation />
+        )}
+      </NavigationContainer>
+    </SafeAreaView>
   );
 }
 

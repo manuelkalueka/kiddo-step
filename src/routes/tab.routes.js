@@ -2,15 +2,15 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import defaultStyle from "../defaultStyle";
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
-
-import Map from "../screens/Map";
+import MapNavigation from "./stack.map.routes";
 import AlertScreen from "../screens/AlertScreen";
 import LocationHistoryScreen from "../screens/LocationHistoryScreen";
 import Profile from "../screens/Profile";
 
 import NewFecing from "../screens/NewFecing";
 import ButtonNewfecing from "../components/ButtonNewfecing";
-import KiddoDetailsScreen from "../screens/KiddoDetailsScreen";
+import KiddoDetailButton from "../components/KiddoDetailButton";
+import Header from "../components/Header";
 
 const Tab = createBottomTabNavigator();
 const { Navigator, Screen } = Tab;
@@ -22,30 +22,27 @@ export default function TabRoutes() {
       screenOptions={{
         tabBarStyle: {
           height: 60,
-          paddingBottom:10,
+          paddingBottom: 10,
           backgroundColor: defaultStyle.colors.light,
-          // borderTopColor: "transparent",
         },
-        // headerShown:false,
         headerStyle: {
           backgroundColor: defaultStyle.colors.mainColorBlue,
-        },
-        headerTitleStyle: {
-          color: defaultStyle.colors.white,
-          fontSize: 35,
-          fontWeight: "bold",
+          elevation: 25,
+          height: 75,
         },
         tabBarActiveTintColor: defaultStyle.colors.mainColorBlue,
         tabBarInactiveTintColor: defaultStyle.colors.grayAccent4,
       }}
     >
       <Screen
-        name="KiddoDetails"
-        component={KiddoDetailsScreen}
+        name="Mapa"
+        component={MapNavigation}
         options={{
           tabBarIcon: ({ size, color }) => (
             <Entypo name="location" size={size} color={color} />
           ),
+          headerTitle: () => <Header name="Mapa" />,
+          headerRight: () => <KiddoDetailButton />,
           tabBarLabel: "Mapa",
         }}
       />
@@ -56,6 +53,7 @@ export default function TabRoutes() {
           tabBarIcon: ({ size, color }) => (
             <FontAwesome5 name="history" size={size} color={color} />
           ),
+          headerTitle: () => <Header name="Histórico de Localização" />,
           tabBarLabel: "Histórico",
         }}
       />
@@ -66,6 +64,7 @@ export default function TabRoutes() {
           tabBarIcon: ({ focused, size, color }) => (
             <ButtonNewfecing size={size} color={color} focused={focused} />
           ),
+          headerTitle: () => <Header name="Geo Cerca" />,
           tabBarLabel: "",
         }}
       />
@@ -76,6 +75,7 @@ export default function TabRoutes() {
           tabBarIcon: ({ size, color }) => (
             <Entypo name="notification" size={size} color={color} />
           ),
+          headerTitle: () => <Header name="Alertas" />,
           tabBarBadge: 3,
         }}
       />
@@ -86,6 +86,7 @@ export default function TabRoutes() {
           tabBarIcon: ({ size, color }) => (
             <FontAwesome5 name="user" size={size} color={color} />
           ),
+          headerTitle: () => <Header name="Perfil" />,
         }}
       />
     </Navigator>
