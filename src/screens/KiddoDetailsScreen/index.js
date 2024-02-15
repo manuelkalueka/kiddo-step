@@ -10,9 +10,10 @@ import {
   ScrollView,
   Platform,
 } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
 
-import { Entypo, MaterialIcons } from "@expo/vector-icons";
+import { Entypo, MaterialIcons, FontAwesome } from "@expo/vector-icons";
 
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -28,7 +29,7 @@ const KiddoSchema = yup.object({
   gender: yup.string().required("Informe o Genero"),
 });
 
-const KiddoDetailsScreen = () => {
+const KiddoDetailsScreen = (props) => {
   const {
     control,
     handleSubmit,
@@ -79,21 +80,34 @@ const KiddoDetailsScreen = () => {
               <Text style={styles.headerSurname}>Tiagão</Text>
               <Text style={styles.headerAge}>5 anos</Text>
             </View>
-            <View style={styles.buttonStatusContainer}>
-              <View
-                style={[
-                  styles.buttonStatusIcon,
-                  {
-                    backgroundColor:
-                      STATUS_DEVICE === true
-                        ? defaultStyle.colors.success
-                        : defaultStyle.colors.danger,
-                  },
-                ]}
-              ></View>
-              <Text style={styles.textStatus}>
-                {STATUS_DEVICE === true ? "online" : "offline"}
-              </Text>
+            <View style={styles.statusContainer}>
+              <View style={styles.buttonStatusContainer}>
+                <View
+                  style={[
+                    styles.buttonStatusIcon,
+                    {
+                      backgroundColor:
+                        STATUS_DEVICE === true
+                          ? defaultStyle.colors.success
+                          : defaultStyle.colors.danger,
+                    },
+                  ]}
+                ></View>
+                <Text style={styles.textStatus}>
+                  {STATUS_DEVICE === true ? "online" : "offline"}
+                </Text>
+              </View>
+              <View style={styles.buttonBatteryContainer}>
+                <FontAwesome
+                  name="battery"
+                  color={
+                    STATUS_DEVICE === true
+                      ? defaultStyle.colors.success
+                      : defaultStyle.colors.danger
+                  }
+                />
+                <Text style={styles.textStatus}>75%</Text>
+              </View>
             </View>
           </View>
         </View>
@@ -138,7 +152,15 @@ const KiddoDetailsScreen = () => {
           </View>
           <View>
             <Text style={styles.labels}>Gênero</Text>
-            <TextInput value="Masculino" style={styles.input} />
+            <Picker
+              style={styles.picker}
+              // selectedValue={selectedGender}
+              // onValueChange={(itemValue, itemIndex) => setSelectedGender(itemValue)}
+            >
+              <Picker.Item label="Selecione um gênero" value="" />
+              <Picker.Item label="Masculino" value="masculino" />
+              <Picker.Item label="Feminino" value="feminino" />
+            </Picker>
           </View>
           <Text style={styles.sectionTitle}>Detalhes de Saúde</Text>
           <View>

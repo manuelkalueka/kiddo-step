@@ -47,6 +47,7 @@ export default function TabRoutes() {
             elevation: 25,
             height: 75,
           },
+          headerTitleAlign: "left",
           tabBarStyle: {
             height: 60,
             paddingBottom: 10,

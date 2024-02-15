@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: defaultStyle.colors.blueDarkColor3,
     width: "90%",
-    marginTop:40,
+    marginTop: 40,
     paddingHorizontal: 10,
     paddingVertical: 10,
     borderRadius: defaultStyle.borderRadio.cards[0],
@@ -48,6 +48,11 @@ const styles = StyleSheet.create({
   buttonStatusContainer: {
     flexDirection: "row",
     justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonBatteryContainer: {
+    marginTop: 10,
+    flexDirection: "row",
     alignItems: "center",
   },
   buttonStatusIcon: {
@@ -119,11 +124,16 @@ const styles = StyleSheet.create({
     backgroundColor: defaultStyle.colors.white,
     borderRadius: defaultStyle.borderRadio.borderRadioInput,
   },
+  picker: {
+    // height: Platform.OS === "ios" ? 50 : null,
+    backgroundColor: defaultStyle.colors.white,
+    borderRadius: defaultStyle.borderRadio.borderRadioInput,
+  },
   sectionTitle: {
     fontWeight: "bold",
     fontSize: defaultStyle.sizes.title,
     color: defaultStyle.colors.dark,
-    marginTop:30,
+    marginTop: 30,
     marginBottom: 10,
   },
   MainButton: {
@@ -139,9 +149,9 @@ const styles = StyleSheet.create({
     color: defaultStyle.colors.white,
     fontWeight: "bold",
   },
-  mainButtonContainer:{
-    marginTop:20,
-    marginBottom:"8%"
+  mainButtonContainer: {
+    marginTop: 20,
+    marginBottom: "8%",
   },
 });
 
