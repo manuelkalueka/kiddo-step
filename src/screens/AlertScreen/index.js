@@ -7,16 +7,6 @@ import defaultStyle from "../../defaultStyle";
 export default function AlertScreen() {
   return(
     <View style={styles.container}>
-      <View style={styles.header}>
-          <FontAwesome5
-              style={styles.iconAlert}
-              name='exclamation-triangle'
-              size={30}
-              color={'#fff'}
-            />
-            <Text style={styles.titleSreen}>Alertas</Text>
-      </View>
-
       <View style={styles.body}>
 
         <TouchableOpacity style={styles.buttonReadNotif} activeOpacity={0.4}>
