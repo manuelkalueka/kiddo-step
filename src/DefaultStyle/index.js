@@ -1,6 +1,6 @@
 export default {
   colors: {
-    mainColorBlue: "#2396f1",
+    mainColorBlue: "#2396f3",
     blueLightColor1: "#a2c4e0",
     blueLightColor2: "#6594ba",
     blueLightColor3: "#7ac3ff",

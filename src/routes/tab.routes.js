@@ -140,13 +140,6 @@ export default function TabRoutes() {
             onPress={handleModalClose}
             style={styles.containerButton}
           >
-            <Text>
-              <FontAwesome
-                name="close"
-                size={18}
-                color={defaultStyle.colors.white}
-              />
-            </Text>
             <Text style={styles.buttonIcon}>Fechar</Text>
           </TouchableOpacity>
         </View>
@@ -175,7 +168,7 @@ const styles = StyleSheet.create({
   containerButton: {
     position: "absolute",
     top: "2%",
-    left: "2%",
+    right: "2%",
     backgroundColor: "transparent",
     paddingVertical: 5,
     paddingHorizontal: 10,
@@ -187,6 +180,5 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontSize: 16,
     color: defaultStyle.colors.white,
-    fontWeight: "bold",
   },
 });
