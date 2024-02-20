@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   mainNotifications: {
     width: '100%',
     backgroundColor: defaultStyle.colors.white,
-    height: '100%',
+    height: '90%',
     paddingVertical: '5%'
   },
 
