@@ -9,7 +9,7 @@ export default function AlertScreen() {
     <View style={styles.container}>
       <View style={styles.body}>
 
-        <TouchableOpacity style={styles.buttonReadNotif} activeOpacity={0.4}>
+        <TouchableOpacity style={styles.buttonReadNotif} activeOpacity={0.6}>
           <Text style={styles.textButtonReadNotif}>Marcar todas como visualizadas</Text>
         </TouchableOpacity>
 

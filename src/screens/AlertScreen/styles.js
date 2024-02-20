@@ -10,20 +10,20 @@ const styles = StyleSheet.create({
   body: {
     width: '100%',
     height: '100%',
-    backgroundColor: defaultStyle.colors.whiteSmooke,
-    paddingHorizontal: '5%',
-    paddingVertical: '5%',
-    borderTopLeftRadius: defaultStyle.borderRadio.big,
-    borderTopRightRadius: defaultStyle.borderRadio.big
+    backgroundColor: defaultStyle.colors.grayAccent1,
+    borderTopLeftRadius: defaultStyle.borderRadio.normal,
+    borderTopRightRadius: defaultStyle.borderRadio.normal
   },
 
   buttonReadNotif: {
-    width: '100%',
+    alignSelf: 'center',
+    width: '95%',
     padding: 5,
     backgroundColor: defaultStyle.colors.white,
-    borderTopLeftRadius: defaultStyle.borderRadio.big,
-    borderTopRightRadius: defaultStyle.borderRadio.big,
-    marginBottom: 10
+    borderTopLeftRadius: defaultStyle.borderRadio.normal,
+    borderTopRightRadius: defaultStyle.borderRadio.normal,
+    marginBottom: 10,
+    marginVertical: '2%'
   },
 
   textButtonReadNotif: {
@@ -42,15 +42,14 @@ const styles = StyleSheet.create({
   mainNotifications: {
     width: '100%',
     backgroundColor: defaultStyle.colors.white,
-    height: '50%',
-    paddingVertical: '5%',
-    paddingHorizontal: '5%'
+    height: '100%',
+    paddingVertical: '5%'
   },
 
   notification: {
     width: '100%',
     padding: 30,
-    backgroundColor: defaultStyle.colors.grayAccent1,
+    backgroundColor: defaultStyle.colors.mainColorBlue1,
     borderRadius: defaultStyle.borderRadio.normal,
     marginBottom: 5
   }
