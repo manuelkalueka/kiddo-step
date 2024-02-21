@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import defaultStyle from "../../defaultStyle";
 
@@ -21,13 +21,13 @@ const ButtonNewfecing = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: 50,
-    height: 50,
+    width: 40,
+    height: 40,
     borderRadius: 25,
     backgroundColor: defaultStyle.colors.mainColorBlue,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 30,
+    marginTop: 20,
   },
 });
 

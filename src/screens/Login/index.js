@@ -66,9 +66,7 @@ export default function Login({ navigation }) {
      />
     </View>
 
-      <View style={styles.form}>
-      <Text style={styles.subTitleLogin}>Conecte-se</Text>
-      
+      <View style={styles.form}>      
       <View style={styles.containerInput}>
         <FontAwesome5 
         size={25} 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -7,9 +7,13 @@ import {
   TextInput,
   Pressable,
   Keyboard,
+  ScrollView,
+  Platform,
 } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { Entypo, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
+import { Picker } from "@react-native-picker/picker";
+import { useNavigation } from "@react-navigation/native";
+
+import { Entypo, MaterialIcons, FontAwesome } from "@expo/vector-icons";
 
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -25,7 +29,7 @@ const KiddoSchema = yup.object({
   gender: yup.string().required("Informe o Genero"),
 });
 
-const KiddoDetailsScreen = ({ navigation }) => {
+const KiddoDetailsScreen = (props) => {
   const {
     control,
     handleSubmit,
@@ -38,9 +42,21 @@ const KiddoDetailsScreen = ({ navigation }) => {
     console.log(data);
   };
 
+  const navigation = useNavigation();
+
+  const STATUS_DEVICE = true;
+  const BIRTH_DATE = () => {
+    const date = new Date().toLocaleDateString();
+    return date;
+  };
+
   return (
     <View style={styles.container}>
-      <StatusBar style="auto" />
+      {Platform.OS === "ios" ? (
+        <StatusBar style="light" />
+      ) : (
+        <StatusBar style="auto" backgroundColor="#000" />
+      )}
       <Pressable
         style={styles.picContainer}
         onPress={() => handleDisableKeyboard(Keyboard)}
@@ -64,13 +80,35 @@ const KiddoDetailsScreen = ({ navigation }) => {
               <Text style={styles.headerSurname}>Tiagão</Text>
               <Text style={styles.headerAge}>5 anos</Text>
             </View>
-            <TouchableOpacity style={styles.buttonMapContainer}>
-              <Entypo
-                name="map"
-                size={25}
-                color={defaultStyle.colors.blueLightColor1}
-              />
-            </TouchableOpacity>
+            <View style={styles.statusContainer}>
+              <View style={styles.buttonStatusContainer}>
+                <View
+                  style={[
+                    styles.buttonStatusIcon,
+                    {
+                      backgroundColor:
+                        STATUS_DEVICE === true
+                          ? defaultStyle.colors.success
+                          : defaultStyle.colors.danger,
+                    },
+                  ]}
+                ></View>
+                <Text style={styles.textStatus}>
+                  {STATUS_DEVICE === true ? "online" : "offline"}
+                </Text>
+              </View>
+              <View style={styles.buttonBatteryContainer}>
+                <FontAwesome
+                  name="battery"
+                  color={
+                    STATUS_DEVICE === true
+                      ? defaultStyle.colors.success
+                      : defaultStyle.colors.danger
+                  }
+                />
+                <Text style={styles.textStatus}>75%</Text>
+              </View>
+            </View>
           </View>
         </View>
         <View style={styles.actionButtons}>
@@ -98,81 +136,59 @@ const KiddoDetailsScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
       </Pressable>
-      <Pressable
-        style={styles.bodyContainer}
-        onPress={() => handleDisableKeyboard(Keyboard)}
-      >
-        <View style={styles.InfoForm}>
-          <View style={styles.inputContainer}>
-            <FontAwesome5
-              style={styles.inputIcon}
-              name="user"
-              size={25}
-              color={defaultStyle.colors.grayAccent1}
-            />
-            <Controller
-              name="fullName"
-              control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  style={styles.input}
-                  placeholder="Nome Completo"
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  value={value}
-                />
-              )}
+      <ScrollView style={styles.bodyDetails}>
+        <View>
+          <View>
+            <Text style={styles.labels}>Nome Completo</Text>
+            <TextInput
+              placeholder="Digite o Nome Completo"
+              value="TIAGO LUIS PEREIRA"
+              style={styles.input}
             />
           </View>
-          {errors.email && (
-            <Text style={styles.msgAlerta}>{errors.email?.message}</Text>
-          )}
-
-          <View style={styles.inputContainer}>
-            <FontAwesome5 size={18.5} name="lock" color={"#a2c4e0"} />
-            <Controller
-              name="password"
-              control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  style={styles.txtPassword}
-                  placeholder="Senha"
-                  secureTextEntry={true}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  value={value}
-                />
-              )}
+          <View>
+            <Text style={styles.labels}>Data de Nascimento</Text>
+            <TextInput value={BIRTH_DATE().toString()} style={styles.input} />
+          </View>
+          <View>
+            <Text style={styles.labels}>Gênero</Text>
+            <Picker
+              style={styles.picker}
+              // selectedValue={selectedGender}
+              // onValueChange={(itemValue, itemIndex) => setSelectedGender(itemValue)}
+            >
+              <Picker.Item label="Selecione um gênero" value="" />
+              <Picker.Item label="Masculino" value="masculino" />
+              <Picker.Item label="Feminino" value="feminino" />
+            </Picker>
+          </View>
+          <Text style={styles.sectionTitle}>Detalhes de Saúde</Text>
+          <View>
+            <Text style={styles.labels}>Tipo Sanguíneo</Text>
+            <TextInput
+              placeholder="Digite o tipo sanguíneo"
+              value="A+"
+              style={styles.input}
             />
           </View>
-          {/* <View style={styles.inputContainer}>
-            <FontAwesome5 size={18.5} name="lock" color={"#a2c4e0"} />
-            <Controller
-              name="birthDay"
-              control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  value={value}
-                  // mode={mode}
-                  is24Hour={true}
-                  onChange={onChange}
-                />
-              )}
+          <View>
+            <Text style={styles.labels}>Alergias</Text>
+            <TextInput
+              placeholder="Descreve as Alergias e Restrições"
+              multiline={true}
+              editable={true}
+              numberOfLines={4}
+              value="TIAGO LUIS PEREIRA"
+              style={styles.input}
             />
-          </View> */}
-          {errors.password && (
-            <Text style={styles.msgAlerta}>{errors.password?.message}</Text>
-          )}
-
-          <TouchableOpacity
-            style={styles.buttonSigIn}
-            onPress={handleSubmit(sendForm)}
-          >
-            <Text style={styles.TextSigIn}>Entrar</Text>
+          </View>
+        </View>
+        <View style={styles.mainButtonContainer}>
+          <TouchableOpacity style={styles.MainButton}>
+            <Text style={styles.textButton}>Salvar Alterações</Text>
           </TouchableOpacity>
         </View>
-      </Pressable>
+      </ScrollView>
     </View>
   );
 };
