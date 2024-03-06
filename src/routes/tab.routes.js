@@ -114,6 +114,16 @@ export default function TabRoutes() {
               <Entypo name="notification" size={size} color={color} />
             ),
             headerTitle: () => <Header name="Alertas" />,
+            headerRight: () => (
+              <TouchableOpacity
+                style={styles.container}
+                onPress={() => {
+                  alert('Configuração de alertas')
+                }}
+              >
+               <Text style={styles.textConfig}>Configuração</Text>
+              </TouchableOpacity>
+            ),
             tabBarBadge: 3,
           }}
         />
@@ -181,4 +191,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: defaultStyle.colors.white,
   },
+
+  textConfig: {
+    color: defaultStyle.colors.white,
+    fontWeight: 'bold'
+  }
 });
