@@ -8,6 +8,7 @@ import {
   Alert,
 } from "react-native";
 import { Modalize } from "react-native-modalize";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 import styles from "./styles";
 import { formatDate } from "../../utils/format-date";
@@ -116,22 +117,27 @@ export default function LocationHistoryScreen() {
           </Pressable>
         )}
       />
-
-      <Modalize ref={modalizeRef} snapPoint={180} modalHeight={200}
-      HeaderComponent={
-        <View>
-          <Text>TITULO DO EVENTO</Text>
-        </View>
-      }>
-        <View
-          style={{
-            flex: 1,
-            height: 180,
-          }}
+      <GestureHandlerRootView>
+        <Modalize
+          ref={modalizeRef}
+          snapPoint={180}
+          modalHeight={200}
+          HeaderComponent={
+            <View>
+              <Text>TITULO DO EVENTO</Text>
+            </View>
+          }
         >
-          <Text>Sou o Conteudo</Text>
-        </View>
-      </Modalize>
+          <View
+            style={{
+              flex: 1,
+              height: 180,
+            }}
+          >
+            <Text>Sou o Conteudo</Text>
+          </View>
+        </Modalize>
+      </GestureHandlerRootView>
     </View>
   );
 }
