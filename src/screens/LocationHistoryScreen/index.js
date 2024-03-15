@@ -4,17 +4,20 @@ import {
   Text,
   FlatList,
   TouchableOpacity,
-  Pressable,
   Alert,
+  Dimensions,
 } from "react-native";
-import { Modalize } from "react-native-modalize";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-
+import BottomSheet, {
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
+import { gestureHandlerRootHOC } from "react-native-gesture-handler"; //Gerenciador de Gestos no Mobile
 import styles from "./styles";
-import { formatDate } from "../../utils/format-date";
+import { relativeTime, formatDate } from "../../utils/format-date";
 
 import { AntDesign } from "@expo/vector-icons";
 import defaultStyle from "../../defaultStyle";
+
+const { width, height } = Dimensions.get("window");
 
 const HISTORICO_BRUTO = [
   {
@@ -78,33 +81,32 @@ const HISTORICO_BRUTO = [
     content: "Conteudo do historico",
   },
 ];
-export default function LocationHistoryScreen() {
-  const modalizeRef = useRef(null);
-
-  const openModalize = () => {
-    modalizeRef.current?.open();
-  };
-
+function LocationHistoryScreen() {
+  const bottomSheetRef = useRef(null);
+  function openBottomSheet() {
+    bottomSheetRef.current?.expand();
+  }
   return (
     <View style={styles.container}>
       <FlatList
         data={HISTORICO_BRUTO}
         keyExtractor={(item, index) => new Date().getTime() + item + index}
         renderItem={({ item }) => (
-          <Pressable
+          <TouchableOpacity
             style={styles.itemContainer}
             onLongPress={() =>
               Alert.alert("FUNCIONALIDADE", "Ocultar do Histórico")
             }
+            activeOpacity={0.6}
           >
             <View style={styles.item}>
               <Text style={styles.header}>{item.title}</Text>
-              <Text style={styles.date}>{formatDate(item.date)}</Text>
+              <Text style={styles.date}>{relativeTime(item.date)}</Text>
             </View>
             <View>
               <TouchableOpacity
                 style={styles.itemAction}
-                onPress={openModalize}
+                onPress={openBottomSheet}
               >
                 <Text style={styles.textAction}>Detalhes</Text>
                 <AntDesign
@@ -114,30 +116,56 @@ export default function LocationHistoryScreen() {
                 />
               </TouchableOpacity>
             </View>
-          </Pressable>
+          </TouchableOpacity>
         )}
       />
-      <GestureHandlerRootView>
-        <Modalize
-          ref={modalizeRef}
-          snapPoint={180}
-          modalHeight={200}
-          HeaderComponent={
-            <View>
-              <Text>TITULO DO EVENTO</Text>
-            </View>
-          }
-        >
-          <View
-            style={{
-              flex: 1,
-              height: 180,
-            }}
-          >
-            <Text>Sou o Conteudo</Text>
+      <BottomSheet //Modal Para Mostrar os Detalhes da Actividade
+        ref={bottomSheetRef}
+        index={0} //começa fechado
+        snapPoints={[1, height - 160, height - 340]}
+        handleIndicatorStyle={{
+          backgroundColor: defaultStyle.colors.mainColorBlue,
+        }}
+        backgroundStyle={{
+          backgroundColor: defaultStyle.colors.white,
+        }}
+      >
+        <BottomSheetView style={styles.containerSheet}>
+          <View>
+            <Text style={styles.header}>Detalhes do [NOME DA ACTIVIDADE]</Text>
           </View>
-        </Modalize>
-      </GestureHandlerRootView>
+          <View>
+            <View style={styles.detailContainer}>
+              <Text style={styles.detailHeader}>Data e Hora</Text>
+              <Text  style={styles.detailContent}>
+                Data da Localização {formatDate(new Date().getDate())}
+              </Text>
+              <Text  style={styles.detailContent}>Hora da localização (hora, minuto, segundo).</Text>
+            </View>
+            <View style={styles.detailContainer}>
+              <Text style={styles.detailHeader}>Localização</Text>
+              <Text style={styles.detailContent}>
+                Endereço completo (rua, número, bairro, cidade, estado, país).
+              </Text>
+              <Text  style={styles.detailContent}>Latitude e longitude (coordenadas geográficas).</Text>
+              <Text  style={styles.detailContent}>
+                Nome do local (se disponível, como um ponto de referência).
+              </Text>
+            </View>
+            <View style={styles.detailContainer}>
+              <Text style={styles.detailHeader}>Outras Informações</Text>
+              <Text  style={styles.detailContent}>Tipo de localização (GPS, Wi-Fi, etc.).</Text>
+              <Text  style={styles.detailContent}>Área [SEGURA, NAO DEFINA, INSEGURA]</Text>
+            </View>
+
+            <TouchableOpacity>
+              <Text>Ver No Mapa</Text>
+            </TouchableOpacity>
+          </View>
+        </BottomSheetView>
+      </BottomSheet>
     </View>
   );
 }
+
+export default gestureHandlerRootHOC(LocationHistoryScreen); //Habilita Gestos no Android e melhora a compatibilidade no IOS

@@ -36,6 +36,27 @@ const styles = StyleSheet.create({
     fontSize: defaultStyle.sizes.inputText,
     color: defaultStyle.colors.mainColorBlue,
   },
+  containerSheet: {
+    flex: 1,
+    paddingVertical: "5%",
+    paddingHorizontal: "5%",
+  },
+  detailContainer:{
+    borderBottomWidth:.6,
+    borderBottomColor:defaultStyle.colors.grayAccent1,
+    paddingBottom:10,
+  },
+  detailHeader:{
+    fontWeight:"bold",
+    fontSize:defaultStyle.sizes.label,
+    color:defaultStyle.colors.dark,
+    marginTop:20,
+    marginBottom:10,
+  },
+  detailContent:{
+    color:defaultStyle.colors.grayAccent2,
+    marginBottom:5,
+  },
 });
 
 export default styles;
