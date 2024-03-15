@@ -7,85 +7,96 @@ import {
   Alert,
   Dimensions,
 } from "react-native";
-import BottomSheet, {
-  BottomSheetView,
-} from "@gorhom/bottom-sheet";
-import { gestureHandlerRootHOC } from "react-native-gesture-handler"; //Gerenciador de Gestos no Mobile
-import styles from "./styles";
-import { relativeTime, formatDate } from "../../utils/format-date";
 
+import styles from "./styles";
 import { AntDesign } from "@expo/vector-icons";
 import defaultStyle from "../../defaultStyle";
+
+import { useNavigation } from "@react-navigation/native";
+
+import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+import { gestureHandlerRootHOC } from "react-native-gesture-handler"; //Gerenciador de Gestos no Mobile
+import { relativeTime, formatDate } from "../../utils/format-date";
+
+import ActionButtom from "../../components/ActionButtom";
 
 const { width, height } = Dimensions.get("window");
 
 const HISTORICO_BRUTO = [
   {
     title: "Meu Historico",
-    date: new Date().getDate() + 1,
+    date: new Date(),
     content: "Conteudo do historico",
   },
   {
     title: "Meu Historico",
-    date: new Date().getDate(),
+    date: new Date(),
     content: "Conteudo do historico",
   },
   {
     title: "Meu Historico",
-    date: new Date().getDate(),
+    date: new Date(),
     content: "Conteudo do historico",
   },
   {
     title: "Meu Historico",
-    date: new Date().getDate(),
+    date: new Date(),
     content: "Conteudo do historico",
   },
   {
     title: "Meu Historico",
-    date: new Date().getDate(),
+    date: new Date(),
     content: "Conteudo do historico",
   },
   {
     title: "Meu Historico",
-    date: new Date().getDate(),
+    date: new Date(),
     content: "Conteudo do historico",
   },
   {
     title: "Meu Historico",
-    date: new Date().getDate(),
+    date: new Date(),
     content: "Conteudo do historico",
   },
   {
     title: "Meu Historico",
-    date: new Date().getDate(),
+    date: new Date(),
     content: "Conteudo do historico",
   },
   {
     title: "Meu Historico",
-    date: new Date().getDate(),
+    date: new Date(),
     content: "Conteudo do historico",
   },
   {
     title: "Meu Historico",
-    date: new Date().getDate(),
+    date: new Date(),
     content: "Conteudo do historico",
   },
   {
     title: "Meu Historico",
-    date: new Date().getDate(),
+    date: new Date(),
     content: "Conteudo do historico",
   },
   {
     title: "Meu Historico",
-    date: new Date().getDate(),
+    date: new Date(),
     content: "Conteudo do historico",
   },
 ];
 function LocationHistoryScreen() {
   const bottomSheetRef = useRef(null);
+
   function openBottomSheet() {
     bottomSheetRef.current?.expand();
   }
+
+  function closeBottomSheet() {
+    bottomSheetRef.current?.close();
+  }
+
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -129,38 +140,57 @@ function LocationHistoryScreen() {
         backgroundStyle={{
           backgroundColor: defaultStyle.colors.white,
         }}
+        style={{
+          shadowColor: defaultStyle.colors.dark,
+          shadowOpacity: 0.45,
+          shadowOffset: [1, 2],
+        }}
       >
         <BottomSheetView style={styles.containerSheet}>
           <View>
-            <Text style={styles.header}>Detalhes do [NOME DA ACTIVIDADE]</Text>
+            <Text style={styles.mainDetailHeader}>
+              Detalhes do [NOME DA ACTIVIDADE]
+            </Text>
           </View>
+
           <View>
             <View style={styles.detailContainer}>
               <Text style={styles.detailHeader}>Data e Hora</Text>
-              <Text  style={styles.detailContent}>
-                Data da Localização {formatDate(new Date().getDate())}
+              <Text style={styles.detailContent}>
+                Data da Localização {formatDate(Date.now())}
               </Text>
-              <Text  style={styles.detailContent}>Hora da localização (hora, minuto, segundo).</Text>
+              <Text style={styles.detailContent}>
+                Hora da localização (hora, minuto, segundo).
+              </Text>
             </View>
             <View style={styles.detailContainer}>
               <Text style={styles.detailHeader}>Localização</Text>
               <Text style={styles.detailContent}>
                 Endereço completo (rua, número, bairro, cidade, estado, país).
               </Text>
-              <Text  style={styles.detailContent}>Latitude e longitude (coordenadas geográficas).</Text>
-              <Text  style={styles.detailContent}>
+              <Text style={styles.detailContent}>
+                Latitude e longitude (coordenadas geográficas).
+              </Text>
+              <Text style={styles.detailContent}>
                 Nome do local (se disponível, como um ponto de referência).
               </Text>
             </View>
             <View style={styles.detailContainer}>
               <Text style={styles.detailHeader}>Outras Informações</Text>
-              <Text  style={styles.detailContent}>Tipo de localização (GPS, Wi-Fi, etc.).</Text>
-              <Text  style={styles.detailContent}>Área [SEGURA, NAO DEFINA, INSEGURA]</Text>
+              <Text style={styles.detailContent}>
+                Tipo de localização (GPS, Wi-Fi, etc.).
+              </Text>
+              <Text style={styles.detailContent}>
+                Área [SEGURA, NAO DEFINA, INSEGURA]
+              </Text>
             </View>
-
-            <TouchableOpacity>
-              <Text>Ver No Mapa</Text>
-            </TouchableOpacity>
+            <ActionButtom
+              textButton="Ver no Mapa"
+              onPress={() => {
+                navigation.navigate("Mapa");
+                closeBottomSheet();
+              }}
+            />
           </View>
         </BottomSheetView>
       </BottomSheet>

@@ -46,6 +46,12 @@ const styles = StyleSheet.create({
     borderBottomColor:defaultStyle.colors.grayAccent1,
     paddingBottom:10,
   },
+  mainDetailHeader: {
+    color: defaultStyle.colors.dark,
+    fontWeight: "bold",
+    fontSize: defaultStyle.sizes.titleSmall,
+    paddingVertical:10,
+  },
   detailHeader:{
     fontWeight:"bold",
     fontSize:defaultStyle.sizes.label,
@@ -55,7 +61,7 @@ const styles = StyleSheet.create({
   },
   detailContent:{
     color:defaultStyle.colors.grayAccent2,
-    marginBottom:5,
+    marginBottom:10,
   },
 });
 

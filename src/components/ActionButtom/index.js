@@ -1,10 +1,16 @@
-import React from 'react';
-import { View } from 'react-native';
+import React from "react";
+import { View, TouchableOpacity, Text } from "react-native";
 
-// import { Container } from './styles';
+import styles from "./styles";
 
-const ActionButtom = () => {
-  return <View />;
-}
+const ActionButtom = (props) => {
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity style={styles.MainButton} {...props}>
+        <Text style={styles.textButton}>{props.textButton}</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 export default ActionButtom;

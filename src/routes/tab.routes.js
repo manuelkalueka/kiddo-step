@@ -2,7 +2,6 @@ import { Fragment, useState } from "react";
 import {
   Modal,
   Text,
-  Button,
   View,
   TouchableOpacity,
   Image,
