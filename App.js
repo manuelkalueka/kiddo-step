@@ -1,7 +1,7 @@
 import { StyleSheet, StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import defaultStyle from "./src/defaultStyle";
 
 import SignupNavigation from "./src/routes/stack.signup.routes";
@@ -13,7 +13,10 @@ const userName = "kalueka";
 export default function App() {
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor={defaultStyle.colors.mainColorBlue} barStyle={"default"} />
+      <StatusBar
+        backgroundColor={defaultStyle.colors.mainColorBlue}
+        barStyle={"default"}
+      />
       <NavigationContainer>
         {isAuthenticated && userName === "kalueka" ? (
           <TabRoutes />
