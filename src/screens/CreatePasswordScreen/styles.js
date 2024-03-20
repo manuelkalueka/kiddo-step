@@ -5,7 +5,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
     backgroundColor: defaultStyle.colors.white,
     paddingVertical: "5%",
     paddingHorizontal: "5%",

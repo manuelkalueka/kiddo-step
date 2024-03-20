@@ -1,10 +1,11 @@
 import { StyleSheet } from "react-native";
-import defaultStyles from "../../defaultStyle";
+import defaultStyle from "../../defaultStyle";
 
 const styles = StyleSheet.create({
   loginContainer: {
     flex: 1,
-    backgroundColor: defaultStyles.colors.white,
+    justifyContent: "center",
+    backgroundColor: defaultStyle.colors.white,
     paddingVertical: "5%",
     paddingHorizontal: "5%",
   },
@@ -18,7 +19,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     height: "auto",
-    borderRadius: defaultStyles.borderRadio.borderRadioInput,
+    borderRadius: defaultStyle.borderRadio.borderRadioInput,
     borderWidth: 1,
     marginVertical: 10,
     paddingLeft: 10,
@@ -31,11 +32,11 @@ const styles = StyleSheet.create({
   },
 
   inputFocused: {
-    borderColor: defaultStyles.colors.mainColorBlue,
+    borderColor: defaultStyle.colors.mainColorBlue,
   },
 
   inputDefault: {
-    borderColor: defaultStyles.colors.grayAccent1,
+    borderColor: defaultStyle.colors.grayAccent1,
   },
 
   inputIcon: {
@@ -45,13 +46,13 @@ const styles = StyleSheet.create({
     width: "100%",
     marginTop: 15,
     padding: 16,
-    backgroundColor: defaultStyles.colors.mainColorBlue,
-    borderRadius: defaultStyles.borderRadio.borderRadioButton.small,
+    backgroundColor: defaultStyle.colors.mainColorBlue,
+    borderRadius: defaultStyle.borderRadio.borderRadioButton.small,
   },
   textButton: {
     textAlign: "center",
-    fontSize: defaultStyles.sizes.subtitle,
-    color: defaultStyles.colors.white,
+    fontSize: defaultStyle.sizes.subtitle,
+    color: defaultStyle.colors.white,
     fontWeight: "bold",
   },
   haveAccountContainer: {
@@ -62,7 +63,7 @@ const styles = StyleSheet.create({
   },
   haveAccountText: {
     fontWeight: "400",
-    fontSize: defaultStyles.sizes.subtitle,
+    fontSize: defaultStyle.sizes.subtitle,
   },
   buttonAction: {
     paddingVertical: 5,
@@ -70,9 +71,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   haveAccounAction: {
-    color: defaultStyles.colors.mainColorBlue,
+    color: defaultStyle.colors.mainColorBlue,
     fontWeight: "bold",
-    fontSize: defaultStyles.sizes.subtitle,
+    fontSize: defaultStyle.sizes.subtitle,
   },
 });
 

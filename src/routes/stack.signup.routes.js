@@ -1,7 +1,6 @@
 import { Fragment } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import defaultStyle from "../defaultStyle";
 const { Screen, Navigator } = createNativeStackNavigator();
 
 import Signup from "../screens/Signup";
@@ -26,9 +25,6 @@ const SignupNavigation = () => {
           component={VerifyId}
           options={{
             title: "Verificar Conta",
-            headerStyle: {
-              headerBackgroundColor: defaultStyle.colors.mainColorBlue,
-            },
           }}
         />
         <Screen
@@ -43,9 +39,6 @@ const SignupNavigation = () => {
           component={ForgotPassword}
           options={{
             title: "Recuperar senha",
-            headerStyle: {
-              headerBackgroundColor: defaultStyle.colors.mainColorBlue,
-            },
           }}
         />
 
@@ -54,9 +47,6 @@ const SignupNavigation = () => {
           component={CreatePasswordScreen}
           options={{
             title: "Criar Senha",
-            headerStyle: {
-              headerBackgroundColor: defaultStyle.colors.mainColorBlue,
-            },
           }}
         />
       </Navigator>
