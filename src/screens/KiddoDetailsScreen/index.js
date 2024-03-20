@@ -65,7 +65,7 @@ const KiddoDetailsScreen = (props) => {
           <View>
             <Image
               source={require("./../../../assets/img/boy-avatar.png")}
-              style={styles.kiddoImg}
+              style={styles.avatar}
             />
             <TouchableOpacity style={styles.buttonChangeImg}>
               <Entypo

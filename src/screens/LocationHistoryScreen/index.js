@@ -15,6 +15,7 @@ import defaultStyle from "../../defaultStyle";
 import { useNavigation } from "@react-navigation/native";
 
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+
 import { gestureHandlerRootHOC } from "react-native-gesture-handler"; //Gerenciador de Gestos no Mobile
 import { relativeTime, formatDate } from "../../utils/format-date";
 
@@ -99,6 +100,7 @@ function LocationHistoryScreen() {
 
   return (
     <View style={styles.container}>
+      {/* //ToDo -Verificar se tem notificação antes de rodar para mostrar */}
       <FlatList
         data={HISTORICO_BRUTO}
         keyExtractor={(item, index) => new Date().getTime() + item + index}
@@ -133,7 +135,7 @@ function LocationHistoryScreen() {
       <BottomSheet //Modal Para Mostrar os Detalhes da Actividade
         ref={bottomSheetRef}
         index={0} //começa fechado
-        snapPoints={[1, height - 160, height - 340]}
+        snapPoints={[1, "100%", "50%"]}
         handleIndicatorStyle={{
           backgroundColor: defaultStyle.colors.mainColorBlue,
         }}
@@ -142,8 +144,11 @@ function LocationHistoryScreen() {
         }}
         style={{
           shadowColor: defaultStyle.colors.dark,
-          shadowOpacity: 0.45,
-          shadowOffset: [1, 2],
+          shadowOpacity: 0.2,
+          shadowOffset: {
+            width: 1,
+            height: 1,
+          },
         }}
       >
         <BottomSheetView style={styles.containerSheet}>

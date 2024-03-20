@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: defaultStyle.borderRadio.cards[0],
   },
-  kiddoImg: {
+  avatar: {
     width: 80,
     height: 80,
   },

@@ -14,7 +14,7 @@ import defaultStyle from "../defaultStyle";
 
 import AlertScreen from "../screens/AlertScreen";
 import LocationHistoryScreen from "../screens/LocationHistoryScreen";
-import Profile from "../screens/Profile";
+import ProfileStack from "../routes/stack.profile.routes";
 import NewFecing from "../screens/NewFecing";
 import Map from "../screens/Map";
 import KiddoDetailsScreen from "./../screens/KiddoDetailsScreen";
@@ -66,6 +66,7 @@ export default function TabRoutes() {
             headerTitle: () => <Header name="Mapa" />,
             headerRight: () => (
               <TouchableOpacity
+                // Estudar a biblioteca para renderizar correctamente botões no Header [React-native navigation]
                 style={styles.container}
                 onPress={() => {
                   handleKiddoModalOpen();
@@ -117,10 +118,10 @@ export default function TabRoutes() {
               <TouchableOpacity
                 style={styles.container}
                 onPress={() => {
-                  alert('Configuração de alertas')
+                  alert("Configuração de alertas");
                 }}
               >
-               <Text style={styles.textConfig}>Configuração</Text>
+                <Text style={styles.textConfig}>Configuração</Text>
               </TouchableOpacity>
             ),
             tabBarBadge: 3,
@@ -128,7 +129,7 @@ export default function TabRoutes() {
         />
         <Screen
           name="Perfil"
-          component={Profile}
+          component={ProfileStack}
           options={{
             tabBarIcon: ({ size, color }) => (
               <FontAwesome5 name="user" size={size} color={color} />
@@ -193,6 +194,6 @@ const styles = StyleSheet.create({
 
   textConfig: {
     color: defaultStyle.colors.white,
-    fontWeight: 'bold'
-  }
+    fontWeight: "bold",
+  },
 });
