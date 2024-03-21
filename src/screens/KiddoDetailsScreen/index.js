@@ -152,7 +152,7 @@ const KiddoDetailsScreen = (props) => {
           </View>
           <View>
             <Text style={styles.labels}>Gênero</Text>
-            <Picker
+            <Picker 
               style={styles.picker}
               // selectedValue={selectedGender}
               // onValueChange={(itemValue, itemIndex) => setSelectedGender(itemValue)}

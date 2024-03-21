@@ -29,7 +29,7 @@ export default function Profile({ navigation }) {
       <ScrollView showsVerticalScrollIndicator={false} style={styles.menu}>
         <TouchableOpacity
           style={styles.menuItem}
-          onPress={() => navigation.navigate("Account")}
+          onPress={() => navigation.navigate("Profile", { screen: "Account" })}
         >
           <View style={styles.itemDesc}>
             <View style={styles.itemIco}>
@@ -81,7 +81,9 @@ export default function Profile({ navigation }) {
             size={20}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity style={styles.menuItem} onPress={()=>{
+          navigation.navigate("Setting")
+        }}>
           <View style={styles.itemDesc}>
             <View style={styles.itemIco}>
               <FontAwesome

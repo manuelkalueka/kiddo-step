@@ -9,7 +9,7 @@ import Login from "../screens/Login";
 import ForgotPassword from "../screens/ForgotPassword";
 import CreatePasswordScreen from "../screens/CreatePasswordScreen";
 
-const SignupNavigation = () => {
+const AuthRoutes = () => {
   return (
     <Fragment>
       <Navigator initialRouteName="Login">
@@ -54,4 +54,4 @@ const SignupNavigation = () => {
   );
 };
 
-export default SignupNavigation;
+export default AuthRoutes;

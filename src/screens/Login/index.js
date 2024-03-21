@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import {
    Text,
    TextInput,
@@ -11,6 +10,7 @@ import {
    Platform,
    View
 } from "react-native";
+
 import { handleDisableKeyboard } from "../../utils/dismiss-keyboard";
 
 import { Controller, useForm } from "react-hook-form";
@@ -36,10 +36,6 @@ const Schema = yup.object({
 
 export default function Login({ navigation }) {
   const [showpassword, setShowPassword] = useState(true);
-
-  // const dismissKeyboard = ()=>{
-  //   Keyboard.dismiss()
-  // }
 
   const {
     control,
