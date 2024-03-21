@@ -157,7 +157,7 @@ const KiddoDetailsScreen = (props) => {
               // selectedValue={selectedGender}
               // onValueChange={(itemValue, itemIndex) => setSelectedGender(itemValue)}
             >
-              <Picker.Item label="Selecione um gênero" value="" />
+              <Picker.Item label="Selecione um gênero" value="" /> 
               <Picker.Item label="Masculino" value="masculino" />
               <Picker.Item label="Feminino" value="feminino" />
             </Picker>

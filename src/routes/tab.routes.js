@@ -6,10 +6,12 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  TextInput
 } from "react-native";
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import BottomSheet from '@gorhom/bottom-sheet'
-import { TouchableWithoutFeedback } from 'react-native'
+import { Picker } from '@react-native-picker/picker'
+
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Entypo, FontAwesome5, FontAwesome } from "@expo/vector-icons";
@@ -32,6 +34,7 @@ const { Navigator, Screen } = Tab;
 export default function TabRoutes() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModal2Visible, setisModal2Vissible] = useState(false);
+  const [selectedValue, setSelectedValue] = useState(null)
 
   const bottomSheet = useRef(null)
   const snapPoints = useMemo(()=>['50%', '86%'], []) 
@@ -181,11 +184,24 @@ export default function TabRoutes() {
               snapPoints={snapPoints}
               enablePanDownToClose={true}
               onChange={handleChange}
-              backgroundStyle={defaultStyle.colors.white}
-              handleIndicatorStyle={{backgroundColor: defaultStyle.colors.mainColorBlue,}}
+              backgroundStyle={{backgroundColor: defaultStyle.colors.light,}}
+              handleIndicatorStyle={{backgroundColor: defaultStyle.colors.mainColorBlue}}
             >
-              <View>
-                <Text>My bottomsheet action</Text>
+              <View style={styles.containerAlert}>
+                  <Text>Configuração de alertas</Text>
+
+                  <Text style={styles.labels}> Tipo de alerta</Text>
+                  <Picker
+                    selectedValue={selectedValue}
+                    onValueChange={(itemValue, itemIndex)=>setSelectedValue(itemValue)}
+                    style={styles.input}
+                  >
+                    <Picker.Item label="Selecione o tipo de alerta" value={''} />
+                    <Picker.Item label="Entrada a escola" value={1} />
+                    <Picker.Item label="Saída da escola" value={2} />
+                    <Picker.Item label="Entrada em área restrita" value={3} />
+
+                  </Picker>
               </View>
             </BottomSheet>
           </GestureHandlerRootView>
@@ -244,6 +260,26 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%',
     backgroundColor: '#0009'
+  },
+
+  containerAlert: {
+    padding: 20,
+  },
+
+  labels: {
+    fontSize: defaultStyle.sizes.inputLabels,
+    color: defaultStyle.colors.dark,
+    marginVertical: 10,
+    fontWeight: "300",
+  },
+
+  input: {
+    paddingVertical: Platform.OS === "ios" ? 16 : 8,
+    paddingHorizontal: 5,
+    fontSize: 16,
+    flex: 1,
+    backgroundColor: defaultStyle.colors.white,
+    borderRadius: defaultStyle.borderRadio.borderRadioInput,
   }
 
 });
