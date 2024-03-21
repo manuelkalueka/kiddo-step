@@ -11,19 +11,17 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     backgroundColor: defaultStyle.colors.grayAccent1,
-    borderTopLeftRadius: defaultStyle.borderRadio.normal,
-    borderTopRightRadius: defaultStyle.borderRadio.normal
   },
 
   buttonReadNotif: {
     alignSelf: 'center',
-    width: '95%',
+    width: '98%',
     padding: 5,
     backgroundColor: defaultStyle.colors.white,
     borderTopLeftRadius: defaultStyle.borderRadio.normal,
     borderTopRightRadius: defaultStyle.borderRadio.normal,
-    marginBottom: 10,
-    marginVertical: '2%'
+    marginBottom: 4,
+    marginVertical: '1%'
   },
 
   textButtonReadNotif: {
@@ -36,13 +34,14 @@ const styles = StyleSheet.create({
   labelNotif: {
     fontSize: defaultStyle.sizes.label,
     fontWeight: 'bold',
-    margin: 2
+    padding: 5,
+    color: 'gray'
   },
 
   mainNotifications: {
     width: '100%',
     backgroundColor: defaultStyle.colors.white,
-    height: '90%',
+    height: '94%',
     paddingVertical: '5%'
   },
 

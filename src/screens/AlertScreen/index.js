@@ -7,6 +7,7 @@ import defaultStyle from "../../defaultStyle";
 export default function AlertScreen() {
   return(
     <View style={styles.container}>
+
       <View style={styles.body}>
 
         <TouchableOpacity style={styles.buttonReadNotif} activeOpacity={0.6}>

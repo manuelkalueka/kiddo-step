@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useMemo, useRef, useCallback } from "react";
 import {
   Modal,
   Text,
@@ -7,6 +7,10 @@ import {
   Image,
   StyleSheet,
 } from "react-native";
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import BottomSheet from '@gorhom/bottom-sheet'
+import { TouchableWithoutFeedback } from 'react-native'
+
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Entypo, FontAwesome5, FontAwesome } from "@expo/vector-icons";
 
@@ -27,6 +31,10 @@ const { Navigator, Screen } = Tab;
 
 export default function TabRoutes() {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModal2Visible, setisModal2Vissible] = useState(false);
+
+  const bottomSheet = useRef(null)
+  const snapPoints = useMemo(()=>['50%', '86%'], []) 
 
   function handleKiddoModalOpen() {
     setIsModalVisible(true);
@@ -35,6 +43,13 @@ export default function TabRoutes() {
   function handleModalClose() {
     setIsModalVisible(false);
   }
+
+  const handleChange = useCallback((index)=>{
+    //Se o bottomSheet arrastado todo ele para baixo então fecha o modal
+    if(index == -1){
+      setisModal2Vissible(false)
+    }
+  },[])
 
   return (
     <Fragment>
@@ -116,12 +131,10 @@ export default function TabRoutes() {
             headerRight: () => (
               <TouchableOpacity
                 style={styles.container}
-                onPress={() => {
-                  alert('Configuração de alertas')
-                }}
+                onPress={() => setisModal2Vissible(true)}//Põe visible o modal do bottomSheet
               >
                <Text style={styles.textConfig}>Configuração</Text>
-              </TouchableOpacity>
+              </TouchableOpacity>    
             ),
             tabBarBadge: 3,
           }}
@@ -143,6 +156,7 @@ export default function TabRoutes() {
         animationType="slide"
         presentationStyle="pageSheet"
       >
+
         <View style={{ flex: 1 }}>
           <KiddoDetailsScreen />
           <TouchableOpacity
@@ -153,9 +167,39 @@ export default function TabRoutes() {
           </TouchableOpacity>
         </View>
       </Modal>
+      
+      <Modal
+        transparent={true}
+        visible={isModal2Visible}
+      >
+        <View style={styles.modalFocus}>
+        
+          <GestureHandlerRootView style={{flex:1}}>
+            <BottomSheet
+              ref={bottomSheet}
+              index={1}
+              snapPoints={snapPoints}
+              enablePanDownToClose={true}
+              onChange={handleChange}
+              backgroundStyle={defaultStyle.colors.white}
+              handleIndicatorStyle={{backgroundColor: defaultStyle.colors.mainColorBlue,}}
+            >
+              <View>
+                <Text>My bottomsheet action</Text>
+              </View>
+            </BottomSheet>
+          </GestureHandlerRootView>
+        </View>
+      </Modal>
+   
+
     </Fragment>
+    
   );
 }
+/*
+  De Tiago "Quando clicar no botão config da screen alertas, abre um modal e dentro do modal contem o bottomSheet e o formulário para cadastrar ou config os alertas." 
+*/
 
 const styles = StyleSheet.create({
   container: {
@@ -194,5 +238,12 @@ const styles = StyleSheet.create({
   textConfig: {
     color: defaultStyle.colors.white,
     fontWeight: 'bold'
+  },
+
+  modalFocus: {
+    height: '100%',
+    width: '100%',
+    backgroundColor: '#0009'
   }
+
 });
