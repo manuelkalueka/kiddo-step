@@ -27,6 +27,7 @@ import KiddoDetailsScreen from "./../screens/KiddoDetailsScreen";
 
 import ButtonNewfecing from "../components/ButtonNewfecing";
 import Header from "../components/Header";
+import ActionButtom from "../components/ActionButtom";
 
 const Tab = createBottomTabNavigator();
 const { Navigator, Screen } = Tab;
@@ -188,7 +189,7 @@ export default function TabRoutes() {
               handleIndicatorStyle={{backgroundColor: defaultStyle.colors.mainColorBlue}}
             >
               <View style={styles.containerAlert}>
-                  <Text>Configuração de alertas</Text>
+                  <Text style={styles.headerTitle}>Configurar um novo alerta</Text>
 
                   <Text style={styles.labels}> Tipo de alerta</Text>
                   <Picker
@@ -202,6 +203,11 @@ export default function TabRoutes() {
                     <Picker.Item label="Entrada em área restrita" value={3} />
 
                   </Picker>
+
+                  <ActionButtom
+                    textButton = 'Guardar as alterações'
+                    onPress={()=>alert('Guardada')}
+                  />
               </View>
             </BottomSheet>
           </GestureHandlerRootView>
@@ -280,6 +286,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: defaultStyle.colors.white,
     borderRadius: defaultStyle.borderRadio.borderRadioInput,
+  },
+
+  headerTitle: {
+    color: defaultStyle.colors.dark,
+    fontWeight: "bold",
+    fontSize: defaultStyle.sizes.titleSmall,
+    paddingVertical:10,
   }
 
 });
