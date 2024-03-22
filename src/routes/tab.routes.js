@@ -14,7 +14,7 @@ import { Picker } from '@react-native-picker/picker'
 
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Entypo, FontAwesome5, FontAwesome } from "@expo/vector-icons";
+import { Entypo, FontAwesome5, FontAwesome, AntDesign } from "@expo/vector-icons";
 
 import defaultStyle from "../defaultStyle";
 
@@ -136,7 +136,7 @@ export default function TabRoutes() {
                 style={styles.container}
                 onPress={() => setisModal2Vissible(true)}//Põe visible o modal do bottomSheet
               >
-               <Text style={styles.textConfig}>Configuração</Text>
+               <Text style={styles.textConfig}> <FontAwesome name="gear" size={25}/></Text>
               </TouchableOpacity>    
             ),
             tabBarBadge: 3,
