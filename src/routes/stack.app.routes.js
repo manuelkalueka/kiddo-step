@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 const { Screen, Navigator } = createNativeStackNavigator();
@@ -11,18 +11,62 @@ import NewFecing from "../screens/NewFecing";
 import Map from "../screens/Map";
 //-----------------------------------------------------
 
-const AppStack = () => {
+export function MapStack() {
   return (
-    <Fragment>
-      <Navigator initialRouteName="Mapa">
-        <Screen name="Mapa" component={Map} />
-        <Screen name="locationHistory" component={LocationHistoryScreen} />
-        <Screen name="Cerca" component={NewFecing} />
-        <Screen name="Alertas" component={AlertScreen} />
-        <Screen name="Perfil" component={ProfileStack} />
-      </Navigator>
-    </Fragment>
+    <Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Screen name="Mapa" component={Map} />
+    </Navigator>
   );
-};
+}
 
-export default AppStack;
+export function LocationHistoryStack() {
+  return (
+    <Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Screen name="LocationHistory" component={LocationHistoryScreen} />
+    </Navigator>
+  );
+}
+
+export function FencigStack() {
+  return (
+    <Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Screen name="Cerca" component={NewFecing} />
+    </Navigator>
+  );
+}
+
+export function ProfileAllStack() {
+  return (
+    <Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Screen name="Perfil" component={ProfileStack} />
+    </Navigator>
+  );
+}
+
+export function AlertStack() {
+  return (
+    <Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Screen name="Alertas" component={AlertScreen} />
+    </Navigator>
+  );
+}

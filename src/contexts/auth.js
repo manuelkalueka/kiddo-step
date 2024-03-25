@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage"; //armazenar dados em string no dispositivo
 import { signInService } from "./../services/auth-services.js";
 import api from "../services/api.js";
+import { Alert } from "react-native";
 const contextFormat = {
   signed: true,
   user: {},
@@ -20,13 +21,11 @@ export const AuthProvider = ({ children }) => {
       const storagedUser = await AsyncStorage.getItem("@KiddoStepAuth");
       const storagedToken = await AsyncStorage.getItem("@KiddoStepToken");
 
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
       if (storagedUser && storagedToken) {
         setUser(JSON.parse(storagedUser));
         api.defaults.headers["x-access-token"] = `Bearer ${storagedToken}`;
-        setLoading(false);
       }
+      setLoading(false);
     }
 
     loadStorageData();
@@ -43,7 +42,7 @@ export const AuthProvider = ({ children }) => {
       );
       await AsyncStorage.setItem("@KiddoStepToken", response.token);
     } catch (error) {
-      console.log(error);
+      Alert.alert("Credenciais Inválidas", "Tente Novamente!");
     }
   }
 
@@ -63,6 +62,6 @@ export const AuthProvider = ({ children }) => {
 };
 
 export function useAuth() {
- const context =  useContext(AuthContext);
- return context;
+  const context = useContext(AuthContext);
+  return context;
 }

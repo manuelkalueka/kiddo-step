@@ -1,10 +1,10 @@
-import { Router } from "./src/routes/router";
 import { NavigationContainer } from "@react-navigation/native";
 
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StyleSheet } from "react-native";
 import defaultStyle from "./src/defaultStyle";
+import { Router } from "./src/routes/router";
 
 import { AuthProvider } from "./src/contexts/auth";
 

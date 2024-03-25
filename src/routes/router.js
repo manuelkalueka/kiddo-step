@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 import LoadingComponent from "../../src/components/LoadingComponent";
 
-import {useAuth} from "../contexts/auth";
+import { useAuth } from "../contexts/auth";
 // ----------- Stacks ---------------------
-import AppStack from "./stack.app.routes";
 import AuthRoutes from "./stack.auth.routes";
+import TabRoutes from "../routes/tab.routes";
 //-----------------------------------------------
 
 export function Router() {
@@ -15,5 +15,5 @@ export function Router() {
     return <LoadingComponent />;
   }
 
-  return signed ? <AppStack /> : <AuthRoutes />;
+  return signed ? <TabRoutes /> : <AuthRoutes />;
 }

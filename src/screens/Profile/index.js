@@ -1,3 +1,4 @@
+import React from "react";
 import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
 import {
   FontAwesome,
@@ -11,7 +12,14 @@ import styles from "./style";
 import defaultStyle from "../../defaultStyle";
 import ActionButtom from "../../components/ActionButtom";
 
+import { useAuth } from "../../contexts/auth";
+
 export default function Profile({ navigation }) {
+  function handleSignOut() {
+    signOut();
+  }
+
+  const { signOut } = useAuth();
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -81,9 +89,12 @@ export default function Profile({ navigation }) {
             size={20}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem} onPress={()=>{
-          navigation.navigate("Setting")
-        }}>
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => {
+            navigation.navigate("Setting");
+          }}
+        >
           <View style={styles.itemDesc}>
             <View style={styles.itemIco}>
               <FontAwesome
@@ -118,7 +129,7 @@ export default function Profile({ navigation }) {
           />
         </TouchableOpacity>
         <View>
-          <ActionButtom textButton="Terminar Sessão" />
+          <ActionButtom textButton="Terminar Sessão" onPress={handleSignOut} />
         </View>
       </ScrollView>
     </View>
