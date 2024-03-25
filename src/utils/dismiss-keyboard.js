@@ -1,5 +1,5 @@
-const handleDisableKeyboard = (keyboard)=>{
-  keyboard.dismiss();
-}
+const handleDisableKeyboard = (keyboard) => {
+  keyboard?.dismiss();
+};
 
-export {handleDisableKeyboard}
+export { handleDisableKeyboard };
