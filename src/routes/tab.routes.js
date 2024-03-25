@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import React, { Fragment, useState } from "react";
 import {
   Modal,
   Text,
@@ -8,18 +8,19 @@ import {
   StyleSheet,
 } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Entypo, FontAwesome5, FontAwesome } from "@expo/vector-icons";
+import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 
 import defaultStyle from "../defaultStyle";
-
-import AlertScreen from "../screens/AlertScreen";
-import LocationHistoryScreen from "../screens/LocationHistoryScreen";
-import ProfileStack from "../routes/stack.profile.routes";
-import NewFecing from "../screens/NewFecing";
-import Map from "../screens/Map";
-import KiddoDetailsScreen from "./../screens/KiddoDetailsScreen";
-
 import ButtonNewfecing from "../components/ButtonNewfecing";
+import {
+  AlertStack,
+  MapStack,
+  FencigStack,
+  ProfileAllStack,
+  LocationHistoryStack,
+} from "../routes/stack.app.routes";
+
+import KiddoDetailsScreen from "./../screens/KiddoDetailsScreen";
 import Header from "../components/Header";
 
 const Tab = createBottomTabNavigator();
@@ -39,7 +40,7 @@ export default function TabRoutes() {
   return (
     <Fragment>
       <Navigator
-        initialRouteName="Mapa"
+        initialRouteName="MapaTab"
         screenOptions={{
           headerStyle: {
             backgroundColor: defaultStyle.colors.mainColorBlue,
@@ -57,8 +58,8 @@ export default function TabRoutes() {
         }}
       >
         <Screen
-          name="Mapa"
-          component={Map}
+          name="MapaTab"
+          component={MapStack}
           options={{
             tabBarIcon: ({ size, color }) => (
               <Entypo name="location" size={size} color={color} />
@@ -85,8 +86,8 @@ export default function TabRoutes() {
           }}
         />
         <Screen
-          name="locationHistory"
-          component={LocationHistoryScreen}
+          name="LocationHistoryTab"
+          component={LocationHistoryStack}
           options={{
             tabBarIcon: ({ size, color }) => (
               <FontAwesome5 name="history" size={size} color={color} />
@@ -96,8 +97,8 @@ export default function TabRoutes() {
           }}
         />
         <Screen
-          name="Cerca"
-          component={NewFecing}
+          name="CercaTab"
+          component={FencigStack}
           options={{
             tabBarIcon: ({ focused, size, color }) => (
               <ButtonNewfecing size={size} color={color} focused={focused} />
@@ -107,8 +108,8 @@ export default function TabRoutes() {
           }}
         />
         <Screen
-          name="Alertas"
-          component={AlertScreen}
+          name="AlertasTab"
+          component={AlertStack}
           options={{
             tabBarIcon: ({ size, color }) => (
               <Entypo name="notification" size={size} color={color} />
@@ -125,16 +126,18 @@ export default function TabRoutes() {
               </TouchableOpacity>
             ),
             tabBarBadge: 3,
+            tabBarLabel: "Alertas",
           }}
         />
         <Screen
-          name="Perfil"
-          component={ProfileStack}
+          name="PerfilTab"
+          component={ProfileAllStack}
           options={{
             tabBarIcon: ({ size, color }) => (
               <FontAwesome5 name="user" size={size} color={color} />
             ),
             headerTitle: () => <Header name="Perfil" />,
+            tabBarLabel: "Perfil",
           }}
         />
       </Navigator>
