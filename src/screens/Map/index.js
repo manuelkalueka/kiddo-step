@@ -1,8 +1,44 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
+import {
+  requestForegroundPermissionsAsync,
+  getCurrentPositionAsync,
+  watchPositionAsync,
+  LocationAccuracy,
+} from "expo-location"; // localização
+
+import styles from "./styles";
 
 export default function Map() {
+  const [location, setLocation] = useState(null);
+  const mapRef = useRef(null); //Referencia do Mapa na Tela
+
+  useEffect(() => {
+    //Pedir Permissão ao Abrir o APP
+    requestLocationPermissions();
+  }, []);
+
+  useEffect(() => {
+    watchPositionAsync(
+      //Vigia a Localização do Dispositivo
+      {
+        accuracy: LocationAccuracy.Highest, //Precisão da Localização
+        timeInterval: 1000, //intervalo de Actualização
+        distanceInterval: 1, //Pesquisar estaaa
+      },
+      (response) => {
+        //Recebe a localização e Actualiza
+        setLocation(response);
+        mapRef.current?.animateCamera({
+          //Camera do Mapa
+          pitch: 70,
+          center: response.coords,
+        });
+      }
+    );
+  }, []);
+
   const PLACES = [
     {
       id: 1,
@@ -221,22 +257,37 @@ export default function Map() {
       longitude: -151.007,
     },
   ];
-  let place = {};
-  setInterval(() => {
-    place = PLACES[Math.floor(Math.random() * PLACES.length)];
-  }, 30000);
-  const aPlace = place;
+
+  async function requestLocationPermissions() {
+    const { granted } = await requestForegroundPermissionsAsync();
+
+    if (granted) {
+      const currentPosition = await getCurrentPositionAsync();
+      setLocation(currentPosition);
+    }
+  }
 
   return (
-    <View style={{ flex: 1 }}>
-      <MapView style={{ height: "100%" }} c>
-        <Marker
-          coordinate={{
-            longitude: PLACES[0].longitude,
-            latitude: PLACES[0].latitude,
+    <View style={styles.container}>
+      {location && ( //Verifica se tem localiza e chama o mapa
+        <MapView
+          ref={mapRef}
+          style={styles.map}
+          initialRegion={{
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
           }}
-        />
-      </MapView>
+        >
+          <Marker // Pin da Localização
+            coordinate={{
+              latitude: location.coords.latitude,
+              longitude: location.coords.longitude,
+            }}
+          />
+        </MapView>
+      )}
     </View>
   );
 }
