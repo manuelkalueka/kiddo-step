@@ -9,11 +9,11 @@ import TabRoutes from "../routes/tab.routes";
 
 export function Router() {
   const { signed, loading } = useAuth();
-
+ 
   if (loading) {
     // COLOCAR O EXPO SPLASH SCREEN
     return <LoadingComponent />;
+  } else {
+    return signed ? <TabRoutes /> : <AuthRoutes />;
   }
-
-  return signed ? <TabRoutes /> : <AuthRoutes />;
 }

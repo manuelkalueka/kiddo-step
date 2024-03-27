@@ -1,5 +1,6 @@
 import React from "react";
-import { View, ScrollView, Text, TouchableOpacity, Slider } from "react-native";
+import { View, ScrollView, Text, TouchableOpacity } from "react-native";
+import { useAuth } from "../../contexts/auth";
 import { AntDesign } from "@expo/vector-icons";
 
 import defaultStyle from "../../defaultStyle";
@@ -8,6 +9,12 @@ import ActionButtom from "../../components/ActionButtom";
 import styles from "./styles";
 
 const SettingScreen = () => {
+  function handleSignOut() {
+    //ToDo pedir confirmação ao Sair
+    signOut();
+  }
+
+  const { signOut } = useAuth();
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false} style={styles.menu}>
@@ -84,7 +91,7 @@ const SettingScreen = () => {
           </TouchableOpacity>
         </View>
         <View style={styles.wrapper}>
-          <ActionButtom textButton="Terminar Sessão" />
+          <ActionButtom textButton="Terminar Sessão" onPress={handleSignOut} />
         </View>
         <View style={styles.footer}>
           <Text style={styles.descFooter}>Kiddo Step, 2024 © v1.0.0</Text>

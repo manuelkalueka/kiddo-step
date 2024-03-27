@@ -1,13 +1,26 @@
-export function signInService() {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        token: "ddjhsjfhsjfhjsbfuehfdjhfjdhfidfuiytrhg",
-        user: {
-          name: "Manuel Kalueka",
-          email: "kalueka@gmail.com",
-        },
-      });
-    }, 2000);
-  });
+import ApiMananger from "./api";
+import { Alert } from "react-native";
+
+async function signInService(email, password) {
+  const reqUser = { email, password };
+  try {
+    //LOGICA PARA MANDAR NA API
+    const { data } = await ApiMananger.post("/users/login", reqUser);
+
+    const { user, token } = data;
+    return { user, token };
+  } catch (error) {
+    Alert.alert(error?.message, "Tente Novamente!");
+  }
 }
+
+async function signUpService() {
+
+  try {
+    
+  } catch (error) {
+    Alert.alert(error?.message, "Tente Novamente!");
+  }
+}
+
+export { signInService, signUpService };
