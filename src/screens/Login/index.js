@@ -48,7 +48,7 @@ export default function Login({ navigation }) {
   });
 
   const sendForm = async (data) => {
-    signIn();
+    signIn(data);
   };
 
   return (
