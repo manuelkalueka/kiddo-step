@@ -1,62 +1,106 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View } from "react-native";
+import { View, Text, ActivityIndicator, Alert } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import {
   requestForegroundPermissionsAsync,
   getCurrentPositionAsync,
   watchPositionAsync,
   LocationAccuracy,
-} from "expo-location"; // localização
+} from "expo-location";
 
 import styles from "./styles";
+import defaultStyle from "../../defaultStyle";
 
 export default function Map() {
   const [location, setLocation] = useState(null);
-  const mapRef = useRef(null); //Referencia do Mapa na Tela
+  const [loading, setLoading] = useState(true);
+  const mapRef = useRef(null);
 
   async function requestLocationPermissions() {
-    const { granted } = await requestForegroundPermissionsAsync();
+    try {
+      const { granted } = await requestForegroundPermissionsAsync();
 
-    if (granted) {
-      const currentPosition = await getCurrentPositionAsync();
-      setLocation(currentPosition);
+      if (granted) {
+        const currentPosition = await getCurrentPositionAsync();
+        setLocation(currentPosition);
+      } else {
+        Alert.alert(
+          "Permissão de localização negada",
+          "O aplicativo precisa de permissão de localização para funcionar corretamente."
+        );
+      }
+    } catch (error) {
+      console.error("Erro ao obter permissões de localização:", error);
+      Alert.alert(
+        "Erro",
+        "Ocorreu um erro ao obter permissões de localização."
+      );
     }
   }
 
   useEffect(() => {
-    //Pedir Permissão ao Abrir o APP
     requestLocationPermissions();
   }, []);
 
   useEffect(() => {
-    watchPositionAsync(
-      //Vigia a Localização do Dispositivo
-      {
-        accuracy: LocationAccuracy.Highest, //Precisão da Localização
-        timeInterval: 1000, //intervalo de Actualização
-        distanceInterval: 1, //Pesquisar estaaa
-      },
-      (response) => {
-        //Recebe a localização e Actualiza
-        setLocation(response);
-        const { latitude, longitude } = response.coords;
-        mapRef.current?.animateCamera({
-          //Camera do Mapa
-          pitch: 70,
-          center: {
-            latitude,
-            longitude,
+    let watchPositionSubscription;
+
+    async function startLocationWatch() {
+      try {
+        watchPositionSubscription = watchPositionAsync(
+          {
+            accuracy: LocationAccuracy.Highest,
+            timeInterval: 1000,
+            distanceInterval: 1,
           },
-          pitch: 70,
-          heading: response.coords.heading,
-        });
+          (response) => {
+            setLocation(response);
+            const { latitude, longitude } = response.coords;
+            mapRef.current?.animateCamera({
+              pitch: 70,
+              center: {
+                latitude,
+                longitude,
+              },
+              heading: response.coords.heading,
+            });
+          }
+        );
+      } catch (error) {
+        console.error("Erro ao iniciar a vigilância da localização:", error);
+        Alert.alert(
+          "Erro",
+          "Ocorreu um erro ao iniciar a vigilância da localização."
+        );
       }
-    );
+    }
+
+    startLocationWatch();
+
+    return () => {
+      if (watchPositionSubscription) {
+        watchPositionSubscription.remove();
+      }
+    };
   }, []);
+
+  useEffect(() => {
+    if (location) {
+      setLoading(false);
+    }
+  }, [location]);
 
   return (
     <View style={styles.container}>
-      {location && ( //Verifica se tem localiza e chama o mapa
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator
+            size="large"
+            color={defaultStyle.colors.mainColorBlue}
+          />
+          <Text>Obtendo localização...</Text>
+        </View>
+      ) : location ? (
         <MapView
           ref={mapRef}
           style={styles.map}
@@ -74,18 +118,18 @@ export default function Map() {
             },
             heading: location.coords.heading,
           }}
-          // (Tipos de Mapa)
           mapType="hybrid"
-          //Botão de Mostrar Localização do Usuário apenas com Google Maps ou Android
           showsMyLocationButton={true}
         >
-          <Marker // Pin da Localização
+          <Marker
             coordinate={{
               latitude: location.coords.latitude,
               longitude: location.coords.longitude,
             }}
           />
         </MapView>
+      ) : (
+        <Text>Falha ao obter localização.</Text>
       )}
     </View>
   );
