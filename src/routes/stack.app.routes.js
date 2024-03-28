@@ -9,6 +9,7 @@ import LocationHistoryScreen from "../screens/LocationHistoryScreen";
 import ProfileStack from "./stack.profile.routes";
 import NewFecing from "../screens/NewFecing";
 import Map from "../screens/Map";
+import KiddoDetailsScreen from "./../screens/KiddoDetailsScreen";
 //-----------------------------------------------------
 
 export function MapStack() {
@@ -19,6 +20,11 @@ export function MapStack() {
       }}
     >
       <Screen name="Mapa" component={Map} />
+      <Screen
+        name="KiddoDetails"
+        component={KiddoDetailsScreen}
+        options={{ presentation: "modal" }}
+      />
     </Navigator>
   );
 }
