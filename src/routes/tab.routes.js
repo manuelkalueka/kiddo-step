@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
 import {
   Modal,
   Text,
@@ -7,6 +7,7 @@ import {
   Image,
   StyleSheet,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 
@@ -20,21 +21,15 @@ import {
   LocationHistoryStack,
 } from "../routes/stack.app.routes";
 
-import KiddoDetailsScreen from "./../screens/KiddoDetailsScreen";
 import Header from "../components/Header";
 
 const Tab = createBottomTabNavigator();
 const { Navigator, Screen } = Tab;
 
 export default function TabRoutes() {
-  const [isModalVisible, setIsModalVisible] = useState(false);
-
+  const navigation = useNavigation();
   function handleKiddoModalOpen() {
-    setIsModalVisible(true);
-  }
-
-  function handleModalClose() {
-    setIsModalVisible(false);
+    navigation.navigate("KiddoDetails");
   }
 
   return (
@@ -141,22 +136,6 @@ export default function TabRoutes() {
           }}
         />
       </Navigator>
-      <Modal
-        visible={isModalVisible}
-        onRequestClose={handleModalClose}
-        animationType="slide"
-        presentationStyle="pageSheet"
-      >
-        <View style={{ flex: 1 }}>
-          <KiddoDetailsScreen />
-          <TouchableOpacity
-            onPress={handleModalClose}
-            style={styles.containerButton}
-          >
-            <Text style={styles.buttonIcon}>Fechar</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
     </Fragment>
   );
 }
@@ -177,22 +156,6 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontWeight: "bold",
     color: defaultStyle.colors.blueDarkColor2,
-  },
-  containerButton: {
-    position: "absolute",
-    top: "2%",
-    right: "2%",
-    backgroundColor: "transparent",
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  buttonIcon: {
-    marginLeft: 5,
-    fontSize: 16,
-    color: defaultStyle.colors.white,
   },
 
   textConfig: {

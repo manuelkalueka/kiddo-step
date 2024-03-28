@@ -9,6 +9,7 @@ const contextFormat = {
   signIn: () => {},
   signOut: () => {},
 };
+
 const AuthContext = createContext(contextFormat);
 
 export const AuthProvider = ({ children }) => {

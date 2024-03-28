@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import {
   View,
   Text,
@@ -29,7 +29,7 @@ const KiddoSchema = yup.object({
   gender: yup.string().required("Informe o Genero"),
 });
 
-const KiddoDetailsScreen = (props) => {
+const KiddoDetailsScreen = () => {
   const {
     control,
     handleSubmit,
@@ -44,11 +44,29 @@ const KiddoDetailsScreen = (props) => {
 
   const navigation = useNavigation();
 
+  const [selectedLanguage, setSelectedLanguage] = useState();
+
+  const pickerRef = useRef();
+
+  function openPicker() {
+    pickerRef.current.focus();
+  }
+
+  function closePicker() {
+    pickerRef.current.blur();
+  }
+
   const STATUS_DEVICE = true;
   const BIRTH_DATE = () => {
     const date = new Date().toLocaleDateString();
     return date;
   };
+
+  function handleModalClose() {
+    navigation.goBack();
+  }
+
+  const kiddoAvatar = require("./../../../assets/img/boy-avatar.png");
 
   return (
     <View style={styles.container}>
@@ -57,16 +75,19 @@ const KiddoDetailsScreen = (props) => {
       ) : (
         <StatusBar style="auto" backgroundColor="#000" />
       )}
+      <TouchableOpacity
+        onPress={handleModalClose}
+        style={styles.containerButton}
+      >
+        <Text style={styles.buttonIcon}>Fechar</Text>
+      </TouchableOpacity>
       <Pressable
         style={styles.picContainer}
         onPress={() => handleDisableKeyboard(Keyboard)}
       >
         <View style={styles.detailContainer}>
           <View>
-            <Image
-              source={require("./../../../assets/img/boy-avatar.png")}
-              style={styles.avatar}
-            />
+            <Image source={kiddoAvatar} style={styles.avatar} />
             <TouchableOpacity style={styles.buttonChangeImg}>
               <Entypo
                 name="camera"
@@ -113,8 +134,8 @@ const KiddoDetailsScreen = (props) => {
         </View>
         <View style={styles.actionButtons}>
           <TouchableOpacity
-            style={[styles.actionItem]}
-            onPress={() => navigation.navigate("Alertas")}
+            style={styles.actionItem}
+            onPress={() => navigation.navigate("AlertasTab")}
           >
             <MaterialIcons
               name="add-alert"
@@ -124,8 +145,10 @@ const KiddoDetailsScreen = (props) => {
             <Text style={styles.textAction}>Definir Alerta</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.actionItem]}
-            onPress={() => navigation.navigate("Cerca")}
+            style={styles.actionItem}
+            onPress={() => {
+              navigation.navigate("CercaTab");
+            }}
           >
             <MaterialIcons
               name="add-location-alt"
@@ -152,14 +175,18 @@ const KiddoDetailsScreen = (props) => {
           </View>
           <View>
             <Text style={styles.labels}>Gênero</Text>
-            <Picker 
-              style={styles.picker}
-              // selectedValue={selectedGender}
-              // onValueChange={(itemValue, itemIndex) => setSelectedGender(itemValue)}
+            <Picker
+              ref={pickerRef}
+              selectedValue={selectedLanguage}
+              onValueChange={(itemValue, itemIndex) =>
+                setSelectedLanguage(itemValue)
+              }
+              onBlur={closePicker}
+              onFocus={openPicker}
+              style={{ width: 150, height: 50 }}
             >
-              <Picker.Item label="Selecione um gênero" value="" />
-              <Picker.Item label="Masculino" value="masculino" />
-              <Picker.Item label="Feminino" value="feminino" />
+              <Picker.Item key={0} label="Java" value="java" />
+              <Picker.Item key={1} label="JavaScript" value="js" />
             </Picker>
           </View>
           <Text style={styles.sectionTitle}>Detalhes de Saúde</Text>
