@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 const { Screen, Navigator } = createNativeStackNavigator();
@@ -11,46 +11,44 @@ import CreatePasswordScreen from "../screens/CreatePasswordScreen";
 
 const AuthRoutes = () => {
   return (
-    <Fragment>
-      <Navigator initialRouteName="Login">
-        <Screen
-          name="Signup"
-          component={Signup}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Screen
-          name="VerifyId"
-          component={VerifyId}
-          options={{
-            title: "Verificar Conta",
-          }}
-        />
-        <Screen
-          name="Login"
-          component={Login}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Screen
-          name="ForgotPassword"
-          component={ForgotPassword}
-          options={{
-            title: "Recuperar senha",
-          }}
-        />
+    <Navigator initialRouteName="Login">
+      <Screen
+        name="Signup"
+        component={Signup}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Screen
+        name="VerifyId"
+        component={VerifyId}
+        options={{
+          title: "Verificar Conta",
+        }}
+      />
+      <Screen
+        name="Login"
+        component={Login}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Screen
+        name="ForgotPassword"
+        component={ForgotPassword}
+        options={{
+          title: "Recuperar senha",
+        }}
+      />
 
-        <Screen
-          name="CreatePassword"
-          component={CreatePasswordScreen}
-          options={{
-            title: "Criar Senha",
-          }}
-        />
-      </Navigator>
-    </Fragment>
+      <Screen
+        name="CreatePassword"
+        component={CreatePasswordScreen}
+        options={{
+          title: "Criar Senha",
+        }}
+      />
+    </Navigator>
   );
 };
 

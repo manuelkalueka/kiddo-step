@@ -110,7 +110,7 @@ export default function Map() {
             },
             heading: location.coords.heading,
           }}
-          mapType="hybrid"
+          // mapType="hybrid"
           showsMyLocationButton={true}
         >
           <Marker

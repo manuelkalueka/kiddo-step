@@ -8,7 +8,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
 } from "react-native";
-import { handleDisableKeyboard } from "../../utils/dismiss-keyboard";
+import { handleDisableKeyboard } from "../../../utils/dismiss-keyboard";
 import { FontAwesome5 } from "@expo/vector-icons";
 import defaultStyle from "../../defaultStyle";
 

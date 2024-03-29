@@ -22,7 +22,7 @@ import * as yup from "yup";
 import styles from "./styles";
 import defaultStyle from "../../defaultStyle";
 import { StatusBar } from "expo-status-bar";
-import { handleDisableKeyboard } from "../../utils/dismiss-keyboard";
+import { handleDisableKeyboard } from "../../../utils/dismiss-keyboard";
 
 const KiddoSchema = yup.object({
   fullName: yup.string().required("Informe o Nome Completo"),

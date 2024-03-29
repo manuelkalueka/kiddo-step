@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 const { Screen, Navigator } = createNativeStackNavigator();
@@ -9,19 +9,17 @@ import AccountScreen from "./../screens/AccountScreen";
 
 const ProfileStack = () => {
   return (
-    <Fragment>
-      <Navigator initialRouteName="Profile">
-        <Screen
-          name="Profile"
-          component={Profile}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Screen name="Account" component={AccountScreen} />
-        <Screen name="Setting" component={SettingScreen} />
-      </Navigator>
-    </Fragment>
+    <Navigator initialRouteName="Profile">
+      <Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Screen name="Account" component={AccountScreen} />
+      <Screen name="Setting" component={SettingScreen} />
+    </Navigator>
   );
 };
 

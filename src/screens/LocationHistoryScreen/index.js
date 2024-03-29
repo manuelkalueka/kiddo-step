@@ -5,7 +5,7 @@ import defaultStyle from "../../defaultStyle";
 import { useNavigation } from "@react-navigation/native";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { gestureHandlerRootHOC } from "react-native-gesture-handler";
-import { relativeTime, formatDate } from "../../utils/format-date";
+import { relativeTime, formatDate } from "../../../utils/format-date";
 import ActionButtom from "../../components/ActionButtom";
 import styles from "./styles";
 
@@ -63,7 +63,8 @@ function LocationHistoryScreen() {
     <View style={styles.container}>
       <FlatList
         data={HISTORICO_BRUTO}
-        keyExtractor={(item, index) => index.toString()}
+        showsVerticalScrollIndicator={false}
+        keyExtractor={(index) => Date.now() + Math.random() * Number(index)}
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.itemContainer}

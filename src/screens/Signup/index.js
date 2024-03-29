@@ -8,15 +8,40 @@ import {
   KeyboardAvoidingView,
   Pressable,
   ScrollView,
+  Platform,
 } from "react-native";
 
-import { handleDisableKeyboard } from "../../utils/dismiss-keyboard";
+import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+import defaultStyle from "../../defaultStyle";
+
+import { handleDisableKeyboard } from "../../../utils/dismiss-keyboard";
 
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import styles from "./styles";
 
 import Title from "../../components/Title";
-import defaultStyle from "../../defaultStyle";
+
+const Schema = yup.object({
+  fullName: yup
+    .string()
+    .required("O nome completo é obrigatório")
+    .test("fullName", "Insira um nome completo válido", (value) => {
+      // Verifica se o valor contém pelo menos um espaço em branco
+      return /\s/.test(value);
+    }),
+  email: yup
+    .email("Informe um email válido!")
+    .string()
+    .email("Email inválido!")
+    .required("Informe o seu email por favor"),
+  phone: yup
+    .string()
+    .required("O número de telefone é obrigatório")
+    .matches(/^[29]\d{8}$/, "Insira um número de telefone válido"),
+});
 
 function Signup({ navigation }) {
   const [isFocused, setIsFocused] = useState(false);
@@ -33,6 +58,7 @@ function Signup({ navigation }) {
     <KeyboardAvoidingView
       style={styles.loginContainer}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
     >
       <ScrollView showsVerticalScrollIndicator={false}>
         <Pressable
@@ -70,7 +96,6 @@ function Signup({ navigation }) {
             <TextInput
               placeholder="Email"
               style={[styles.input]}
-              // autoCapitalize="none"
               keyboardType="email-address"
             />
           </View>
@@ -117,11 +142,6 @@ function Signup({ navigation }) {
             <Text style={styles.haveAccounAction}>Entrar</Text>
           </TouchableOpacity>
         </Pressable>
-        {/* <View>
-     <Group>
-      <Item label="Eu li e concordo com as Políticas de Privacidade"/>
-     </Group>
-     </View> */}
       </ScrollView>
     </KeyboardAvoidingView>
   );
