@@ -1,5 +1,11 @@
 import React from "react";
-import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  TouchableHighlight,
+} from "react-native";
 import {
   FontAwesome,
   FontAwesome5,
@@ -7,19 +13,18 @@ import {
   Ionicons,
   Entypo,
 } from "@expo/vector-icons";
-
+import { useAuth } from "../../contexts/auth";
 import styles from "./style";
 import defaultStyle from "../../defaultStyle";
 import ActionButtom from "../../components/ActionButtom";
 
-import { useAuth } from "../../contexts/auth";
-
 export default function Profile({ navigation }) {
+  const { signOut } = useAuth();
+
   function handleSignOut() {
     signOut();
   }
 
-  const { signOut } = useAuth();
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -34,13 +39,16 @@ export default function Profile({ navigation }) {
           <Text style={styles.displayPhoneNumber}>923 405 066</Text>
         </View>
       </View>
-      <ScrollView showsVerticalScrollIndicator={false} style={styles.menu}>
-        <TouchableOpacity
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContainer}
+      >
+        <TouchableHighlight
           style={styles.menuItem}
           onPress={() => navigation.navigate("Profile", { screen: "Account" })}
         >
           <View style={styles.itemDesc}>
-            <View style={styles.itemIco}>
+            <View style={styles.itemIcon}>
               <FontAwesome5
                 name="user-alt"
                 color={defaultStyle.colors.mainColorBlue}
@@ -54,10 +62,10 @@ export default function Profile({ navigation }) {
             color={defaultStyle.colors.grayAccent1}
             size={20}
           />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        </TouchableHighlight>
+        <TouchableHighlight style={styles.menuItem}>
           <View style={styles.itemDesc}>
-            <View style={styles.itemIco}>
+            <View style={styles.itemIcon}>
               <Ionicons
                 name="location-sharp"
                 color={defaultStyle.colors.mainColorBlue}
@@ -71,10 +79,10 @@ export default function Profile({ navigation }) {
             color={defaultStyle.colors.grayAccent1}
             size={20}
           />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        </TouchableHighlight>
+        <TouchableHighlight style={styles.menuItem}>
           <View style={styles.itemDesc}>
-            <View style={styles.itemIco}>
+            <View style={styles.itemIcon}>
               <FontAwesome
                 name="phone"
                 color={defaultStyle.colors.mainColorBlue}
@@ -88,15 +96,13 @@ export default function Profile({ navigation }) {
             color={defaultStyle.colors.grayAccent1}
             size={20}
           />
-        </TouchableOpacity>
-        <TouchableOpacity
+        </TouchableHighlight>
+        <TouchableHighlight
           style={styles.menuItem}
-          onPress={() => {
-            navigation.navigate("Setting");
-          }}
+          onPress={() => navigation.navigate("Setting")}
         >
           <View style={styles.itemDesc}>
-            <View style={styles.itemIco}>
+            <View style={styles.itemIcon}>
               <FontAwesome
                 name="gear"
                 color={defaultStyle.colors.mainColorBlue}
@@ -110,10 +116,10 @@ export default function Profile({ navigation }) {
             color={defaultStyle.colors.grayAccent1}
             size={20}
           />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        </TouchableHighlight>
+        <TouchableHighlight style={styles.menuItem}>
           <View style={styles.itemDesc}>
-            <View style={styles.itemIco}>
+            <View style={styles.itemIcon}>
               <Entypo
                 name="help-with-circle"
                 color={defaultStyle.colors.mainColorBlue}
@@ -127,10 +133,8 @@ export default function Profile({ navigation }) {
             color={defaultStyle.colors.grayAccent1}
             size={20}
           />
-        </TouchableOpacity>
-        <View>
-          <ActionButtom textButton="Terminar Sessão" onPress={handleSignOut} />
-        </View>
+        </TouchableHighlight>
+        <ActionButtom textButton="Terminar Sessão" onPress={handleSignOut} />
       </ScrollView>
     </View>
   );

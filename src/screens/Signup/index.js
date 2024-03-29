@@ -13,7 +13,6 @@ import {
 import { handleDisableKeyboard } from "../../utils/dismiss-keyboard";
 
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-// import { RadioButton } from "react-native-paper";
 import styles from "./styles";
 
 import Title from "../../components/Title";
@@ -71,7 +70,7 @@ function Signup({ navigation }) {
             <TextInput
               placeholder="Email"
               style={[styles.input]}
-              autoCapitalize="none"
+              // autoCapitalize="none"
               keyboardType="email-address"
             />
           </View>

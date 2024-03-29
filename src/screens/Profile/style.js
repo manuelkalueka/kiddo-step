@@ -9,9 +9,9 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: "3%",
-    paddingVertical: "3%",
-    paddingHorizontal: "5%",
+    marginBottom: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     borderBottomColor: defaultStyle.colors.grayAccent1,
     borderBottomWidth: 0.5,
   },
@@ -20,15 +20,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: 60,
     height: 60,
-    borderRadius: "100%",
-    marginRight: "3%",
+    borderRadius: 30,
+    marginRight: 10,
   },
   avatar: {
     width: "100%",
     height: "100%",
+    borderRadius: 30,
   },
   displayName: {
-    marginBottom: "5%",
+    marginBottom: 5,
     fontSize: defaultStyle.sizes.mainLabels,
     fontWeight: "bold",
   },
@@ -36,35 +37,38 @@ const styles = StyleSheet.create({
     color: defaultStyle.colors.grayAccent2,
     fontSize: defaultStyle.sizes.label,
   },
-  menu: {
-    flex: 1,
-    backgroundColor: defaultStyle.colors.white,
-    paddingVertical: "5%",
-    paddingHorizontal: "5%",
-  },
+
   menuItem: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 5,
-    marginBottom: "5%",
+    paddingVertical: 10,
+    marginBottom: 10,
+    borderBottomColor: defaultStyle.colors.grayAccent1,
+    borderBottomWidth: 0.5,
   },
   itemDesc: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
   },
-  itemIco: {
+  itemIcon: {
     width: 50,
     height: 50,
-    marginRight: "4%",
+    marginRight: 10,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: defaultStyle.colors.light,
-    borderRadius: "100%",
+    borderRadius: 25,
   },
   descText: {
     fontSize: defaultStyle.sizes.mainLabels,
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    backgroundColor: defaultStyle.colors.white,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
   },
 });
 
