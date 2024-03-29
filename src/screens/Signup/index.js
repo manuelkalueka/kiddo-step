@@ -33,9 +33,8 @@ const Schema = yup.object({
       return /\s/.test(value);
     }),
   email: yup
-    .email("Informe um email válido!")
     .string()
-    .email("Email inválido!")
+    .email("Informe um email válido!")
     .required("Informe o seu email por favor"),
   phone: yup
     .string()
