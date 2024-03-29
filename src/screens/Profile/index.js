@@ -4,7 +4,7 @@ import {
   Text,
   Image,
   ScrollView,
-  TouchableHighlight,
+  TouchableOpacity,
 } from "react-native";
 import {
   FontAwesome,
@@ -43,7 +43,7 @@ export default function Profile({ navigation }) {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContainer}
       >
-        <TouchableHighlight
+        <TouchableOpacity
           style={styles.menuItem}
           onPress={() => navigation.navigate("Profile", { screen: "Account" })}
         >
@@ -62,8 +62,8 @@ export default function Profile({ navigation }) {
             color={defaultStyle.colors.grayAccent1}
             size={20}
           />
-        </TouchableHighlight>
-        <TouchableHighlight style={styles.menuItem}>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem}>
           <View style={styles.itemDesc}>
             <View style={styles.itemIcon}>
               <Ionicons
@@ -79,8 +79,8 @@ export default function Profile({ navigation }) {
             color={defaultStyle.colors.grayAccent1}
             size={20}
           />
-        </TouchableHighlight>
-        <TouchableHighlight style={styles.menuItem}>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem}>
           <View style={styles.itemDesc}>
             <View style={styles.itemIcon}>
               <FontAwesome
@@ -96,8 +96,8 @@ export default function Profile({ navigation }) {
             color={defaultStyle.colors.grayAccent1}
             size={20}
           />
-        </TouchableHighlight>
-        <TouchableHighlight
+        </TouchableOpacity>
+        <TouchableOpacity
           style={styles.menuItem}
           onPress={() => navigation.navigate("Setting")}
         >
@@ -116,8 +116,8 @@ export default function Profile({ navigation }) {
             color={defaultStyle.colors.grayAccent1}
             size={20}
           />
-        </TouchableHighlight>
-        <TouchableHighlight style={styles.menuItem}>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.menuItem}>
           <View style={styles.itemDesc}>
             <View style={styles.itemIcon}>
               <Entypo
@@ -133,7 +133,7 @@ export default function Profile({ navigation }) {
             color={defaultStyle.colors.grayAccent1}
             size={20}
           />
-        </TouchableHighlight>
+        </TouchableOpacity>
         <ActionButtom textButton="Terminar Sessão" onPress={handleSignOut} />
       </ScrollView>
     </View>
