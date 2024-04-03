@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState, useMemo, useRef, useCallback } from "react";
 import {
   Modal,
   Text,
@@ -6,12 +6,21 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  TextInput,
 } from "react-native";
+
 import { useNavigation } from "@react-navigation/native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import BottomSheet from "@gorhom/bottom-sheet";
+import { Picker } from "@react-native-picker/picker";
+
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 
 import defaultStyle from "../defaultStyle";
+
+import KiddoDetailsScreen from "./../screens/KiddoDetailsScreen";
+
 import ButtonNewfecing from "../components/ButtonNewfecing";
 import {
   AlertStack,
@@ -28,9 +37,23 @@ const { Navigator, Screen } = Tab;
 
 export default function TabRoutes() {
   const navigation = useNavigation();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModal2Visible, setisModal2Vissible] = useState(false);
+  const [selectedValue, setSelectedValue] = useState(null);
+
+  const bottomSheet = useRef(null);
+  const snapPoints = useMemo(() => ["50%", "86%"], []);
+
   function handleKiddoModalOpen() {
     navigation.navigate("KiddoDetails");
   }
+
+  const handleChange = useCallback((index) => {
+    //Se o bottomSheet arrastado todo ele para baixo então fecha o modal
+    if (index == -1) {
+      setisModal2Vissible(false);
+    }
+  }, []);
 
   return (
     <Fragment>
@@ -62,7 +85,6 @@ export default function TabRoutes() {
             headerTitle: () => <Header name="Mapa" />,
             headerRight: () => (
               <TouchableOpacity
-                // Estudar a biblioteca para renderizar correctamente botões no Header [React-native navigation]
                 style={styles.container}
                 onPress={() => {
                   handleKiddoModalOpen();
@@ -113,9 +135,7 @@ export default function TabRoutes() {
             headerRight: () => (
               <TouchableOpacity
                 style={styles.container}
-                onPress={() => {
-                  alert("Configuração de alertas");
-                }}
+                onPress={() => setisModal2Vissible(true)} //Põe visible o modal do bottomSheet
               >
                 <Text style={styles.textConfig}>Configuração</Text>
               </TouchableOpacity>
@@ -136,9 +156,65 @@ export default function TabRoutes() {
           }}
         />
       </Navigator>
+
+      <Modal
+        visible={isModalVisible}
+        onRequestClose={handleModalClose}
+        animationType="slide"
+        presentationStyle="pageSheet"
+      >
+        <View style={{ flex: 1 }}>
+          <KiddoDetailsScreen />
+          <TouchableOpacity
+            onPress={handleModalClose}
+            style={styles.containerButton}
+          >
+            <Text style={styles.buttonIcon}>Fechar</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+
+      <Modal transparent={true} visible={isModal2Visible}>
+        <View style={styles.modalFocus}>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <BottomSheet
+              ref={bottomSheet}
+              index={1}
+              snapPoints={snapPoints}
+              enablePanDownToClose={true}
+              onChange={handleChange}
+              backgroundStyle={{ backgroundColor: defaultStyle.colors.light }}
+              handleIndicatorStyle={{
+                backgroundColor: defaultStyle.colors.mainColorBlue,
+              }}
+            >
+              <View style={styles.containerAlert}>
+                <Text>Configuração de alertas</Text>
+
+                <Text style={styles.labels}> Tipo de alerta</Text>
+                <Picker
+                  selectedValue={selectedValue}
+                  onValueChange={(itemValue, itemIndex) =>
+                    setSelectedValue(itemValue)
+                  }
+                  style={styles.input}
+                >
+                  <Picker.Item label="Selecione o tipo de alerta" value={""} />
+                  <Picker.Item label="Entrada a escola" value={1} />
+                  <Picker.Item label="Saída da escola" value={2} />
+                  <Picker.Item label="Entrada em área restrita" value={3} />
+                </Picker>
+              </View>
+            </BottomSheet>
+          </GestureHandlerRootView>
+        </View>
+      </Modal>
     </Fragment>
   );
 }
+/*
+  De Tiago "Quando clicar no botão config da screen alertas, abre um modal e dentro do modal contem o bottomSheet e o formulário para cadastrar ou config os alertas." 
+*/
 
 const styles = StyleSheet.create({
   container: {
@@ -161,5 +237,31 @@ const styles = StyleSheet.create({
   textConfig: {
     color: defaultStyle.colors.white,
     fontWeight: "bold",
+  },
+
+  modalFocus: {
+    height: "100%",
+    width: "100%",
+    backgroundColor: "#0009",
+  },
+
+  containerAlert: {
+    padding: 20,
+  },
+
+  labels: {
+    fontSize: defaultStyle.sizes.inputLabels,
+    color: defaultStyle.colors.dark,
+    marginVertical: 10,
+    fontWeight: "300",
+  },
+
+  input: {
+    paddingVertical: Platform.OS === "ios" ? 16 : 8,
+    paddingHorizontal: 5,
+    fontSize: 16,
+    flex: 1,
+    backgroundColor: defaultStyle.colors.white,
+    borderRadius: defaultStyle.borderRadio.borderRadioInput,
   },
 });

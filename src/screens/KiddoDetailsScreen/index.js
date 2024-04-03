@@ -185,8 +185,14 @@ const KiddoDetailsScreen = () => {
               onFocus={openPicker}
               style={{ width: 150, height: 50 }}
             >
+<<<<<<< HEAD
               <Picker.Item key={0} label="Java" value="java" />
               <Picker.Item key={1} label="JavaScript" value="js" />
+=======
+              <Picker.Item label="Selecione um gênero" value="" /> 
+              <Picker.Item label="Masculino" value="masculino" />
+              <Picker.Item label="Feminino" value="feminino" />
+>>>>>>> master
             </Picker>
           </View>
           <Text style={styles.sectionTitle}>Detalhes de Saúde</Text>
