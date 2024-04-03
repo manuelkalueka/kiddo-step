@@ -1,4 +1,4 @@
-import { Fragment, useState, useMemo, useRef, useCallback } from "react";
+import React, { Fragment, useState, useMemo, useRef, useCallback } from "react";
 import {
   Modal,
   Text,
@@ -6,58 +6,59 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
-  TextInput
+  TextInput,
 } from "react-native";
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
-import BottomSheet from '@gorhom/bottom-sheet'
-import { Picker } from '@react-native-picker/picker'
 
+import { useNavigation } from "@react-navigation/native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import BottomSheet from "@gorhom/bottom-sheet";
+import { Picker } from "@react-native-picker/picker";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Entypo, FontAwesome5, FontAwesome } from "@expo/vector-icons";
+import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 
 import defaultStyle from "../defaultStyle";
 
-import AlertScreen from "../screens/AlertScreen";
-import LocationHistoryScreen from "../screens/LocationHistoryScreen";
-import Profile from "../screens/Profile";
-import NewFecing from "../screens/NewFecing";
-import Map from "../screens/Map";
 import KiddoDetailsScreen from "./../screens/KiddoDetailsScreen";
 
 import ButtonNewfecing from "../components/ButtonNewfecing";
+import {
+  AlertStack,
+  MapStack,
+  FencigStack,
+  ProfileAllStack,
+  LocationHistoryStack,
+} from "../routes/stack.app.routes";
+
 import Header from "../components/Header";
 
 const Tab = createBottomTabNavigator();
 const { Navigator, Screen } = Tab;
 
 export default function TabRoutes() {
+  const navigation = useNavigation();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModal2Visible, setisModal2Vissible] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(null)
+  const [selectedValue, setSelectedValue] = useState(null);
 
-  const bottomSheet = useRef(null)
-  const snapPoints = useMemo(()=>['50%', '86%'], []) 
+  const bottomSheet = useRef(null);
+  const snapPoints = useMemo(() => ["50%", "86%"], []);
 
   function handleKiddoModalOpen() {
-    setIsModalVisible(true);
+    navigation.navigate("KiddoDetails");
   }
 
-  function handleModalClose() {
-    setIsModalVisible(false);
-  }
-
-  const handleChange = useCallback((index)=>{
+  const handleChange = useCallback((index) => {
     //Se o bottomSheet arrastado todo ele para baixo então fecha o modal
-    if(index == -1){
-      setisModal2Vissible(false)
+    if (index == -1) {
+      setisModal2Vissible(false);
     }
-  },[])
+  }, []);
 
   return (
     <Fragment>
       <Navigator
-        initialRouteName="Mapa"
+        initialRouteName="MapaTab"
         screenOptions={{
           headerStyle: {
             backgroundColor: defaultStyle.colors.mainColorBlue,
@@ -75,8 +76,8 @@ export default function TabRoutes() {
         }}
       >
         <Screen
-          name="Mapa"
-          component={Map}
+          name="MapaTab"
+          component={MapStack}
           options={{
             tabBarIcon: ({ size, color }) => (
               <Entypo name="location" size={size} color={color} />
@@ -102,8 +103,8 @@ export default function TabRoutes() {
           }}
         />
         <Screen
-          name="locationHistory"
-          component={LocationHistoryScreen}
+          name="LocationHistoryTab"
+          component={LocationHistoryStack}
           options={{
             tabBarIcon: ({ size, color }) => (
               <FontAwesome5 name="history" size={size} color={color} />
@@ -113,8 +114,8 @@ export default function TabRoutes() {
           }}
         />
         <Screen
-          name="Cerca"
-          component={NewFecing}
+          name="CercaTab"
+          component={FencigStack}
           options={{
             tabBarIcon: ({ focused, size, color }) => (
               <ButtonNewfecing size={size} color={color} focused={focused} />
@@ -124,8 +125,8 @@ export default function TabRoutes() {
           }}
         />
         <Screen
-          name="Alertas"
-          component={AlertScreen}
+          name="AlertasTab"
+          component={AlertStack}
           options={{
             tabBarIcon: ({ size, color }) => (
               <Entypo name="notification" size={size} color={color} />
@@ -134,32 +135,34 @@ export default function TabRoutes() {
             headerRight: () => (
               <TouchableOpacity
                 style={styles.container}
-                onPress={() => setisModal2Vissible(true)}//Põe visible o modal do bottomSheet
+                onPress={() => setisModal2Vissible(true)} //Põe visible o modal do bottomSheet
               >
-               <Text style={styles.textConfig}>Configuração</Text>
-              </TouchableOpacity>    
+                <Text style={styles.textConfig}>Configuração</Text>
+              </TouchableOpacity>
             ),
             tabBarBadge: 3,
+            tabBarLabel: "Alertas",
           }}
         />
         <Screen
-          name="Perfil"
-          component={Profile}
+          name="PerfilTab"
+          component={ProfileAllStack}
           options={{
             tabBarIcon: ({ size, color }) => (
               <FontAwesome5 name="user" size={size} color={color} />
             ),
             headerTitle: () => <Header name="Perfil" />,
+            tabBarLabel: "Perfil",
           }}
         />
       </Navigator>
+
       <Modal
         visible={isModalVisible}
         onRequestClose={handleModalClose}
         animationType="slide"
         presentationStyle="pageSheet"
       >
-
         <View style={{ flex: 1 }}>
           <KiddoDetailsScreen />
           <TouchableOpacity
@@ -170,47 +173,43 @@ export default function TabRoutes() {
           </TouchableOpacity>
         </View>
       </Modal>
-      
-      <Modal
-        transparent={true}
-        visible={isModal2Visible}
-      >
+
+      <Modal transparent={true} visible={isModal2Visible}>
         <View style={styles.modalFocus}>
-        
-          <GestureHandlerRootView style={{flex:1}}>
+          <GestureHandlerRootView style={{ flex: 1 }}>
             <BottomSheet
               ref={bottomSheet}
               index={1}
               snapPoints={snapPoints}
               enablePanDownToClose={true}
               onChange={handleChange}
-              backgroundStyle={{backgroundColor: defaultStyle.colors.light,}}
-              handleIndicatorStyle={{backgroundColor: defaultStyle.colors.mainColorBlue}}
+              backgroundStyle={{ backgroundColor: defaultStyle.colors.light }}
+              handleIndicatorStyle={{
+                backgroundColor: defaultStyle.colors.mainColorBlue,
+              }}
             >
               <View style={styles.containerAlert}>
-                  <Text>Configuração de alertas</Text>
+                <Text>Configuração de alertas</Text>
 
-                  <Text style={styles.labels}> Tipo de alerta</Text>
-                  <Picker
-                    selectedValue={selectedValue}
-                    onValueChange={(itemValue, itemIndex)=>setSelectedValue(itemValue)}
-                    style={styles.input}
-                  >
-                    <Picker.Item label="Selecione o tipo de alerta" value={''} />
-                    <Picker.Item label="Entrada a escola" value={1} />
-                    <Picker.Item label="Saída da escola" value={2} />
-                    <Picker.Item label="Entrada em área restrita" value={3} />
-
-                  </Picker>
+                <Text style={styles.labels}> Tipo de alerta</Text>
+                <Picker
+                  selectedValue={selectedValue}
+                  onValueChange={(itemValue, itemIndex) =>
+                    setSelectedValue(itemValue)
+                  }
+                  style={styles.input}
+                >
+                  <Picker.Item label="Selecione o tipo de alerta" value={""} />
+                  <Picker.Item label="Entrada a escola" value={1} />
+                  <Picker.Item label="Saída da escola" value={2} />
+                  <Picker.Item label="Entrada em área restrita" value={3} />
+                </Picker>
               </View>
             </BottomSheet>
           </GestureHandlerRootView>
         </View>
       </Modal>
-   
-
     </Fragment>
-    
   );
 }
 /*
@@ -234,32 +233,16 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: defaultStyle.colors.blueDarkColor2,
   },
-  containerButton: {
-    position: "absolute",
-    top: "2%",
-    right: "2%",
-    backgroundColor: "transparent",
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  buttonIcon: {
-    marginLeft: 5,
-    fontSize: 16,
-    color: defaultStyle.colors.white,
-  },
 
   textConfig: {
     color: defaultStyle.colors.white,
-    fontWeight: 'bold'
+    fontWeight: "bold",
   },
 
   modalFocus: {
-    height: '100%',
-    width: '100%',
-    backgroundColor: '#0009'
+    height: "100%",
+    width: "100%",
+    backgroundColor: "#0009",
   },
 
   containerAlert: {
@@ -280,6 +263,5 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: defaultStyle.colors.white,
     borderRadius: defaultStyle.borderRadio.borderRadioInput,
-  }
-
+  },
 });

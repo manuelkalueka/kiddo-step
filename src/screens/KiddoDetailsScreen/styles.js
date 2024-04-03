@@ -6,6 +6,18 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: defaultStyle.colors.mainColorBlue,
   },
+  containerButton: {
+    paddingTop: "4%",
+    marginHorizontal: 20,
+    justifyContent: "center",
+    alignItems: "flex-end",
+    backgroundColor: "transparent",
+  },
+  buttonIcon: {
+    fontSize: 16,
+    color: defaultStyle.colors.white,
+    fontWeight: "bold",
+  },
   picContainer: {
     justifyContent: "center",
     alignItems: "center",
@@ -17,7 +29,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: defaultStyle.colors.blueDarkColor3,
     width: "90%",
-    marginTop: 40,
     paddingHorizontal: 10,
     paddingVertical: 10,
     borderRadius: defaultStyle.borderRadio.cards[0],

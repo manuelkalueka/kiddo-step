@@ -1,14 +1,12 @@
-import { StyleSheet, StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 
+import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { StyleSheet } from "react-native";
 import defaultStyle from "./src/defaultStyle";
+import { Router } from "./src/routes/router";
 
-import SignupNavigation from "./src/routes/stack.signup.routes";
-import TabRoutes from "./src/routes/tab.routes";
-
-const isAuthenticated = true;
-const userName = "kalueka";
+import { AuthProvider } from "./src/contexts/auth";
 
 export default function App() {
   return (
@@ -17,12 +15,11 @@ export default function App() {
         backgroundColor={defaultStyle.colors.mainColorBlue}
         barStyle={"default"}
       />
+
       <NavigationContainer>
-        {isAuthenticated && userName === "kalueka" ? (
-          <TabRoutes />
-        ) : (
-          <SignupNavigation />
-        )}
+        <AuthProvider>
+          <Router />
+        </AuthProvider>
       </NavigationContainer>
     </SafeAreaView>
   );
