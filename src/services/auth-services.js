@@ -14,11 +14,22 @@ async function signInService(email, password) {
   }
 }
 
-async function signUpService() {
-
+async function signUpService({ fullName, email, password, phone }) {
+  const reqUser = {
+    fullName,
+    email,
+    password,
+    phone,
+  };
   try {
-    
+    const response = await ApiMananger.post("/users/register", reqUser);
+    if (response.status === 201) {
+      return !!response.data;
+    }
+    Alert.alert("Erro ao Cadastro", "Tente Novamente!");
+    return false;
   } catch (error) {
+    console.log(error)
     Alert.alert(error?.message, "Tente Novamente!");
   }
 }

@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import ApiMananger from "../services/api.js";
 import AsyncStorage from "@react-native-async-storage/async-storage"; //armazenar dados em string no dispositivo
-import { signInService } from "./../services/auth-services.js";
+import { signInService, signUpService } from "./../services/auth-services.js";
 
 const contextFormat = {
   signed: true,
@@ -53,7 +53,10 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  async function signUp() {}
+  async function signUp({ fullName, email, password, phone }) {
+    const response = await signUpService({ fullName, email, password, phone });
+    return response;
+  }
 
   async function signOut() {
     setUser(null);
