@@ -66,7 +66,7 @@ const KiddoDetailsScreen = () => {
   };
 
   function handleModalClose() {
-    navigation.goBack();
+    navigation?.goBack();
   }
 
   const kiddoAvatar = require("./../../../assets/img/boy-avatar.png");
@@ -114,12 +114,12 @@ const KiddoDetailsScreen = () => {
   const handleChange = useCallback((index) => {
     //Se o bottomSheet arrastado todo ele para baixo então fecha o modal
     if (index == -1) {
-      setisModal2Vissible(false);
+      setisModal2Visible(false);
     }
   }, []);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isModal2Visible, setisModal2Vissible] = useState(false);
+  const [isModal2Visible, setisModal2Visible] = useState(false);
   const [selectedValue, setSelectedValue] = useState(null);
 
   const bottomSheet = useRef(null);
@@ -127,7 +127,6 @@ const KiddoDetailsScreen = () => {
   /*
   De Tiago "Quando clicar no botão config da screen alertas, abre um modal e dentro do modal contem o bottomSheet e o formulário para cadastrar ou config os alertas." 
 */
-
 
   return (
     <View style={styles.container}>

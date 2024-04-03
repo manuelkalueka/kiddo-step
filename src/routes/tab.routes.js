@@ -1,5 +1,12 @@
 import React from "react";
-import { Text, View, TouchableOpacity, Image, StyleSheet } from "react-native";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  Platform,
+} from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
 
@@ -132,7 +139,6 @@ export default function TabRoutes() {
   );
 }
 const styles = StyleSheet.create({
-  
   container: {
     flexDirection: "row",
     alignItems: "center",
@@ -180,4 +186,4 @@ const styles = StyleSheet.create({
     backgroundColor: defaultStyle.colors.white,
     borderRadius: defaultStyle.borderRadio.borderRadioInput,
   },
-})
+});
