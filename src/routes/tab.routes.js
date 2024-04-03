@@ -1,25 +1,12 @@
-import React, { Fragment, useState, useMemo, useRef, useCallback } from "react";
-import {
-  Modal,
-  Text,
-  View,
-  TouchableOpacity,
-  Image,
-  StyleSheet,
-  TextInput,
-} from "react-native";
+import React from "react";
+import { Text, View, TouchableOpacity, Image, StyleSheet } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import BottomSheet from "@gorhom/bottom-sheet";
-import { Picker } from "@react-native-picker/picker";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 
 import defaultStyle from "../defaultStyle";
-
-import KiddoDetailsScreen from "./../screens/KiddoDetailsScreen";
 
 import ButtonNewfecing from "../components/ButtonNewfecing";
 import {
@@ -37,186 +24,115 @@ const { Navigator, Screen } = Tab;
 
 export default function TabRoutes() {
   const navigation = useNavigation();
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isModal2Visible, setisModal2Vissible] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(null);
-
-  const bottomSheet = useRef(null);
-  const snapPoints = useMemo(() => ["50%", "86%"], []);
 
   function handleKiddoModalOpen() {
     navigation.navigate("KiddoDetails");
   }
 
-  const handleChange = useCallback((index) => {
-    //Se o bottomSheet arrastado todo ele para baixo então fecha o modal
-    if (index == -1) {
-      setisModal2Vissible(false);
-    }
-  }, []);
-
   return (
-    <Fragment>
-      <Navigator
-        initialRouteName="MapaTab"
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: defaultStyle.colors.mainColorBlue,
-            elevation: 25,
-            height: 75,
-          },
-          headerTitleAlign: "left",
-          tabBarStyle: {
-            height: 60,
-            paddingBottom: 10,
-            backgroundColor: defaultStyle.colors.light,
-          },
-          tabBarActiveTintColor: defaultStyle.colors.mainColorBlue,
-          tabBarInactiveTintColor: defaultStyle.colors.grayAccent4,
-        }}
-      >
-        <Screen
-          name="MapaTab"
-          component={MapStack}
-          options={{
-            tabBarIcon: ({ size, color }) => (
-              <Entypo name="location" size={size} color={color} />
-            ),
-            headerTitle: () => <Header name="Mapa" />,
-            headerRight: () => (
-              <TouchableOpacity
-                style={styles.container}
-                onPress={() => {
-                  handleKiddoModalOpen();
-                }}
-              >
-                <View>
-                  <Image
-                    source={require("./../../assets/img/boy-avatar.png")}
-                    style={styles.kiddoImg}
-                  />
-                </View>
-                <Text style={styles.textSurname}>Tiagão</Text>
-              </TouchableOpacity>
-            ),
-            tabBarLabel: "Mapa",
-          }}
-        />
-        <Screen
-          name="LocationHistoryTab"
-          component={LocationHistoryStack}
-          options={{
-            tabBarIcon: ({ size, color }) => (
-              <FontAwesome5 name="history" size={size} color={color} />
-            ),
-            headerTitle: () => <Header name="Histórico de Localização" />,
-            tabBarLabel: "Histórico",
-          }}
-        />
-        <Screen
-          name="CercaTab"
-          component={FencigStack}
-          options={{
-            tabBarIcon: ({ focused, size, color }) => (
-              <ButtonNewfecing size={size} color={color} focused={focused} />
-            ),
-            headerTitle: () => <Header name="Geo Cerca" />,
-            tabBarLabel: "",
-          }}
-        />
-        <Screen
-          name="AlertasTab"
-          component={AlertStack}
-          options={{
-            tabBarIcon: ({ size, color }) => (
-              <Entypo name="notification" size={size} color={color} />
-            ),
-            headerTitle: () => <Header name="Alertas" />,
-            headerRight: () => (
-              <TouchableOpacity
-                style={styles.container}
-                onPress={() => setisModal2Vissible(true)} //Põe visible o modal do bottomSheet
-              >
-                <Text style={styles.textConfig}>Configuração</Text>
-              </TouchableOpacity>
-            ),
-            tabBarBadge: 3,
-            tabBarLabel: "Alertas",
-          }}
-        />
-        <Screen
-          name="PerfilTab"
-          component={ProfileAllStack}
-          options={{
-            tabBarIcon: ({ size, color }) => (
-              <FontAwesome5 name="user" size={size} color={color} />
-            ),
-            headerTitle: () => <Header name="Perfil" />,
-            tabBarLabel: "Perfil",
-          }}
-        />
-      </Navigator>
-
-      <Modal
-        visible={isModalVisible}
-        onRequestClose={handleModalClose}
-        animationType="slide"
-        presentationStyle="pageSheet"
-      >
-        <View style={{ flex: 1 }}>
-          <KiddoDetailsScreen />
-          <TouchableOpacity
-            onPress={handleModalClose}
-            style={styles.containerButton}
-          >
-            <Text style={styles.buttonIcon}>Fechar</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
-
-      <Modal transparent={true} visible={isModal2Visible}>
-        <View style={styles.modalFocus}>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <BottomSheet
-              ref={bottomSheet}
-              index={1}
-              snapPoints={snapPoints}
-              enablePanDownToClose={true}
-              onChange={handleChange}
-              backgroundStyle={{ backgroundColor: defaultStyle.colors.light }}
-              handleIndicatorStyle={{
-                backgroundColor: defaultStyle.colors.mainColorBlue,
+    <Navigator
+      initialRouteName="MapaTab"
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: defaultStyle.colors.mainColorBlue,
+          elevation: 25,
+          height: 75,
+        },
+        headerTitleAlign: "left",
+        tabBarStyle: {
+          height: 60,
+          paddingBottom: 10,
+          backgroundColor: defaultStyle.colors.light,
+        },
+        tabBarActiveTintColor: defaultStyle.colors.mainColorBlue,
+        tabBarInactiveTintColor: defaultStyle.colors.grayAccent4,
+      }}
+    >
+      <Screen
+        name="MapaTab"
+        component={MapStack}
+        options={{
+          tabBarIcon: ({ size, color }) => (
+            <Entypo name="location" size={size} color={color} />
+          ),
+          headerTitle: () => <Header name="Mapa" />,
+          headerRight: () => (
+            <TouchableOpacity
+              style={styles.container}
+              onPress={() => {
+                handleKiddoModalOpen();
               }}
             >
-              <View style={styles.containerAlert}>
-                <Text>Configuração de alertas</Text>
-
-                <Text style={styles.labels}> Tipo de alerta</Text>
-                <Picker
-                  selectedValue={selectedValue}
-                  onValueChange={(itemValue, itemIndex) =>
-                    setSelectedValue(itemValue)
-                  }
-                  style={styles.input}
-                >
-                  <Picker.Item label="Selecione o tipo de alerta" value={""} />
-                  <Picker.Item label="Entrada a escola" value={1} />
-                  <Picker.Item label="Saída da escola" value={2} />
-                  <Picker.Item label="Entrada em área restrita" value={3} />
-                </Picker>
+              <View>
+                <Image
+                  source={require("./../../assets/img/boy-avatar.png")}
+                  style={styles.kiddoImg}
+                />
               </View>
-            </BottomSheet>
-          </GestureHandlerRootView>
-        </View>
-      </Modal>
-    </Fragment>
+              <Text style={styles.textSurname}>Tiagão</Text>
+            </TouchableOpacity>
+          ),
+          tabBarLabel: "Mapa",
+        }}
+      />
+      <Screen
+        name="LocationHistoryTab"
+        component={LocationHistoryStack}
+        options={{
+          tabBarIcon: ({ size, color }) => (
+            <FontAwesome5 name="history" size={size} color={color} />
+          ),
+          headerTitle: () => <Header name="Histórico de Localização" />,
+          tabBarLabel: "Histórico",
+        }}
+      />
+      <Screen
+        name="CercaTab"
+        component={FencigStack}
+        options={{
+          tabBarIcon: ({ focused, size, color }) => (
+            <ButtonNewfecing size={size} color={color} focused={focused} />
+          ),
+          headerTitle: () => <Header name="Geo Cerca" />,
+          tabBarLabel: "",
+        }}
+      />
+      <Screen
+        name="AlertasTab"
+        component={AlertStack}
+        options={{
+          tabBarIcon: ({ size, color }) => (
+            <Entypo name="notification" size={size} color={color} />
+          ),
+          headerTitle: () => <Header name="Alertas" />,
+          headerRight: () => (
+            <TouchableOpacity
+              style={styles.container}
+              onPress={() => setisModal2Visible(true)} //Põe visible o modal do bottomSheet
+            >
+              <Text style={styles.textConfig}>Configuração</Text>
+            </TouchableOpacity>
+          ),
+          tabBarBadge: 3,
+          tabBarLabel: "Alertas",
+        }}
+      />
+      <Screen
+        name="PerfilTab"
+        component={ProfileAllStack}
+        options={{
+          tabBarIcon: ({ size, color }) => (
+            <FontAwesome5 name="user" size={size} color={color} />
+          ),
+          headerTitle: () => <Header name="Perfil" />,
+          tabBarLabel: "Perfil",
+        }}
+      />
+    </Navigator>
   );
 }
-/*
-  De Tiago "Quando clicar no botão config da screen alertas, abre um modal e dentro do modal contem o bottomSheet e o formulário para cadastrar ou config os alertas." 
-*/
-
 const styles = StyleSheet.create({
+  
   container: {
     flexDirection: "row",
     alignItems: "center",
@@ -264,4 +180,4 @@ const styles = StyleSheet.create({
     backgroundColor: defaultStyle.colors.white,
     borderRadius: defaultStyle.borderRadio.borderRadioInput,
   },
-});
+})
