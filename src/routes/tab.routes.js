@@ -195,14 +195,20 @@ export default function TabRoutes() {
                   <Picker
                     selectedValue={selectedValue}
                     onValueChange={(itemValue, itemIndex)=>setSelectedValue(itemValue)}
-                    style={styles.input}
+                    style={{ height: 42,justifyContent:'center'}}
                   >
                     <Picker.Item label="Selecione o tipo de alerta" value={''} />
-                    <Picker.Item label="Entrada a escola" value={1} />
-                    <Picker.Item label="Saída da escola" value={2} />
-                    <Picker.Item label="Entrada em área restrita" value={3} />
+                    <Picker.Item label="Entrada" value={1} />
+                    <Picker.Item label="Saída" value={2} />
+                    <Picker.Item label="Área restrita" value={3} />
 
                   </Picker>
+                  
+                  <Text style={styles.labels}> Observação</Text>
+                  <TextInput
+                    style={[, {color: 'red', fontSize:16, padding: 10}]}
+                    
+                  />
 
                   <ActionButtom
                     textButton = 'Guardar as alterações'
@@ -280,12 +286,13 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    paddingVertical: Platform.OS === "ios" ? 16 : 8,
+    paddingVertical: Platform.OS === "ios" ? 20 : 8,
     paddingHorizontal: 5,
     fontSize: 16,
     flex: 1,
     backgroundColor: defaultStyle.colors.white,
     borderRadius: defaultStyle.borderRadio.borderRadioInput,
+
   },
 
   headerTitle: {
