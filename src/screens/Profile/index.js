@@ -1,11 +1,5 @@
-import React from "react";
-import {
-  View,
-  Text,
-  Image,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
 import {
   FontAwesome,
   FontAwesome5,
@@ -19,24 +13,30 @@ import defaultStyle from "../../defaultStyle";
 import ActionButtom from "../../components/ActionButtom";
 
 export default function Profile({ navigation }) {
-  const { signOut } = useAuth();
+  const { signOut, getUserAuth } = useAuth();
+
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    async function loadUser() {
+      const fetchedUser = await getUserAuth();
+      setUser(fetchedUser);
+    }
+    loadUser();
+  }, []);
 
   function handleSignOut() {
     signOut();
   }
-
+  const parentAvatar = require("./../../../assets/img/avatar-parent-man.png");
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.avatarContainer}>
-          <Image
-            source={require("./../../../assets/img/avatar-parent-man.png")}
-            style={styles.avatar}
-          />
+          <Image source={parentAvatar} style={styles.avatar} />
         </View>
         <View>
-          <Text style={styles.displayName}>João António</Text>
-          <Text style={styles.displayPhoneNumber}>923 405 066</Text>
+          <Text style={styles.displayName}>{user?.fullName}</Text>
+          <Text style={styles.displayPhoneNumber}>{user?.phone}</Text>
         </View>
       </View>
       <ScrollView
@@ -45,7 +45,7 @@ export default function Profile({ navigation }) {
       >
         <TouchableOpacity
           style={styles.menuItem}
-          onPress={() => navigation.navigate("Profile", { screen: "Account" })}
+          onPress={() => navigation.navigate("Account")}
         >
           <View style={styles.itemDesc}>
             <View style={styles.itemIcon}>

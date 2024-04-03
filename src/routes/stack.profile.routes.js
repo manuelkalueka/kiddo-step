@@ -9,7 +9,9 @@ import AccountScreen from "./../screens/AccountScreen";
 
 const ProfileStack = () => {
   return (
-    <Navigator initialRouteName="Profile">
+    <Navigator initialRouteName="Profile" screenOptions={{
+      headerShown:false,
+    }}>
       <Screen
         name="Profile"
         component={Profile}
