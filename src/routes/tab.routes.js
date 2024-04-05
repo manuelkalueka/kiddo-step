@@ -1,10 +1,20 @@
 import React from "react";
-import { Text, View, TouchableOpacity, Image, StyleSheet } from "react-native";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  Image,
+  StyleSheet,
+  Platform,
+} from "react-native";
+
 import { useNavigation } from "@react-navigation/native";
+
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 
 import defaultStyle from "../defaultStyle";
+
 import ButtonNewfecing from "../components/ButtonNewfecing";
 import {
   AlertStack,
@@ -21,6 +31,7 @@ const { Navigator, Screen } = Tab;
 
 export default function TabRoutes() {
   const navigation = useNavigation();
+
   function handleKiddoModalOpen() {
     navigation.navigate("KiddoDetails");
   }
@@ -53,8 +64,9 @@ export default function TabRoutes() {
           ),
           headerTitle: () => <Header name="Mapa" />,
           headerRight: () => (
-            <TouchableOpacity
+            <TouchableOpacit
               // Estudar a biblioteca para renderizar correctamente botões no Header [React-native navigation]
+
               style={styles.container}
               onPress={() => {
                 handleKiddoModalOpen();
@@ -105,9 +117,7 @@ export default function TabRoutes() {
           headerRight: () => (
             <TouchableOpacity
               style={styles.container}
-              onPress={() => {
-                alert("Configuração de alertas");
-              }}
+              onPress={() => setisModal2Visible(true)} //Põe visible o modal do bottomSheet
             >
               <Text style={styles.textConfig}>Configuração</Text>
             </TouchableOpacity>
@@ -130,7 +140,6 @@ export default function TabRoutes() {
     </Navigator>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
@@ -152,5 +161,31 @@ const styles = StyleSheet.create({
   textConfig: {
     color: defaultStyle.colors.white,
     fontWeight: "bold",
+  },
+
+  modalFocus: {
+    height: "100%",
+    width: "100%",
+    backgroundColor: "#0009",
+  },
+
+  containerAlert: {
+    padding: 20,
+  },
+
+  labels: {
+    fontSize: defaultStyle.sizes.inputLabels,
+    color: defaultStyle.colors.dark,
+    marginVertical: 10,
+    fontWeight: "300",
+  },
+
+  input: {
+    paddingVertical: Platform.OS === "ios" ? 16 : 8,
+    paddingHorizontal: 5,
+    fontSize: 16,
+    flex: 1,
+    backgroundColor: defaultStyle.colors.white,
+    borderRadius: defaultStyle.borderRadio.borderRadioInput,
   },
 });

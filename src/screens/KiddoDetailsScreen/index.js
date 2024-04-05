@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useMemo, useRef, useCallback } from "react";
 import {
   View,
   Text,
@@ -10,6 +10,9 @@ import {
   ScrollView,
   Platform,
 } from "react-native";
+
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import BottomSheet from "@gorhom/bottom-sheet";
 import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
 
@@ -63,10 +66,67 @@ const KiddoDetailsScreen = () => {
   };
 
   function handleModalClose() {
-    navigation.goBack();
+    navigation?.goBack();
   }
 
   const kiddoAvatar = require("./../../../assets/img/boy-avatar.png");
+
+  function modalTiago() {
+    return (
+      <Modal transparent={true} visible={isModal2Visible}>
+        <View style={styles.modalFocus}>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <BottomSheet
+              ref={bottomSheet}
+              index={1}
+              snapPoints={snapPoints}
+              enablePanDownToClose={true}
+              onChange={handleChange}
+              backgroundStyle={{ backgroundColor: defaultStyle.colors.light }}
+              handleIndicatorStyle={{
+                backgroundColor: defaultStyle.colors.mainColorBlue,
+              }}
+            >
+              <View style={styles.containerAlert}>
+                <Text>Configuração de alertas</Text>
+
+                <Text style={styles.labels}> Tipo de alerta</Text>
+                <Picker
+                  selectedValue={selectedValue}
+                  onValueChange={(itemValue, itemIndex) =>
+                    setSelectedValue(itemValue)
+                  }
+                  style={styles.input}
+                >
+                  <Picker.Item label="Selecione o tipo de alerta" value={""} />
+                  <Picker.Item label="Entrada a escola" value={1} />
+                  <Picker.Item label="Saída da escola" value={2} />
+                  <Picker.Item label="Entrada em área restrita" value={3} />
+                </Picker>
+              </View>
+            </BottomSheet>
+          </GestureHandlerRootView>
+        </View>
+      </Modal>
+    );
+  }
+
+  const handleChange = useCallback((index) => {
+    //Se o bottomSheet arrastado todo ele para baixo então fecha o modal
+    if (index == -1) {
+      setisModal2Visible(false);
+    }
+  }, []);
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModal2Visible, setisModal2Visible] = useState(false);
+  const [selectedValue, setSelectedValue] = useState(null);
+
+  const bottomSheet = useRef(null);
+  const snapPoints = useMemo(() => ["50%", "86%"], []);
+  /*
+  De Tiago "Quando clicar no botão config da screen alertas, abre um modal e dentro do modal contem o bottomSheet e o formulário para cadastrar ou config os alertas." 
+*/
 
   return (
     <View style={styles.container}>
