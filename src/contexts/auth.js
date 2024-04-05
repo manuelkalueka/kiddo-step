@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import ApiMananger from "../services/api.js";
 import AsyncStorage from "@react-native-async-storage/async-storage"; //armazenar dados em string no dispositivo
-import { signInService } from "./../services/auth-services.js";
+import { signInService, signUpService } from "./../services/auth-services.js";
 
 const contextFormat = {
   signed: true,
@@ -33,6 +33,17 @@ export const AuthProvider = ({ children }) => {
 
     loadStorageData();
   }, []);
+
+  async function getUserAuth() {
+    try {
+      const storagedUser = await AsyncStorage.getItem("@KiddoStepAuth");
+      const user = JSON.parse(storagedUser);
+      return user;
+    } catch (error) {
+      console.log("Erro ao carregar usuario", error);
+    }
+  }
+
   async function signIn(data) {
     const { email, password } = data;
     try {
@@ -53,7 +64,10 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  async function signUp() {}
+  async function signUp({ fullName, email, password, phone }) {
+    const response = await signUpService({ fullName, email, password, phone });
+    return response;
+  }
 
   async function signOut() {
     setUser(null);
@@ -63,7 +77,15 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ signed: !!user, user, signIn, signOut, signUp, loading }}
+      value={{
+        signed: !!user,
+        user,
+        signIn,
+        signOut,
+        signUp,
+        loading,
+        getUserAuth,
+      }}
     >
       {children}
     </AuthContext.Provider>

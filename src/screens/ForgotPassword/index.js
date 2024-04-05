@@ -17,7 +17,7 @@ import * as yup from 'yup'
 
 import { styles } from './styles'
 import defaultStyle from '../../defaultStyle'
-import {handleDisableKeyboard} from "../../utils/dismiss-keyboard"
+import {handleDisableKeyboard} from "../../../utils/dismiss-keyboard"
 
 const schema = yup.object({
   email: yup.string().email('Por favor informe um email válido').required('Campo obrigatório')

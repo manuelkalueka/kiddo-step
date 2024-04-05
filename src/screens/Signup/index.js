@@ -8,16 +8,36 @@ import {
   KeyboardAvoidingView,
   Pressable,
   ScrollView,
+  Platform,
 } from "react-native";
 
-import { handleDisableKeyboard } from "../../utils/dismiss-keyboard";
+import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+import defaultStyle from "../../defaultStyle";
+
+import { handleDisableKeyboard } from "../../../utils/dismiss-keyboard";
 
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-// import { RadioButton } from "react-native-paper";
 import styles from "./styles";
 
 import Title from "../../components/Title";
-import defaultStyle from "../../defaultStyle";
+
+const Schema = yup.object({
+  fullName: yup
+    .string()
+    .required("Nome é obrigatório")
+    .test("fullName", "Insira um nome completo válido", (value) => {
+      // Verifica se o valor contém pelo menos um espaço em branco
+      return /\s/.test(value);
+    }),
+  phone: yup
+    .string()
+    .required("O número de telefone é obrigatório")
+    .matches(/^[29]\d{8}$/, "Insira um número de telefone válido"),
+  email: yup.string().email("E-mail inválido").required("E-mail é obrigatório"),
+});
 
 function Signup({ navigation }) {
   const [isFocused, setIsFocused] = useState(false);
@@ -29,6 +49,19 @@ function Signup({ navigation }) {
   function handleInputBlur() {
     setIsFocused(false);
   }
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(Schema),
+  });
+
+  const sendForm = async (data) => {
+    const { fullName, email, phone } = data;
+    navigation.navigate("CreatePassword", { fullName, email, phone });
+  };
 
   return (
     <KeyboardAvoidingView
@@ -55,8 +88,23 @@ function Signup({ navigation }) {
                   : defaultStyle.colors.mainColorBlue
               }
             />
-            <TextInput placeholder="Nome Completo" style={styles.input} />
+            <Controller
+              name="fullName"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  placeholder="Nome Completo"
+                  style={styles.input}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                />
+              )}
+            />
           </View>
+          {errors.fullName && (
+            <Text style={styles.msgAlerta}>{errors.fullName?.message}</Text>
+          )}
           <View style={[styles.inputContainer, styles.inputDefault]}>
             <FontAwesome5
               style={styles.inputIcon}
@@ -68,14 +116,24 @@ function Signup({ navigation }) {
                   : defaultStyle.colors.mainColorBlue
               }
             />
-            <TextInput
-              placeholder="Email"
-              style={[styles.input]}
-              autoCapitalize="none"
-              keyboardType="email-address"
+            <Controller
+              name="email"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  placeholder="Email"
+                  style={[styles.input]}
+                  keyboardType="email-address"
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                />
+              )}
             />
           </View>
-
+          {errors.email && (
+            <Text style={styles.msgAlerta}>{errors.email?.message}</Text>
+          )}
           <View style={[styles.inputContainer, styles.inputDefault]}>
             <FontAwesome5
               style={styles.inputIcon}
@@ -87,18 +145,24 @@ function Signup({ navigation }) {
                   : defaultStyle.colors.mainColorBlue
               }
             />
-            <TextInput
-              placeholder="Número de Telefone"
-              style={[styles.input]}
-              keyboardType="phone-pad"
+            <Controller
+              name="phone"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  placeholder="Número de Telefone"
+                  style={[styles.input]}
+                  keyboardType="phone-pad"
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                />
+              )}
             />
           </View>
-
           <TouchableOpacity
             style={styles.MainButton}
-            onPress={() => {
-              navigation.navigate("CreatePassword");
-            }}
+            onPress={handleSubmit(sendForm)}
           >
             <Text style={styles.textButton}>Registar</Text>
           </TouchableOpacity>
@@ -118,11 +182,6 @@ function Signup({ navigation }) {
             <Text style={styles.haveAccounAction}>Entrar</Text>
           </TouchableOpacity>
         </Pressable>
-        {/* <View>
-     <Group>
-      <Item label="Eu li e concordo com as Políticas de Privacidade"/>
-     </Group>
-     </View> */}
       </ScrollView>
     </KeyboardAvoidingView>
   );

@@ -64,7 +64,9 @@ export default function TabRoutes() {
           ),
           headerTitle: () => <Header name="Mapa" />,
           headerRight: () => (
-            <TouchableOpacity
+            <TouchableOpacit
+              // Estudar a biblioteca para renderizar correctamente botões no Header [React-native navigation]
+
               style={styles.container}
               onPress={() => {
                 handleKiddoModalOpen();

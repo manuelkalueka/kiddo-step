@@ -75,6 +75,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: defaultStyle.sizes.subtitle,
   },
+  msgAlerta: {
+    color: defaultStyle.colors.danger,
+    fontSize: defaultStyle.sizes.bodyText,
+    alignSelf: "flex-start",
+    marginLeft: "2.5%",
+  },
 });
 
 export default styles;

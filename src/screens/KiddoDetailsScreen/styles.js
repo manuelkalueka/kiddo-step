@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     backgroundColor: defaultStyle.colors.mainColorBlue,
   },
   containerButton: {
-    paddingTop: "4%",
+    paddingVertical: "4%",
     marginHorizontal: 20,
     justifyContent: "center",
     alignItems: "flex-end",

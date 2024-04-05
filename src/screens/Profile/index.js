@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
 import {
   FontAwesome,
@@ -7,40 +7,48 @@ import {
   Ionicons,
   Entypo,
 } from "@expo/vector-icons";
-
+import { useAuth } from "../../contexts/auth";
 import styles from "./style";
 import defaultStyle from "../../defaultStyle";
 import ActionButtom from "../../components/ActionButtom";
 
-import { useAuth } from "../../contexts/auth";
-
 export default function Profile({ navigation }) {
+  const { signOut, getUserAuth } = useAuth();
+
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    async function loadUser() {
+      const fetchedUser = await getUserAuth();
+      setUser(fetchedUser);
+    }
+    loadUser();
+  }, []);
+
   function handleSignOut() {
     signOut();
   }
-
-  const { signOut } = useAuth();
+  const parentAvatar = require("./../../../assets/img/avatar-parent-man.png");
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <View style={styles.avatarContainer}>
-          <Image
-            source={require("./../../../assets/img/avatar-parent-man.png")}
-            style={styles.avatar}
-          />
+          <Image source={parentAvatar} style={styles.avatar} />
         </View>
         <View>
-          <Text style={styles.displayName}>João António</Text>
-          <Text style={styles.displayPhoneNumber}>923 405 066</Text>
+          <Text style={styles.displayName}>{user?.fullName}</Text>
+          <Text style={styles.displayPhoneNumber}>{user?.phone}</Text>
         </View>
       </View>
-      <ScrollView showsVerticalScrollIndicator={false} style={styles.menu}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContainer}
+      >
         <TouchableOpacity
           style={styles.menuItem}
-          onPress={() => navigation.navigate("Profile", { screen: "Account" })}
+          onPress={() => navigation.navigate("Account")}
         >
           <View style={styles.itemDesc}>
-            <View style={styles.itemIco}>
+            <View style={styles.itemIcon}>
               <FontAwesome5
                 name="user-alt"
                 color={defaultStyle.colors.mainColorBlue}
@@ -57,7 +65,7 @@ export default function Profile({ navigation }) {
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
           <View style={styles.itemDesc}>
-            <View style={styles.itemIco}>
+            <View style={styles.itemIcon}>
               <Ionicons
                 name="location-sharp"
                 color={defaultStyle.colors.mainColorBlue}
@@ -74,7 +82,7 @@ export default function Profile({ navigation }) {
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
           <View style={styles.itemDesc}>
-            <View style={styles.itemIco}>
+            <View style={styles.itemIcon}>
               <FontAwesome
                 name="phone"
                 color={defaultStyle.colors.mainColorBlue}
@@ -91,12 +99,10 @@ export default function Profile({ navigation }) {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.menuItem}
-          onPress={() => {
-            navigation.navigate("Setting");
-          }}
+          onPress={() => navigation.navigate("Setting")}
         >
           <View style={styles.itemDesc}>
-            <View style={styles.itemIco}>
+            <View style={styles.itemIcon}>
               <FontAwesome
                 name="gear"
                 color={defaultStyle.colors.mainColorBlue}
@@ -113,7 +119,7 @@ export default function Profile({ navigation }) {
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem}>
           <View style={styles.itemDesc}>
-            <View style={styles.itemIco}>
+            <View style={styles.itemIcon}>
               <Entypo
                 name="help-with-circle"
                 color={defaultStyle.colors.mainColorBlue}
@@ -128,9 +134,7 @@ export default function Profile({ navigation }) {
             size={20}
           />
         </TouchableOpacity>
-        <View>
-          <ActionButtom textButton="Terminar Sessão" onPress={handleSignOut} />
-        </View>
+        <ActionButtom textButton="Terminar Sessão" onPress={handleSignOut} />
       </ScrollView>
     </View>
   );

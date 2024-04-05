@@ -66,6 +66,12 @@ const styles = StyleSheet.create({
     color: defaultStyle.colors.white,
     fontWeight: "bold",
   },
+  msgAlerta: {
+    color: defaultStyle.colors.danger,
+    fontSize: defaultStyle.sizes.bodyText,
+    alignSelf:'flex-start',
+    marginLeft:'2.5%'
+  }
 });
 
 export default styles;
