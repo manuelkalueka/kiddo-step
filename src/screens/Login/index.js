@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { useAuth } from "../../contexts/auth";
 
-import { handleDisableKeyboard } from "../../utils/dismiss-keyboard";
+import { handleDisableKeyboard } from "../../../utils/dismiss-keyboard";
 
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";

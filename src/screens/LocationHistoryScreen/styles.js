@@ -16,6 +16,10 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: defaultStyle.colors.grayAccent1,
   },
+  scrollContainer: {
+    flexGrow: 1,
+    paddingBottom: 40,
+  },
   header: {
     color: defaultStyle.colors.dark,
     fontWeight: "bold",
@@ -38,30 +42,31 @@ const styles = StyleSheet.create({
   },
   containerSheet: {
     flex: 1,
-    paddingVertical: "5%",
-    paddingHorizontal: "5%",
+    backgroundColor: defaultStyle.colors.white,
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
-  detailContainer:{
-    borderBottomWidth:.6,
-    borderBottomColor:defaultStyle.colors.grayAccent1,
-    paddingBottom:10,
+  detailContainer: {
+    borderBottomWidth: 0.6,
+    borderBottomColor: defaultStyle.colors.grayAccent1,
+    paddingBottom: 10,
   },
   mainDetailHeader: {
     color: defaultStyle.colors.dark,
     fontWeight: "bold",
     fontSize: defaultStyle.sizes.titleSmall,
-    paddingVertical:10,
+    paddingVertical: 10,
   },
-  detailHeader:{
-    fontWeight:"bold",
-    fontSize:defaultStyle.sizes.label,
-    color:defaultStyle.colors.dark,
-    marginTop:20,
-    marginBottom:10,
+  detailHeader: {
+    fontWeight: "bold",
+    fontSize: defaultStyle.sizes.label,
+    color: defaultStyle.colors.dark,
+    marginTop: 20,
+    marginBottom: 10,
   },
-  detailContent:{
-    color:defaultStyle.colors.grayAccent2,
-    marginBottom:10,
+  detailContent: {
+    color: defaultStyle.colors.grayAccent2,
+    marginBottom: 10,
   },
 });
 

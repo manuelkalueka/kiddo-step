@@ -43,10 +43,9 @@ export default function Map() {
   }, []);
 
   useEffect(() => {
-
     async function startLocationWatch() {
       try {
-         watchPositionAsync(
+        await watchPositionAsync(
           {
             accuracy: LocationAccuracy.Highest,
             timeInterval: 1000,
@@ -111,7 +110,7 @@ export default function Map() {
             },
             heading: location.coords.heading,
           }}
-          mapType="hybrid"
+          // mapType="hybrid"
           showsMyLocationButton={true}
         >
           <Marker
