@@ -78,9 +78,7 @@ const AccountScreen = ({ navigation }) => {
             paddingTop: 30,
             paddingBottom: 30,
           }}
-          onPress={() => {
-            handleDisableKeyboard(Keyboard);
-          }}
+          onPress={handleDisableKeyboard(Keyboard)}
         >
           <View style={{ justifyContent: "center", alignItems: "center" }}>
             <View style={styles.avatarContainer}>

@@ -28,7 +28,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 const kiddoAvatar = require("./../../../assets/img/boy-avatar.png");
-import { handleDisableKeyboard } from "../../utils/dismiss-keyboard";
+import { handleDisableKeyboard } from "../../../utils/dismiss-keyboard";
 
 const Schema = yup.object({
   geoName: yup.string().required("Informe um nome de identificação"),

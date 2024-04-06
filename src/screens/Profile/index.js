@@ -72,7 +72,7 @@ export default function Profile({ navigation }) {
                 size={20}
               />
             </View>
-            <Text style={styles.descText}>Endereço</Text>
+            <Text style={styles.descText}>Endereços</Text>
           </View>
           <AntDesign
             name="right"
