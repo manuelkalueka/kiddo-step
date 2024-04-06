@@ -80,7 +80,12 @@ export default function Profile({ navigation }) {
             size={20}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => {
+            navigation.navigate("Contact");
+          }}
+        >
           <View style={styles.itemDesc}>
             <View style={styles.itemIcon}>
               <FontAwesome
