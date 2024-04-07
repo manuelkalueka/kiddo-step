@@ -29,7 +29,7 @@ async function signUpService({ fullName, email, password, phone }) {
     Alert.alert("Erro ao Cadastro", "Tente Novamente!");
     return false;
   } catch (error) {
-    console.log(error)
+    console.log(error);
     Alert.alert(error?.message, "Tente Novamente!");
   }
 }

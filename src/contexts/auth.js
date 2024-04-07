@@ -24,9 +24,7 @@ export const AuthProvider = ({ children }) => {
 
       if (storagedUser && storagedToken) {
         setUser(JSON.parse(storagedUser));
-        ApiMananger.defaults.headers[
-          "Authorization"
-        ] = `Bearer ${storagedToken}`;
+        ApiMananger.defaults.headers["x-access-token"] = `${storagedToken}`;
       }
       setLoading(false);
     }
@@ -59,6 +57,7 @@ export const AuthProvider = ({ children }) => {
         JSON.stringify(response.user)
       );
       await AsyncStorage.setItem("@KiddoStepToken", response.token);
+      ApiMananger.defaults.headers["x-access-token"] = `${response.token}`;
     } catch (error) {
       console.log("ERRO NO CONTEXTO:", error);
     }

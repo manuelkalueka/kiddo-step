@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   TextInput,
@@ -19,26 +19,13 @@ import styles from "./styles";
 import defaultStyle from "../../defaultStyle";
 import ActionButtom from "../../components/ActionButtom";
 import { handleDisableKeyboard } from "../../../utils/dismiss-keyboard";
+import { getContacts, setContacts } from "../../services/user-service";
 
 const Schema = yup.object({
   name: yup.string().required("Informe um nome de identificação"),
   address: yup.string().required("Informe um enderenco"),
-  contact: yup.string().required("Informe contacto para o destino"),
+  phone: yup.string().required("Informe contacto para o destino"),
 });
-
-const contactList = [
-  {
-    name: "Manuel",
-    address: "Mbemba Ngango Rua J",
-    contact: "933808188",
-  },
-
-  {
-    name: "Manuel",
-    address: "Mbemba Ngango Rua J",
-    contact: "933808187",
-  },
-];
 
 const ContactScreen = () => {
   const {
@@ -49,8 +36,24 @@ const ContactScreen = () => {
     resolver: yupResolver(Schema),
   });
 
+  const [contactList, setContactList] = useState([]);
+
+  useEffect(() => {
+    async function getCont() {
+      try {
+        const contacts = await getContacts();
+        setContactList(contacts);
+      } catch (error) {
+        console.log("Erro ao Carregar os Contactos");
+      }
+    }
+
+    getCont();
+  }, [contactList]);
+
   const sendForm = async (data) => {
-    //Salvar os Dados e Voltar no Mapa
+    //Salvar os Dados e Voltar na Lista
+    await setContacts(data);
     handleCloseModal();
   };
 
@@ -78,12 +81,12 @@ const ContactScreen = () => {
       <FlatList
         data={contactList}
         showsVerticalScrollIndicator={false}
-        keyExtractor={(item) => Number(item.contact)}
-        renderItem={(item) => (
+        keyExtractor={({ index }) => index}
+        renderItem={({ item }) => (
           <TouchableOpacity>
             <Text>{item.name}</Text>
             <Text>{item.address}</Text>
-            <Text>{item.contact}</Text>
+            <Text>{item.phone}</Text>
           </TouchableOpacity>
         )}
       />
@@ -110,6 +113,9 @@ const ContactScreen = () => {
               />
             )}
           />
+          {errors.name && (
+            <Text style={styles.msgAlerta}>{errors.name?.message}</Text>
+          )}
           <Text style={styles.label}>Enderenço</Text>
           <Controller
             name="address"
@@ -123,9 +129,12 @@ const ContactScreen = () => {
               />
             )}
           />
+          {errors.address && (
+            <Text style={styles.msgAlerta}>{errors.address?.message}</Text>
+          )}
           <Text style={styles.label}>Contacto</Text>
           <Controller
-            name="contact"
+            name="phone"
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
@@ -137,6 +146,9 @@ const ContactScreen = () => {
               />
             )}
           />
+          {errors.phone && (
+            <Text style={styles.msgAlerta}>{errors.phone?.message}</Text>
+          )}
           <ActionButtom
             textButton="Adicionar"
             onPress={handleSubmit(sendForm)}

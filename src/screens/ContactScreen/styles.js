@@ -2,10 +2,10 @@ import { StyleSheet } from "react-native";
 import defaultStyle from "../../defaultStyle";
 
 const styles = StyleSheet.create({
-  container:{
-    flex:1,
-    paddingHorizontal:"5%",
-    paddingVertical:"5%"
+  container: {
+    flex: 1,
+    paddingHorizontal: "5%",
+    paddingVertical: "5%",
   },
   label: {
     paddingTop: "5%",
@@ -22,6 +22,12 @@ const styles = StyleSheet.create({
     width: "100%",
     borderWidth: 1,
     borderColor: defaultStyle.colors.blueLightColor1,
+  },
+  msgAlerta: {
+    color: defaultStyle.colors.danger,
+    fontSize: defaultStyle.sizes.bodyText,
+    alignSelf: "flex-start",
+    marginLeft: "2.5%",
   },
 });
 
