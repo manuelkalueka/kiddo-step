@@ -49,7 +49,7 @@ const ContactScreen = () => {
     }
 
     getCont();
-  }, [contactList]);
+  }, []);
 
   const sendForm = async (data) => {
     //Salvar os Dados e Voltar na Lista
@@ -68,33 +68,56 @@ const ContactScreen = () => {
   const [visible, setVisible] = useState(false);
   return (
     <View style={styles.container}>
-      <View>
-        <TouchableOpacity onPress={handleOpenModal}>
+      <View style={styles.top}>
+        <TouchableOpacity
+          onPress={handleOpenModal}
+          style={styles.buttonAdContact}
+          accessible={true}
+          accessibilityLabel="Abrir modal"
+        >
           <FontAwesome5
             name="plus"
-            color={defaultStyle.colors.mainColorBlue}
-            size={25}
+            color={defaultStyle.colors.blueDarkColor3}
+            size={18}
           />
-          <Text>Adicionar Contactos</Text>
+          <Text style={{ fontWeight: "bold", paddingLeft: 5, opacity: 0.4 }}>
+            Adicionar Contactos
+          </Text>
         </TouchableOpacity>
       </View>
       <FlatList
         data={contactList}
         showsVerticalScrollIndicator={false}
-        keyExtractor={({ index }) => index}
+        keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
-          <TouchableOpacity>
-            <Text>{item.name}</Text>
-            <Text>{item.address}</Text>
-            <Text>{item.phone}</Text>
+          <TouchableOpacity style={styles.contactContainer}>
+            <Text style={styles.labelName}>{item.name}</Text>
+            <Text style={styles.labelAddress}>{item.address}</Text>
+            <Text style={styles.labelPhone}>{item.phone}</Text>
           </TouchableOpacity>
         )}
       />
-      <Modal presentationStyle="pageSheet" visible={visible}>
+      <Modal
+        visible={visible}
+        animationType="slide"
+        onRequestClose={() => handleCloseModal()}
+        accessible={true}
+        accessibilityLabel="Modal"
+      >
         <Pressable
-          style={styles.container}
+          style={styles.containerModal}
           onPress={() => handleDisableKeyboard(Keyboard)}
         >
+          <View style={{ paddingBottom: 40 }}>
+            <TouchableOpacity
+              onPress={() => handleCloseModal()}
+              accessible={true}
+              accessibilityLabel="Fechar modal"
+              style={styles.closeButton}
+            >
+              <Text style={styles.closeButtonText}>Fechar</Text>
+            </TouchableOpacity>
+          </View>
           <Text
             style={{ fontSize: 20, fontWeight: "bold", paddingVertical: "5%" }}
           >
