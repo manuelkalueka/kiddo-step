@@ -19,4 +19,14 @@ function formatDate(dateStr) {
   return date.format("DD/MM/YYYY");
 }
 
-export { relativeTime, formatDate };
+function getHour(date) {
+  const dataString = date;
+  // Converta a string para um objeto Moment
+  const dataMoment = moment(dataString);
+
+  // Extraia apenas a hora da data
+  const hora = dataMoment.format("HH:mm:ss");
+  return hora;
+}
+
+export { relativeTime, formatDate, getHour };
