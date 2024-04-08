@@ -1,34 +1,65 @@
-import { View, Text, TextInput, TouchableOpacity, ScrollView } from "react-native";
+import { 
+  View,
+   Text,
+   TextInput,
+   TouchableOpacity,
+    FlatList
+} from "react-native";
 import { FontAwesome5 } from '@expo/vector-icons'
 
 import { styles } from './styles'
 import defaultStyle from "../../defaultStyle";
 
 export default function AlertScreen() {
+
+  const data = [
+    {
+      id: 1,
+      nome: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Similique repellendus exercitationem nam. Dolor, totam.',
+      data: '08/04/2024'
+    },
+    {
+      id: 2,
+      nome: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Similique repellendus exercitationem nam. Dolor, totam.',
+      data: '08/04/2024'
+    },
+    {
+      id: 3,
+      nome: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Similique repellendus exercitationem nam. Dolor, totam.',
+      data: '08/04/2024'
+    },
+    {
+      id: 4,
+      nome: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Similique repellendus exercitationem nam. Dolor, totam.',
+      data: '08/04/2024'
+    },
+    {
+      id: 5,
+      nome: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Similique repellendus exercitationem nam. Dolor, totam.',
+      data: '08/04/2024'
+    },
+    {
+      id: 6,
+      nome: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Similique repellendus exercitationem nam. Dolor, totam.',
+      data: '08/04/2024'
+    }
+  ]
+
   return(
     <View style={styles.container}>
 
       <View style={styles.body}>
-
-        <TouchableOpacity style={styles.buttonReadNotif} activeOpacity={0.6}>
-          <Text style={styles.textButtonReadNotif}>Marcar todas como visualizadas</Text>
-        </TouchableOpacity>
-
-        <View style={styles.mainNotifications}>
-          <ScrollView>
-            <Text style={styles.labelNotif}>Hoje</Text>
-              <View style={styles.notification}></View>
-              <View style={styles.notification}></View>
-              <View style={styles.notification}></View>
-
-              <Text style={styles.labelNotif}>Ontem</Text>
-              <View style={styles.notification}></View>
-              <View style={styles.notification}></View>
-              <View style={styles.notification}></View>
-              <View style={styles.notification}></View>
-
-          </ScrollView>
-        </View>
+          <FlatList
+            style={styles.containerNoti}
+            data={data}
+            renderItem={({item})=>(
+              <TouchableOpacity style={styles.containerItem}>
+                <Text>{item.id}</Text>
+                <Text>{item.nome}</Text>
+                <Text>{item.data}</Text>
+              </TouchableOpacity>
+            )}
+          />
       </View>
 
    </View>
