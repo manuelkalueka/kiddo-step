@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
 
   containerInput: {
     width: "100%",
-    padding:Platform.OS == 'ios'?defaultStyle.inputs.container:10,
+    padding:Platform.OS == 'ios'?defaultStyle.inputs.container:12,
     flexDirection: 'row',
     borderRadius:defaultStyle.borderRadio.borderRadioInput,
     marginVertical: 10,
@@ -57,11 +57,11 @@ const styles = StyleSheet.create({
   buttonSigIn: {
     marginTop:10,
     width:'100%',
-    padding:Platform.OS == 'ios'?defaultStyle.inputs.container:10,
+    padding:Platform.OS == 'ios'?defaultStyle.inputs.container:13,
     borderColor:defaultStyle.colors.blueLightColor1,
     borderRadius:defaultStyle.borderRadio.borderRadioInput,
     backgroundColor: defaultStyle.colors.mainColorBlue,
-    marginBottom:15
+    marginBottom:20
   },
 
   TextSigIn: {
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   },
 
   containerForgotPassword: {
-    marginBottom:10,
+    marginBottom:15,
     alignSelf: 'center'
   },
 

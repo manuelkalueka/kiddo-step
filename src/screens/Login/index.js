@@ -8,7 +8,7 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
-  View,
+  View
 } from "react-native";
 import { useAuth } from "../../contexts/auth";
 
