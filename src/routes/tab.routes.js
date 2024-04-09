@@ -7,9 +7,11 @@ import {
   StyleSheet,
   Platform,
   Modal,
+  Keyboard,
+  TouchableWithoutFeedback
 } from "react-native";
 
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { GestureHandlerRootView, TextInput } from "react-native-gesture-handler";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { Picker } from "@react-native-picker/picker";
 
@@ -19,6 +21,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
 
 import defaultStyle from "../defaultStyle";
+import { handleDisableKeyboard } from "../../utils/dismiss-keyboard";
 
 import ButtonNewfecing from "../components/ButtonNewfecing";
 import {
@@ -53,7 +56,7 @@ export default function TabRoutes() {
   const [selectedValue, setSelectedValue] = useState(null);
 
   const bottomSheet = useRef(null);
-  const snapPoints = useMemo(() => ["50%", "86%"], []);
+  const snapPoints = useMemo(() => ["55%", "55%"], []);
 
   return (
     <Fragment>
@@ -158,6 +161,8 @@ export default function TabRoutes() {
           }}
         />
       </Navigator>
+
+     
       <Modal transparent={true} visible={isModal2Visible}>
         <View style={styles.modalFocus}>
           <GestureHandlerRootView style={{ flex: 1 }}>
@@ -172,28 +177,50 @@ export default function TabRoutes() {
                 backgroundColor: defaultStyle.colors.mainColorBlue,
               }}
             >
+              
               <View style={styles.containerAlert}>
-                <Text>Configuração de alertas</Text>
+                <Text style={styles.titleBottomSheet}>Configuração de alertas</Text>
 
-                <Text style={styles.labels}> Tipo de alerta</Text>
+                <Text style={styles.labels}>Designação</Text>
+                <TextInput
+                style={styles.input}
+                />
+
+                <Text style={styles.labels}>Tipo de alerta</Text>
                 <Picker
                   selectedValue={selectedValue}
                   onValueChange={(itemValue, itemIndex) =>
                     setSelectedValue(itemValue)
                   }
-                  style={styles.input}
+                  style={styles.inputcombox}
                 >
-                  <Picker.Item label="Selecione o tipo de alerta" value={""} />
-                  <Picker.Item label="Entrada a escola" value={1} />
-                  <Picker.Item label="Saída da escola" value={2} />
-                  <Picker.Item label="Entrada em área restrita" value={3} />
+                  <Picker.Item label="Entrada" value={1} />
+                  <Picker.Item label="Saída" value={2} />
                 </Picker>
+
+                <Text style={styles.labels}>Quando</Text>
+                <Picker
+                  selectedValue={selectedValue}
+                  onValueChange={(itemValue, itemIndex) =>
+                    setSelectedValue(itemValue)
+                  }
+                  style={styles.inputcombox}
+                >
+                  <Picker.Item label="1" value={1} />
+                  <Picker.Item label="2" value={2} />
+                </Picker>
+
+                <TouchableOpacity style={styles.buttonSave}>
+                  <Text style={styles.textBtnSave}>Salvar</Text>
+                </TouchableOpacity>
+
               </View>
+ 
             </BottomSheet>
           </GestureHandlerRootView>
         </View>
+       
       </Modal>
-
     </Fragment>
   );
 }
@@ -237,12 +264,41 @@ const styles = StyleSheet.create({
     fontWeight: "300",
   },
 
-  input: {
-    paddingVertical: Platform.OS === "ios" ? 16 : 8,
+  inputcombox: {
+    paddingVertical: Platform.OS === "ios" ? 16 : 10,
     paddingHorizontal: 5,
     fontSize: 16,
-    flex: 1,
     backgroundColor: defaultStyle.colors.white,
     borderRadius: defaultStyle.borderRadio.borderRadioInput,
   },
+
+  input: {
+    paddingVertical: Platform.OS === "ios" ? 16 : 10,
+    paddingHorizontal: 5,
+    fontSize: 16,
+    backgroundColor: defaultStyle.colors.white,
+    borderRadius: defaultStyle.borderRadio.borderRadioInput,
+  },
+
+  buttonSave: {
+    marginVertical: '8%',
+    padding: 16,
+    backgroundColor: defaultStyle.colors.mainColorBlue,
+    borderRadius: defaultStyle.borderRadio.borderRadioButton.small,
+  },
+
+  textBtnSave: {
+    textAlign: "center",
+    fontSize: defaultStyle.sizes.subtitle,
+    color: defaultStyle.colors.white,
+    fontWeight: "bold",
+  },
+
+  titleBottomSheet: {
+    fontSize: defaultStyle.sizes.title,
+    color: defaultStyle.colors.black,
+    fontWeight: 'bold'
+  }
+  
+
 });

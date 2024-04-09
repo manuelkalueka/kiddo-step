@@ -14,6 +14,6 @@ export function Router() {
     // COLOCAR O EXPO SPLASH SCREEN
     return <LoadingComponent />;
   } else {
-    return signed ? <TabRoutes /> : <AuthRoutes />;
+    return signed ?  <AuthRoutes />:<TabRoutes />;
   }
 }
