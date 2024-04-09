@@ -18,7 +18,6 @@ const styles = StyleSheet.create({
   },
 
   containerItem: {
-    borderTopWidth: .5,
     borderBottomWidth: .5,
     paddingBottom: 10,
     borderColor: defaultStyle.colors.mainColorBlue1

@@ -12,7 +12,7 @@ import {
 } from "react-native";
 
 import { GestureHandlerRootView, TextInput } from "react-native-gesture-handler";
-import BottomSheet from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { Picker } from "@react-native-picker/picker";
 
 import { useNavigation } from "@react-navigation/native";
@@ -56,7 +56,7 @@ export default function TabRoutes() {
   const [selectedValue, setSelectedValue] = useState(null);
 
   const bottomSheet = useRef(null);
-  const snapPoints = useMemo(() => ["55%", "55%"], []);
+  const snapPoints = useMemo(() => ["55%", "70%"], []);
 
   return (
     <Fragment>
@@ -142,7 +142,8 @@ export default function TabRoutes() {
                 style={styles.container}
                 onPress={() => setisModal2Visible(true)} //Põe visible o modal do bottomSheet
               >
-                <Text style={styles.textConfig}>Configuração</Text>
+                
+                <FontAwesome5 name='cog' size={25} color={defaultStyle.colors.white}/>
               </TouchableOpacity>
             ),
             tabBarBadge: 3,
@@ -177,6 +178,9 @@ export default function TabRoutes() {
                 backgroundColor: defaultStyle.colors.mainColorBlue,
               }}
             >
+              <BottomSheetScrollView
+                style={styles.bottomSheetScrollView}
+              >
               
               <View style={styles.containerAlert}>
                 <Text style={styles.titleBottomSheet}>Configuração de alertas</Text>
@@ -215,6 +219,7 @@ export default function TabRoutes() {
                 </TouchableOpacity>
 
               </View>
+              </BottomSheetScrollView>
  
             </BottomSheet>
           </GestureHandlerRootView>
@@ -298,6 +303,10 @@ const styles = StyleSheet.create({
     fontSize: defaultStyle.sizes.title,
     color: defaultStyle.colors.black,
     fontWeight: 'bold'
+  },
+
+  bottomSheetScrollView: {
+    height: '100%'
   }
   
 
