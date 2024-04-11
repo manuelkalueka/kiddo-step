@@ -1,37 +1,28 @@
-import React, { useState, useEffect, useRef } from "react";
-import { View, Text, ActivityIndicator, Alert } from "react-native";
-import MapView, { Marker } from "react-native-maps";
-import {
-  requestForegroundPermissionsAsync,
-  getCurrentPositionAsync,
-  watchPositionAsync,
-  LocationAccuracy,
-} from "expo-location";
+import React, { useEffect, useState } from "react";
+import { View, Text } from "react-native";
+import * as Location from "expo-location";
+import geolib from "geolib";
+import { useAuth } from "../../contexts/auth";
+import { getLastLocation, saveLocation } from "../../services/location-service"; // Supondo que você tenha um serviço para interagir com a base de dados
 
-import styles from "./styles";
-import defaultStyle from "../../defaultStyle";
-
-export default function Map() {
+const Map = () => {
   const [location, setLocation] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const mapRef = useRef(null);
-
   async function requestLocationPermissions() {
     try {
-      const { granted } = await requestForegroundPermissionsAsync();
+      const { granted } = await Location.requestForegroundPermissionsAsync();
 
       if (granted) {
-        const currentPosition = await getCurrentPositionAsync();
-        setLocation(currentPosition);
+        const currentPosition = await Location.getCurrentPositionAsync();
+        console.log(currentPosition);
       } else {
-        Alert.alert(
+        console.log(
           "Permissão de localização negada",
           "O aplicativo precisa de permissão de localização para funcionar corretamente."
         );
       }
     } catch (error) {
       console.error("Erro ao obter permissões de localização:", error);
-      Alert.alert(
+      console.log(
         "Erro",
         "Ocorreu um erro ao obter permissões de localização."
       );
@@ -45,84 +36,89 @@ export default function Map() {
   useEffect(() => {
     async function startLocationWatch() {
       try {
-        await watchPositionAsync(
+        await Location.watchPositionAsync(
           {
-            accuracy: LocationAccuracy.Highest,
+            accuracy: Location.LocationAccuracy.Highest,
             timeInterval: 1000,
-            distanceInterval: 1,
+            distanceInterval: 10, //distancia de 10 metros
           },
           (response) => {
             setLocation(response);
-            const { latitude, longitude } = response.coords;
-            mapRef.current?.animateCamera({
-              pitch: 70,
-              center: {
-                latitude,
-                longitude,
-              },
-              heading: response.coords.heading,
-            });
+            handleLocationUpdate(response);
           }
         );
       } catch (error) {
         console.error("Erro ao iniciar a vigilância da localização:", error);
-        Alert.alert(
+        console.log(
           "Erro",
           "Ocorreu um erro ao iniciar a vigilância da localização."
         );
       }
+      // Função para lidar com a atualização da localização do usuário
+      const handleLocationUpdate = async (location) => {
+        // Obtém a última localização salva na base de dados
+        const kiddo = auth.user._id;
+        const device = 4321;
+
+        const lastLocation = await getLastLocation(kiddo, device);
+        if (lastLocation) {
+          // Calcula a distância entre a localização atual e a última localização salva
+          const distance = geolib.getDistance(
+            {
+              latitude: lastLocation.latitude,
+              longitude: lastLocation.longitude,
+            },
+            {
+              latitude: location.coords.latitude,
+              longitude: location.coords.longitude,
+            }
+          );
+          // Verifica se a distância percorrida é maior ou igual a 50 metros
+          if (distance >= 50) {
+            // Salva a nova localização na base de dados
+            try {
+              await saveLocation(
+                location.coords.latitude,
+                location.coords.longitude,
+                kiddo,
+                device
+              );
+              console.log("Localização salva com sucesso.");
+            } catch (error) {
+              console.error("Erro ao salvar localização:", error);
+            }
+          }
+        } else {
+          // Se não houver localização anterior, salva a localização atual
+          try {
+            await saveLocation(
+              location.coords.latitude,
+              location.coords.longitude,
+              kiddo,
+              device
+            );
+            console.log("Localização inicial salva com sucesso.");
+          } catch (error) {
+            console.error("Erro ao salvar localização inicial:", error);
+          }
+        }
+      };
+      // Limpa a observação ao desmontar o componente
+      return () => {
+        Location.stopLocationUpdatesAsync();
+      };
     }
 
     startLocationWatch();
   }, []);
 
-  useEffect(() => {
-    if (location) {
-      setLoading(false);
-    }
-  }, [location]);
+  const auth = useAuth();
 
   return (
-    <View style={styles.container}>
-      {loading ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator
-            size="large"
-            color={defaultStyle.colors.mainColorBlue}
-          />
-          <Text>Obtendo localização...</Text>
-        </View>
-      ) : location ? (
-        <MapView
-          ref={mapRef}
-          style={styles.map}
-          initialRegion={{
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-            latitudeDelta: 0.005,
-            longitudeDelta: 0.005,
-          }}
-          camera={{
-            pitch: 70,
-            center: {
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
-            },
-            heading: location.coords.heading,
-          }}
-          // mapType="hybrid"
-          showsMyLocationButton={true}
-        >
-          <Marker
-            coordinate={{
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
-            }}
-          />
-        </MapView>
-      ) : (
-        <Text>Falha ao obter localização.</Text>
-      )}
+    <View>
+      <Text>Rastreador de Localização</Text>
     </View>
   );
-}
+};
+
+export default Map;

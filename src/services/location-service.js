@@ -10,6 +10,21 @@ async function getLocationHistory(kiddo, device) {
   }
 }
 
+async function saveLocation(latitude, longitude, kiddo, device) {
+  try {
+    const { data } = await ApiMananger.post(`/locations`, {
+      latitude,
+      longitude,
+      kiddo,
+      device,
+    });
+    return data;
+  } catch (error) {
+    console.error("Erro ao salvar localização:", error);
+    throw error;
+  }
+}
+
 async function getCurrentLocation(id) {
   try {
     const { data } = await ApiMananger.get(`/locations/${id}`);
@@ -23,11 +38,17 @@ async function getCurrentLocation(id) {
 async function getLastLocation(kiddo, device) {
   try {
     const locations = await getLocationHistory(kiddo, device);
-    const location = locations[locations.length - 1];
+    const location = locations.pop();
     return location;
   } catch (error) {
-    console.log(error);
+    console.log("Erro ao buscar a ultima localização");
+    throw error;
   }
 }
 
-export { getCurrentLocation, getLastLocation, getLocationHistory };
+export {
+  getCurrentLocation,
+  getLastLocation,
+  getLocationHistory,
+  saveLocation,
+};
