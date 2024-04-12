@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 import * as Location from "expo-location";
 import geolib from "geolib";
 import { useAuth } from "../../contexts/auth";
-import { getLastLocation, saveLocation } from "../../services/location-service"; // Supondo que você tenha um serviço para interagir com a base de dados
+import { getLastLocation, saveLocation } from "../../services/location-service"; 
 
 const Map = () => {
   const [location, setLocation] = useState(null);
@@ -119,5 +119,5 @@ const Map = () => {
       <Text>Rastreador de Localização</Text>
     </View>
   );
-
+};
 export default Map;
