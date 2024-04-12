@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useCallback } from "react";
+import React, { useState, useMemo, useRef, useCallback, Fragment } from "react";
 import {
   View,
   Text,
@@ -11,8 +11,6 @@ import {
   Platform,
 } from "react-native";
 
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import BottomSheet from "@gorhom/bottom-sheet";
 import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
 
@@ -26,6 +24,7 @@ import styles from "./styles";
 import defaultStyle from "../../defaultStyle";
 import { StatusBar } from "expo-status-bar";
 import { handleDisableKeyboard } from "../../../utils/dismiss-keyboard";
+import PickerModal from "../../components/PickerModal";
 
 const KiddoSchema = yup.object({
   fullName: yup.string().required("Informe o Nome Completo"),
@@ -47,7 +46,11 @@ const KiddoDetailsScreen = () => {
 
   const navigation = useNavigation();
 
-  const [selectedLanguage, setSelectedLanguage] = useState();
+  const [selectedGendre, setSelectedGendre] = useState();
+  const itemsPicker = ["Masculino", "Feminino"];
+  const [visiblePicker, setVisiblePicker] = useState(false);
+
+  const [pickerResult, setPickerResult] = useState("Masculino");
 
   const pickerRef = useRef();
 
@@ -71,62 +74,13 @@ const KiddoDetailsScreen = () => {
 
   const kiddoAvatar = require("./../../../assets/img/boy-avatar.png");
 
-  function modalTiago() {
-    return (
-      <Modal transparent={true} visible={isModal2Visible}>
-        <View style={styles.modalFocus}>
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <BottomSheet
-              ref={bottomSheet}
-              index={1}
-              snapPoints={snapPoints}
-              enablePanDownToClose={true}
-              onChange={handleChange}
-              backgroundStyle={{ backgroundColor: defaultStyle.colors.light }}
-              handleIndicatorStyle={{
-                backgroundColor: defaultStyle.colors.mainColorBlue,
-              }}
-            >
-              <View style={styles.containerAlert}>
-                <Text>Configuração de alertas</Text>
+  const onClose = () => {
+    setVisiblePicker(false);
+  };
 
-                <Text style={styles.labels}> Tipo de alerta</Text>
-                <Picker
-                  selectedValue={selectedValue}
-                  onValueChange={(itemValue, itemIndex) =>
-                    setSelectedValue(itemValue)
-                  }
-                  style={styles.input}
-                >
-                  <Picker.Item label="Selecione o tipo de alerta" value={""} />
-                  <Picker.Item label="Entrada a escola" value={1} />
-                  <Picker.Item label="Saída da escola" value={2} />
-                  <Picker.Item label="Entrada em área restrita" value={3} />
-                </Picker>
-              </View>
-            </BottomSheet>
-          </GestureHandlerRootView>
-        </View>
-      </Modal>
-    );
-  }
-
-  const handleChange = useCallback((index) => {
-    //Se o bottomSheet arrastado todo ele para baixo então fecha o modal
-    if (index == -1) {
-      setisModal2Visible(false);
-    }
-  }, []);
-
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isModal2Visible, setisModal2Visible] = useState(false);
-  const [selectedValue, setSelectedValue] = useState(null);
-
-  const bottomSheet = useRef(null);
-  const snapPoints = useMemo(() => ["50%", "86%"], []);
-  /*
-  De Tiago "Quando clicar no botão config da screen alertas, abre um modal e dentro do modal contem o bottomSheet e o formulário para cadastrar ou config os alertas." 
-*/
+  const onSelect = (value) => {
+    setPickerResult(value);
+  };
 
   return (
     <View style={styles.container}>
@@ -225,36 +179,62 @@ const KiddoDetailsScreen = () => {
             <Text style={styles.labels}>Nome Completo</Text>
             <TextInput
               placeholder="Digite o Nome Completo"
-              value="TIAGO LUIS PEREIRA"
+              defaultValue="TIAGO LUIS PEREIRA"
               style={styles.input}
             />
           </View>
           <View>
             <Text style={styles.labels}>Data de Nascimento</Text>
-            <TextInput value={BIRTH_DATE().toString()} style={styles.input} />
+            <TextInput
+              defaultValue={BIRTH_DATE().toString()}
+              style={styles.input}
+            />
           </View>
           <View>
-            <Text style={styles.labels}>Gênero</Text>
-            <Picker
-              ref={pickerRef}
-              selectedValue={selectedLanguage}
-              onValueChange={(itemValue, itemIndex) =>
-                setSelectedLanguage(itemValue)
-              }
-              onBlur={closePicker}
-              onFocus={openPicker}
-              style={{ width: 150, height: 50 }}
-            >
-              <Picker.Item key={0} label="Java" value="java" />
-              <Picker.Item key={1} label="JavaScript" value="js" />
-            </Picker>
+            {Platform.OS === "android" ? (
+              <Fragment>
+                <Text style={styles.labels}>Gênero</Text>
+                <Picker
+                  ref={pickerRef}
+                  selectedValue={selectedGendre}
+                  onValueChange={(itemValue, itemIndex) =>
+                    setSelectedGendre(itemValue)
+                  }
+                  onBlur={closePicker}
+                  onFocus={openPicker}
+                  style={{ width: 150, height: 50 }}
+                >
+                  <Picker.Item key={0} label="Masculino" value="Masculino" />
+                  <Picker.Item key={1} label="Feminino" value="Feminino" />
+                </Picker>
+              </Fragment>
+            ) : (
+              <Fragment>
+                <Text style={styles.labels}>Genero</Text>
+                <TextInput
+                  defaultValue={pickerResult}
+                  style={styles.input}
+                  editable={false}
+                  onPressIn={() => {
+                    setVisiblePicker(true);
+                  }}
+                />
+                <PickerModal
+                  items={itemsPicker}
+                  title="Gênero"
+                  visible={visiblePicker}
+                  onClose={onClose}
+                  onSelect={onSelect}
+                />
+              </Fragment>
+            )}
           </View>
           <Text style={styles.sectionTitle}>Detalhes de Saúde</Text>
           <View>
             <Text style={styles.labels}>Tipo Sanguíneo</Text>
             <TextInput
               placeholder="Digite o tipo sanguíneo"
-              value="A+"
+              defaultValue="A+"
               style={styles.input}
             />
           </View>
@@ -265,7 +245,7 @@ const KiddoDetailsScreen = () => {
               multiline={true}
               editable={true}
               numberOfLines={4}
-              value="TIAGO LUIS PEREIRA"
+              defaultValue="TIAGO LUIS PEREIRA"
               style={styles.input}
             />
           </View>

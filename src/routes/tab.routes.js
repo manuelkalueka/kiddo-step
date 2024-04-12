@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment, useCallback, useMemo, useRef, useState } from "react";
 import {
   Text,
   View,
@@ -6,14 +6,25 @@ import {
   Image,
   StyleSheet,
   Platform,
+  Modal,
+  Keyboard,
+  TouchableWithoutFeedback,
+  Switch
 } from "react-native";
+
+import { GestureHandlerRootView, TextInput } from "react-native-gesture-handler";
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import { Picker } from "@react-native-picker/picker";
+import DateTimePicker from '@react-native-community/datetimepicker'
 
 import { useNavigation } from "@react-navigation/native";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
+import DropDownPicker from 'react-native-dropdown-picker';
 
 import defaultStyle from "../defaultStyle";
+import { handleDisableKeyboard } from "../../utils/dismiss-keyboard";
 
 import ButtonNewfecing from "../components/ButtonNewfecing";
 import {
@@ -36,108 +47,240 @@ export default function TabRoutes() {
     navigation.navigate("KiddoDetails");
   }
 
-  return (
-    <Navigator
-      initialRouteName="MapaTab"
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: defaultStyle.colors.mainColorBlue,
-          elevation: 25,
-          height: 75,
-        },
-        headerTitleAlign: "left",
-        tabBarStyle: {
-          height: 60,
-          paddingBottom: 10,
-          backgroundColor: defaultStyle.colors.light,
-        },
-        tabBarActiveTintColor: defaultStyle.colors.mainColorBlue,
-        tabBarInactiveTintColor: defaultStyle.colors.grayAccent4,
-      }}
-    >
-      <Screen
-        name="MapaTab"
-        component={MapStack}
-        options={{
-          tabBarIcon: ({ size, color }) => (
-            <Entypo name="location" size={size} color={color} />
-          ),
-          headerTitle: () => <Header name="Mapa" />,
-          headerRight: () => (
-            <TouchableOpacity
-              // Estudar a biblioteca para renderizar correctamente botões no Header [React-native navigation]
+  const handleChange = useCallback((index) => {
+    //Se o bottomSheet arrastado todo ele para baixo então fecha o modal
+    if (index == -1) {
+      setisModal2Visible(false);
+    }
+  }, []);
 
-              style={styles.container}
-              onPress={() => {
-                handleKiddoModalOpen();
+  const onChangeDate = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setDate(currentDate);
+  }
+
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModal2Visible, setisModal2Visible] = useState(false);
+  const [selectedValue1, setSelectedValue1] = useState(null);
+  const [selectedValue2, setSelectedValue2] = useState(null);
+  const [date, setDate] = useState(new Date())
+
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+
+  const [openPickerAlert, setOpenPickerAlert] = useState(false);
+  const [valuePickerAlert, setValuePickerAlert] = useState(null);
+
+  const cercasVirtuais = [
+    { label: 'Escola', value: 'Escola' },
+    { label: 'Casa', value: 'Casa' }
+  ];
+
+  const bottomSheet = useRef(null);
+  const snapPoints = useMemo(() => ["55%", "70%"], []);
+
+  return (
+    <Fragment>
+      <Navigator
+        initialRouteName="MapaTab"
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: defaultStyle.colors.mainColorBlue,
+            elevation: 25,
+            height: 75,
+          },
+          headerTitleAlign: "left",
+          tabBarStyle: {
+            height: 60,
+            paddingBottom: 10,
+            backgroundColor: defaultStyle.colors.light,
+          },
+          tabBarActiveTintColor: defaultStyle.colors.mainColorBlue,
+          tabBarInactiveTintColor: defaultStyle.colors.grayAccent4,
+        }}
+      >
+        <Screen
+          name="MapaTab"
+          component={MapStack}
+          options={{
+            tabBarIcon: ({ size, color }) => (
+              <Entypo name="location" size={size} color={color} />
+            ),
+            headerTitle: () => <Header name="Mapa" />,
+            headerRight: () => (
+              <TouchableOpacity
+                // Estudar a biblioteca para renderizar correctamente botões no Header [React-native navigation]
+
+                style={styles.container}
+                onPress={() => {
+                  handleKiddoModalOpen();
+                }}
+              >
+                <View>
+                  <Image
+                    source={require("./../../assets/img/boy-avatar.png")}
+                    style={styles.kiddoImg}
+                  />
+                </View>
+                <Text style={styles.textSurname}>Tiagão</Text>
+              </TouchableOpacity>
+            ),
+            tabBarLabel: "Mapa",
+          }}
+        />
+        <Screen
+          name="LocationHistoryTab"
+          component={LocationHistoryStack}
+          options={{
+            tabBarIcon: ({ size, color }) => (
+              <FontAwesome5 name="history" size={size} color={color} />
+            ),
+            headerTitle: () => <Header name="Histórico de Localização" />,
+            tabBarLabel: "Histórico",
+          }}
+        />
+        <Screen
+          name="CercaTab"
+          component={FencigStack}
+          options={{
+            tabBarIcon: ({ focused, size, color }) => (
+              <ButtonNewfecing size={size} color={color} focused={focused} />
+            ),
+            headerTitle: () => <Header name="Criar Geo Cerca" />,
+            tabBarLabel: "",
+          }}
+        />
+        <Screen
+          name="AlertasTab"
+          component={AlertStack}
+          options={{
+            tabBarIcon: ({ size, color }) => (
+              <Entypo name="notification" size={size} color={color} />
+            ),
+            headerTitle: () => <Header name="Alertas" />,
+            headerRight: () => (
+              <TouchableOpacity
+                style={styles.container}
+                onPress={() => setisModal2Visible(true)} //Põe visible o modal do bottomSheet
+              >
+
+                <FontAwesome5 name='cog' size={25} color={defaultStyle.colors.white} />
+              </TouchableOpacity>
+            ),
+            tabBarBadge: 3,
+            tabBarLabel: "Alertas",
+          }}
+        />
+        <Screen
+          name="PerfilTab"
+          component={ProfileAllStack}
+          options={{
+            tabBarIcon: ({ size, color }) => (
+              <FontAwesome5 name="user" size={size} color={color} />
+            ),
+            headerTitle: () => <Header name="Perfil" />,
+            tabBarLabel: "Perfil",
+          }}
+        />
+      </Navigator>
+
+
+      <Modal transparent={true} visible={isModal2Visible}>
+        <View style={styles.modalFocus}>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <BottomSheet
+              ref={bottomSheet}
+              index={1}
+              snapPoints={snapPoints}
+              enablePanDownToClose={true}
+              onChange={handleChange}
+              backgroundStyle={{ backgroundColor: defaultStyle.colors.light }}
+              handleIndicatorStyle={{
+                backgroundColor: defaultStyle.colors.mainColorBlue,
               }}
             >
-              <View>
-                <Image
-                  source={require("./../../assets/img/boy-avatar.png")}
-                  style={styles.kiddoImg}
-                />
-              </View>
-              <Text style={styles.textSurname}>Tiagão</Text>
-            </TouchableOpacity>
-          ),
-          tabBarLabel: "Mapa",
-        }}
-      />
-      <Screen
-        name="LocationHistoryTab"
-        component={LocationHistoryStack}
-        options={{
-          tabBarIcon: ({ size, color }) => (
-            <FontAwesome5 name="history" size={size} color={color} />
-          ),
-          headerTitle: () => <Header name="Histórico de Localização" />,
-          tabBarLabel: "Histórico",
-        }}
-      />
-      <Screen
-        name="CercaTab"
-        component={FencigStack}
-        options={{
-          tabBarIcon: ({ focused, size, color }) => (
-            <ButtonNewfecing size={size} color={color} focused={focused} />
-          ),
-          headerTitle: () => <Header name="Criar Geo Cerca" />,
-          tabBarLabel: "",
-        }}
-      />
-      <Screen
-        name="AlertasTab"
-        component={AlertStack}
-        options={{
-          tabBarIcon: ({ size, color }) => (
-            <Entypo name="notification" size={size} color={color} />
-          ),
-          headerTitle: () => <Header name="Alertas" />,
-          headerRight: () => (
-            <TouchableOpacity
-              style={styles.container}
-              onPress={() => setisModal2Visible(true)} //Põe visible o modal do bottomSheet
-            >
-              <Text style={styles.textConfig}>Configuração</Text>
-            </TouchableOpacity>
-          ),
-          tabBarBadge: 3,
-          tabBarLabel: "Alertas",
-        }}
-      />
-      <Screen
-        name="PerfilTab"
-        component={ProfileAllStack}
-        options={{
-          tabBarIcon: ({ size, color }) => (
-            <FontAwesome5 name="user" size={size} color={color} />
-          ),
-          headerTitle: () => <Header name="Perfil" />,
-          tabBarLabel: "Perfil",
-        }}
-      />
-    </Navigator>
+              <BottomSheetScrollView
+                style={styles.bottomSheetScrollView}
+              >
+
+                <View style={styles.containerAlert}>
+                  <Text style={styles.titleBottomSheet}>Configuração de alertas</Text>
+
+                  <Text style={styles.labels}>Designação</Text>
+                  <TextInput
+                    style={styles.input}
+                  />
+
+                  <Text style={styles.labels}>Tipo de alerta</Text>
+                  <DropDownPicker
+                    open={openPickerAlert}
+                    value={valuePickerAlert}
+                    items={[
+                      {
+                        label: 'Entrada',
+                        value: 'entrada'
+                      },
+                      {
+                        label: 'Saída',
+                        value: 'saida'
+                      }
+                    ]}
+                    setOpen={setOpenPickerAlert}
+                    setValue={setValuePickerAlert}
+                  />
+
+                  <Text style={styles.labels}>Cerca virtual</Text>
+                  <DropDownPicker
+                    open={open}
+                    value={value}
+                    items={cercasVirtuais}
+                    setOpen={setOpen}
+                    setValue={setValue}
+                  />
+                  
+                  <View style={styles.containerSwitch}>
+                    <Text style={styles.labels}>Definir hora ?</Text>
+                    <Switch
+                      trackColor={{
+                        false: "#767577",
+                        true: defaultStyle.colors.mainColorBlue,
+                      }}
+                      thumbColor={
+                        isEnabled ? defaultStyle.colors.blueLightColor1 : "#f4f3f4"
+                      }
+                      ios_backgroundColor="#3e3e3e"
+                      onValueChange={toggleSwitch}
+                      value={isEnabled}
+                    />
+                  </View>
+                  {
+                    isEnabled && (
+                      <DateTimePicker
+                        testID="dataTimePicker"
+                        mode="time"
+                        value={date}
+                        is24Hour={true}
+                        onChange={onChangeDate}
+                      />
+                    )
+                  }
+
+                  <TouchableOpacity style={styles.buttonSave}>
+                    <Text style={styles.textBtnSave}>Salvar</Text>
+                  </TouchableOpacity>
+
+                </View>
+              </BottomSheetScrollView>
+
+            </BottomSheet>
+          </GestureHandlerRootView>
+        </View>
+
+      </Modal>
+    </Fragment>
   );
 }
 const styles = StyleSheet.create({
@@ -180,12 +323,49 @@ const styles = StyleSheet.create({
     fontWeight: "300",
   },
 
-  input: {
-    paddingVertical: Platform.OS === "ios" ? 16 : 8,
+  inputcombox: {
+    paddingVertical: Platform.OS === "ios" ? 16 : 10,
     paddingHorizontal: 5,
     fontSize: 16,
-    flex: 1,
     backgroundColor: defaultStyle.colors.white,
     borderRadius: defaultStyle.borderRadio.borderRadioInput,
   },
+
+  input: {
+    paddingVertical: Platform.OS === "ios" ? 16 : 10,
+    paddingHorizontal: 5,
+    fontSize: 16,
+    backgroundColor: defaultStyle.colors.white,
+    borderRadius: defaultStyle.borderRadio.borderRadioInput,
+  },
+
+  buttonSave: {
+    marginVertical: '8%',
+    padding: 16,
+    backgroundColor: defaultStyle.colors.mainColorBlue,
+    borderRadius: defaultStyle.borderRadio.borderRadioButton.small,
+  },
+
+  textBtnSave: {
+    textAlign: "center",
+    fontSize: defaultStyle.sizes.subtitle,
+    color: defaultStyle.colors.white,
+    fontWeight: "bold",
+  },
+
+  titleBottomSheet: {
+    fontSize: defaultStyle.sizes.title,
+    color: defaultStyle.colors.black,
+    fontWeight: 'bold'
+  },
+
+  bottomSheetScrollView: {
+    height: '100%'
+  },
+
+  containerSwitch: {
+    flexDirection: 'row'
+  }
+
+
 });

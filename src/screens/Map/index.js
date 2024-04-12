@@ -119,6 +119,5 @@ const Map = () => {
       <Text>Rastreador de Localização</Text>
     </View>
   );
-};
 
 export default Map;
