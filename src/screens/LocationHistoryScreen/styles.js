@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
     color: defaultStyle.colors.grayAccent2,
     marginBottom: 10,
   },
+  labelContent: { fontWeight: "bold" },
 });
 
 export default styles;

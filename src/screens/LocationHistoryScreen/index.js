@@ -1,12 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  Alert,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, FlatList, TouchableOpacity, Alert } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import defaultStyle from "../../defaultStyle";
 import { useNavigation } from "@react-navigation/native";
@@ -29,6 +22,9 @@ const LocationHistoryScreen = () => {
   const [locationHistory, setLocationHistory] = useState(null);
   const [locationItem, setLocationItem] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const [visibleModalDetail, setVisibleModalDetail] = useState(false);
+
   let coordenadas = {};
   if (locationItem) {
     const { latitude, longitude } = locationItem;
@@ -40,18 +36,25 @@ const LocationHistoryScreen = () => {
   }
 
   async function revGeoCode(latitude, longitude) {
-    const place = await reverseGeocodeAsync({ latitude, longitude });
-    return place;
+    try {
+      const place = await reverseGeocodeAsync({ latitude, longitude });
+      return place;
+    } catch (error) {
+      console.log("Erro ao reverter localização para endereço ", error);
+    }
   }
 
   async function openBottomSheet(id) {
-    const locItem = await getLocationItem(id);
-    const place = await revGeoCode(locItem.latitude, locItem.longitude);
-    locItem.place = place[0];
-    setLocationItem(locItem);
-    console.log(locationItem.place.name);
-    bottomSheetRef.current?.expand();
-    setLoading(false);
+    try {
+      const locItem = await getLocationItem(id); //guarda o item para visualizar
+      const place = await revGeoCode(locItem.latitude, locItem.longitude); //Verificar o desempenho nessa chamada por causa da API do Location
+      locItem.place = place[0];
+      setLocationItem(locItem);
+      setLoading(false);
+      bottomSheetRef.current?.expand();
+    } catch (error) {
+      console.log("Erro ao carregar localização especifica ", error);
+    }
   }
 
   function closeBottomSheet() {
@@ -84,6 +87,19 @@ const LocationHistoryScreen = () => {
     getLocHistory();
   }, []);
 
+  async function handleOpenModalDetail(id) {
+    try {
+      await openBottomSheet(id);
+      setVisibleModalDetail(true);
+    } catch (error) {
+      console.log("Erro ao Abrir o Modal", error);
+    }
+  }
+
+  function handleCloseModalDetail() {
+    setVisibleModalDetail(false);
+  }
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -91,7 +107,7 @@ const LocationHistoryScreen = () => {
         showsVerticalScrollIndicator={false}
         keyExtractor={(item) => item._id}
         renderItem={({ item }) =>
-          locationHistory ? (
+          locationHistory.length ? (
             <TouchableOpacity
               style={styles.itemContainer}
               onLongPress={() =>
@@ -101,8 +117,8 @@ const LocationHistoryScreen = () => {
             >
               <View style={styles.item}>
                 <Text style={styles.header}>
-                  {item.address
-                    ? item.address.country
+                  {item.place !== null && item.place !== undefined
+                    ? `${item.place.country} em ${item.place.city}`
                     : `Movimento ${item.latitude.toFixed(4)}`}
                 </Text>
                 <Text style={styles.date}>{relativeTime(item?.timestamp)}</Text>
@@ -137,10 +153,18 @@ const LocationHistoryScreen = () => {
           )
         }
       />
+
+      {/* <Modal
+        transparent={true}
+        visible={visibleModalDetail}
+        onRequestClose={handleCloseModalDetail}
+        onDismiss={handleCloseModalDetail}
+        statusBarTranslucent={true}
+      > */}
       <BottomSheet
         ref={bottomSheetRef}
         index={0} // começa fechado
-        snapPoints={[1, "25%", "50%", "100%"]}
+        snapPoints={[1, "25%", "50%", "90%"]}
         handleIndicatorStyle={{
           backgroundColor: defaultStyle.colors.mainColorBlue,
         }}
@@ -152,47 +176,54 @@ const LocationHistoryScreen = () => {
         >
           <Text style={styles.mainDetailHeader}>
             Detalhes de{" "}
-            {locationItem?.place?.name !== null
+            {locationItem?.place?.name !== null &&
+            locationItem?.place?.name !== undefined
               ? `${locationItem?.place?.name} em ${locationItem?.place?.city}` ===
                 null
                 ? ""
                 : `${locationItem?.place?.city}`
-              : "Movimento"}
+              : `Movimento ${locationItem?.latitude.toFixed(4)}`}
           </Text>
           <View style={styles.detailContainer}>
             <Text style={styles.detailHeader}>Data e Hora</Text>
             <Text style={styles.detailContent}>
-              Data da Localização: {formatDate(locationItem?.timestamp)}
+              <Text style={styles.labelContent}>Data da Localização:</Text>{" "}
+              {formatDate(locationItem?.timestamp)}
             </Text>
             <Text style={styles.detailContent}>
-              Hora da Localização: {getHour(locationItem?.timestamp)}
+              <Text style={styles.labelContent}>Hora da Localização:</Text>{" "}
+              {getHour(locationItem?.timestamp)}
             </Text>
           </View>
           <View style={styles.detailContainer}>
             <Text style={styles.detailHeader}>Localização</Text>
             <Text style={styles.detailContent}>
-              Endereço Completo:{" "}
-              {locationItem?.city !== null
+              <Text style={styles.labelContent}>Endereço Completo:</Text>{" "}
+              {locationItem?.city !== null && locationItem?.city !== undefined
                 ? `${locationItem?.name}, ${locationItem?.street}, ${locationItem?.city},${locationItem?.country}`
-                : "Inválido!"}
+                : "DESCONHECIDO"}
             </Text>
             <Text style={styles.detailContent}>
-              Latitude e Longitude: {locationItem?.latitude.toFixed(4)},{" "}
+              <Text style={styles.labelContent}>Latitude e Longitude:</Text>{" "}
+              {locationItem?.latitude.toFixed(4)},{" "}
               {locationItem?.longitude.toFixed(4)}
             </Text>
             <Text style={styles.detailContent}>
-              Nome do Local:{" "}
-              {locationItem?.name !== null ? locationItem?.name : "Inválido!"}
+              <Text style={styles.labelContent}>Nome do Local:</Text>{" "}
+              {locationItem?.name !== null && locationItem?.name !== undefined
+                ? locationItem?.name
+                : "DESCONHECIDO"}
             </Text>
           </View>
           <View style={styles.detailContainer}>
             <Text style={styles.detailHeader}>Outras Informações</Text>
             <Text style={styles.detailContent}>
-              Tipo de Localização: {locationItem?.type.toUpperCase()}
+              <Text style={styles.labelContent}>Tipo de Localização:</Text>{" "}
+              {locationItem?.type.toUpperCase()}
             </Text>
             <Text style={styles.detailContent}>
               {/* Área: [SEGURA, NÃO DEFINIDA, INSEGURA] */}
-              Área: NÃO DEFINIDA
+              <Text style={styles.labelContent}>Área:</Text> NÃO DEFINIDA
             </Text>
           </View>
           <ActionButtom
