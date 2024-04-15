@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 import * as Location from "expo-location";
 import geolib from "geolib";
 import { useAuth } from "../../contexts/auth";
-import { getLastLocation, saveLocation } from "../../services/location-service"; 
+import { getLastLocation, saveLocation } from "../../services/location-service";
 
 const Map = () => {
   const [location, setLocation] = useState(null);
