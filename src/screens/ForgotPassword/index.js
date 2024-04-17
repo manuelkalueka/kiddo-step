@@ -15,6 +15,8 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { Controller, useForm } from 'react-hook-form'
 import * as yup from 'yup'
 
+import * as Notify from 'expo-notifications'
+
 import { styles } from './styles'
 import defaultStyle from '../../defaultStyle'
 import { handleDisableKeyboard } from "../../../utils/dismiss-keyboard"
@@ -23,31 +25,53 @@ const schema1 = yup.object({
   email: yup.string().email('Por favor informe um email válido').required('Campo obrigatório'),
 })
 
-const schema2 = yup.object({
-  code1: yup.number().required('Campo obrigatório'),
-  code2: yup.number().required('Campo obrigatório'),
-  code3: yup.number().required('Campo obrigatório'),
-  code4: yup.number().required('Campo obrigatório'),
-})
+
 
 export default function ForgotPassword() {
+  const [code1, setCode1] = useState('')
+  const [code2, setCode2] = useState('')
+  const [code3, setCode3] = useState('')
+  const [code4, setCode4] = useState('')
 
   const [visModal, setVisModal] = useState(false)
   const [active, SetActive] = useState(true)
 
   const { control, handleSubmit, formState: { errors } } = useForm({
-    resolver: yupResolver(schema1, schema2)
+    resolver: yupResolver(schema1)
   })
 
   const sendData = (data) => {
     setVisModal(true)
 
+    setTimeout(() => {
+      SetActive(false)
+      //Preenchimento automático dos inputs de code
+      const max = 9
+      const min = 0
+
+      //Constantes com as funcões para gerarem números aleatórios
+      const code1 = Math.floor(Math.random() * (max - min + 1) + min)
+      const code2 = Math.floor(Math.random() * (max - min + 1) + min)
+      const code3 = Math.floor(Math.random() * (max - min + 1) + min)
+      const code4 = Math.floor(Math.random() * (max - min + 1) + min)
+
+      //Setando os números gerados no states
+      setCode1(code1)
+      setCode2(code2)
+      setCode3(code3)
+      setCode4(code4)
+
+    }, 2000)
+  }
+
+  const dismissModal = () => {
+    setVisModal(false)
   }
 
   const verifyCode = (data) => {
     console.log(data)
     SetActive(false)
-    //Faça o preenchimento automático aqui!a
+
   }
 
   return (
@@ -64,69 +88,36 @@ export default function ForgotPassword() {
             <View style={styles.containerCode}>
               <View style={styles.containerInputsCode}>
 
-              <TouchableOpacity style={styles.btnClose}>
-                <Text style={styles.txtBtnClose}>Fechar</Text>
-              </TouchableOpacity>
+                <TouchableOpacity style={styles.btnClose} onPress={dismissModal}>
+                  <Text style={styles.txtBtnClose}>Fechar</Text>
+                </TouchableOpacity>
 
-                <Controller
-                  name='code1'
-                  control={control}
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <TextInput
-                      style={styles.code}
-                      keyboardType='numeric'
-                      maxLength={1}
-                      onChangeText={onChange}
-                      onBlur={onBlur}
-                      value={value}
-                    />
-                  )}
+                <TextInput
+                  style={styles.code}
+                  keyboardType='numeric'
+                  maxLength={1}
+                  value={String(code1)}
                 />
 
-
-                <Controller
-                  name='code2'
-                  control={control}
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <TextInput
-                      style={styles.code}
-                      keyboardType='numeric'
-                      maxLength={1}
-                      onChangeText={onChange}
-                      onBlur={onBlur}
-                      value={value}
-                    />
-                  )}
+                <TextInput
+                  style={styles.code}
+                  keyboardType='numeric'
+                  maxLength={1}
+                  value={String(code2)}
                 />
 
-                <Controller
-                  name='code3'
-                  control={control}
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <TextInput
-                      style={styles.code}
-                      keyboardType='numeric'
-                      maxLength={1}
-                      onChangeText={onChange}
-                      onBlur={onBlur}
-                      value={value}
-                    />
-                  )}
+                <TextInput
+                  style={styles.code}
+                  keyboardType='numeric'
+                  maxLength={1}
+                  value={String(code3)}
                 />
 
-                <Controller
-                  name='code4'
-                  control={control}
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <TextInput
-                      style={styles.code}
-                      keyboardType='numeric'
-                      maxLength={1}
-                      onChangeText={onChange}
-                      onBlur={onBlur}
-                      value={value}
-                    />
-                  )}
+                <TextInput
+                  style={styles.code}
+                  keyboardType='numeric'
+                  maxLength={1}
+                  value={String(code4)}
                 />
 
               </View>
