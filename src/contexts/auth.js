@@ -1,7 +1,11 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import ApiMananger from "../services/api.js";
 import AsyncStorage from "@react-native-async-storage/async-storage"; //armazenar dados em string no dispositivo
-import { signInService, signUpService } from "./../services/auth-services.js";
+import {
+  signInService,
+  signUpService,
+  updateUserService,
+} from "./../services/auth-services.js";
 
 const contextFormat = {
   signed: true,
@@ -74,6 +78,14 @@ export const AuthProvider = ({ children }) => {
     await AsyncStorage.removeItem("@KiddoStepToken");
   }
 
+  async function updateUser(data) {
+    try {
+      await updateUserService(data, user);
+    } catch (error) {
+      console.log("Erro ao Actualizar o usuário");
+    }
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -84,6 +96,7 @@ export const AuthProvider = ({ children }) => {
         signUp,
         loading,
         getUserAuth,
+        updateUser
       }}
     >
       {children}

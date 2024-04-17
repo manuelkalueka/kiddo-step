@@ -5,9 +5,6 @@ const styles = StyleSheet.create({
   containerLogin: {
     flex: 1,
     backgroundColor: defaultStyle.colors.white,
-    width:'100%',
-    height:'100%',
-    backgroundColor: defaultStyle.colors.white,
     paddingVertical: "5%",
     paddingHorizontal: "5%",
   },
