@@ -10,6 +10,7 @@ import {
   ActivityIndicator
 } from 'react-native'
 import { FontAwesome5, FontAwesome } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Controller, useForm } from 'react-hook-form'
@@ -35,6 +36,9 @@ Notify.setNotificationHandler({
 })
 
 export default function ForgotPassword() {
+
+  const navigation = useNavigation();
+
   //States
   const [code1, setCode1] = useState('')
   const [code2, setCode2] = useState('')
@@ -91,8 +95,8 @@ export default function ForgotPassword() {
   }
 
   const verifyCode = (data) => {
-    console.log(data)
     SetActive(false)
+    navigation.navigate('CreatePassword')
 
   }
 
