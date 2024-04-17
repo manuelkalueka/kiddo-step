@@ -21,8 +21,19 @@ const styles = StyleSheet.create({
   containerCode: {
     backgroundColor: defaultStyle.colors.white,
     width: '95%',
-    height: 200,
+    height: 220,
     borderRadius: defaultStyle.borderRadio.normal
+  },
+
+  btnClose: {
+    position: 'absolute',
+    top: 2,
+    right: 10
+  },
+
+  txtBtnClose: {
+    fontSize: defaultStyle.sizes.button,
+    color: defaultStyle.colors.mainColorBlue
   },
 
   containerInputsCode: {

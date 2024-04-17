@@ -64,6 +64,10 @@ export default function ForgotPassword() {
             <View style={styles.containerCode}>
               <View style={styles.containerInputsCode}>
 
+              <TouchableOpacity style={styles.btnClose}>
+                <Text style={styles.txtBtnClose}>Fechar</Text>
+              </TouchableOpacity>
+
                 <Controller
                   name='code1'
                   control={control}
