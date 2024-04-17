@@ -25,9 +25,17 @@ const schema1 = yup.object({
   email: yup.string().email('Por favor informe um email válido').required('Campo obrigatório'),
 })
 
-
+//Permitindo o uso do expo notication
+Notify.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+    shouldShowAlert: true
+  })
+})
 
 export default function ForgotPassword() {
+  //States
   const [code1, setCode1] = useState('')
   const [code2, setCode2] = useState('')
   const [code3, setCode3] = useState('')
@@ -36,11 +44,26 @@ export default function ForgotPassword() {
   const [visModal, setVisModal] = useState(false)
   const [active, SetActive] = useState(true)
 
+  //Função que manda a notification no user
+  const handlerNotify = async () => {
+    await Notify.scheduleNotificationAsync({
+      content: {
+        title: 'Confirmação de email',
+        body: 'Confirmamos o teu email através de um código de segurança enviado',
+        data: [],
+      },
+      trigger: {
+        seconds:1
+      }
+    })
+  }
+
   const { control, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema1)
   })
 
   const sendData = (data) => {
+    handlerNotify()
     setVisModal(true)
 
     setTimeout(() => {
@@ -60,7 +83,6 @@ export default function ForgotPassword() {
       setCode2(code2)
       setCode3(code3)
       setCode4(code4)
-
     }, 2000)
   }
 

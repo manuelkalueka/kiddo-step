@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
 
   btnClose: {
     position: 'absolute',
-    top: 2,
+    top: 5,
     right: 10
   },
 
