@@ -22,6 +22,8 @@ import { styles } from './styles'
 import defaultStyle from '../../defaultStyle'
 import { handleDisableKeyboard } from "../../../utils/dismiss-keyboard"
 
+import { confirmEmail } from '../../services/auth-services'
+
 const schema1 = yup.object({
   email: yup.string().email('Por favor informe um email válido').required('Campo obrigatório'),
 })
@@ -67,6 +69,13 @@ export default function ForgotPassword() {
   })
 
   const sendData = (data) => {
+
+    const { email } = data;
+
+    confirmEmail(email)
+
+    //Fazer a verificação do email existente no banco de dados ou não para assim privilegiar a recuperação de senha
+
     handlerNotify()
     setVisModal(true)
 
