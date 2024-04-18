@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
-  ActivityIndicator,
   Alert,
   TextInput,
   ScrollView,
@@ -16,8 +15,8 @@ import Slider from "@react-native-community/slider";
 import ActionButtom from "../../components/ActionButtom";
 import MapView, { Marker, Circle } from "react-native-maps";
 import {
-  requestForegroundPermissionsAsync,
-  getCurrentPositionAsync,
+  requestForegroundPermissionsAsync, //Serve para pedir a Localização enquanto o App é Executado
+  getCurrentPositionAsync, //Pega a Localização Actual
 } from "expo-location";
 
 import styles from "./styles";
@@ -29,11 +28,11 @@ import * as yup from "yup";
 
 const kiddoAvatar = require("./../../../assets/img/boy-avatar.png");
 import { handleDisableKeyboard } from "../../../utils/dismiss-keyboard";
-import { getKiddoInfo } from "../../services/kiddo-service";
+import { getKiddoInfo } from "../../services/kiddo-service"; //Pegar a Criança na DB
 import { useAuth } from "../../contexts/auth";
 import { useNavigation } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
-import { createGeoFence } from "../../services/geofence";
+import { createGeoFence } from "../../services/geofence"; //Criar Geo Cerca
 
 const Schema = yup.object({
   name: yup.string().required("Informe um nome de identificação"),
@@ -81,8 +80,9 @@ export default function NewFecing() {
       longitude,
     };
     try {
-      const status = await createGeoFence(geoFenceData, kiddo._id);
+      const status = await createGeoFence(geoFenceData, kiddo._id); //Salvar a Fence
       if (status === 200 || status === 201) {
+        //Mudar de Tela de Tudo Correr Bem
         navigation.navigate("Mapa");
       } else {
         Alert.alert("Erro", "Tente Novamente!");
@@ -119,6 +119,7 @@ export default function NewFecing() {
   };
 
   const handleMapPress = (e) => {
+    //Captura no Evento de Click no Mapa e Muda o Pin para a localização Clicada
     setMarkerPosition(e.nativeEvent.coordinate);
   };
 
@@ -144,6 +145,7 @@ export default function NewFecing() {
           >
             {markerPosition && (
               <>
+                {/* Funciona como o Fragment*/}
                 <Circle
                   center={markerPosition}
                   radius={radius}
