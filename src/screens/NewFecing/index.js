@@ -33,16 +33,23 @@ import { getKiddoInfo } from "../../services/kiddo-service";
 import { useAuth } from "../../contexts/auth";
 import { useNavigation } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
+import { createGeoFence } from "../../services/geofence";
 
 const Schema = yup.object({
-  geoName: yup.string().required("Informe um nome de identificação"),
+  name: yup.string().required("Informe um nome de identificação"),
   geoType: yup.string(),
+  target: yup.bool(),
+  status: yup.bool(),
 });
 
 export default function NewFecing() {
   const navigation = useNavigation();
   const [kiddo, setKiddo] = useState(null);
   const { user } = useAuth();
+
+  const [location, setLocation] = useState(null);
+  const [markerPosition, setMarkerPosition] = useState(null);
+  const [radius, setradius] = useState(100); // Valor padrão do raio da GeoFence
 
   useEffect(() => {
     async function getKiddo() {
@@ -59,20 +66,31 @@ export default function NewFecing() {
   } = useForm({
     defaultValues: {
       status: true,
-      geoTarget: true, // Definindo o valor padrão do campo 'status' como true
+      target: true, // Definindo o valor padrão do campo 'status' como true
       geoType: true,
     },
     resolver: yupResolver(Schema),
   });
 
   const sendForm = async (data) => {
-    //Salvar os Dados e Voltar no Mapa
-    navigation.navigate("Mapa");
+    const { latitude, longitude } = location.coords;
+    const geoFenceData = {
+      ...data,
+      radius,
+      latitude,
+      longitude,
+    };
+    try {
+      const status = await createGeoFence(geoFenceData, kiddo._id);
+      if (status === 200 || status === 201) {
+        navigation.navigate("Mapa");
+      } else {
+        Alert.alert("Erro", "Tente Novamente!");
+      }
+    } catch (error) {
+      console.log("Erro ao Salvar Fence", error);
+    }
   };
-
-  const [location, setLocation] = useState(null);
-  const [markerPosition, setMarkerPosition] = useState(null);
-  const [radiusFence, setRadiusFence] = useState(100); // Valor padrão do raio da GeoFence
 
   useEffect(() => {
     getLocationAsync();
@@ -86,8 +104,8 @@ export default function NewFecing() {
         const currentPosition = await getCurrentPositionAsync();
         setLocation(currentPosition);
         setMarkerPosition({
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
+          latitude: currentPosition.coords.latitude,
+          longitude: currentPosition.coords.longitude,
         });
       } else {
         Alert.alert(
@@ -103,14 +121,6 @@ export default function NewFecing() {
   const handleMapPress = (e) => {
     setMarkerPosition(e.nativeEvent.coordinate);
   };
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <Text style={{ backgroundColor: "red" }}>Fui Renderizado</Text>
-      ),
-    });
-  }, [navigation]);
 
   const pickerGeoRef = useRef();
 
@@ -136,7 +146,7 @@ export default function NewFecing() {
               <>
                 <Circle
                   center={markerPosition}
-                  radius={radiusFence}
+                  radius={radius}
                   strokeColor="rgba(162, 196, 224,1)"
                   fillColor="rgba(162, 196, 224,0.3)"
                 />
@@ -160,7 +170,7 @@ export default function NewFecing() {
         >
           <Text style={styles.label}>Nome da Cerca</Text>
           <Controller
-            name="geoName"
+            name="name"
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
@@ -171,8 +181,8 @@ export default function NewFecing() {
               />
             )}
           />
-          {errors.geoName && (
-            <Text style={styles.msgAlerta}>{errors.geoName?.message}</Text>
+          {errors.name && (
+            <Text style={styles.msgAlerta}>{errors.name?.message}</Text>
           )}
           <Text style={styles.label}>Tipo de Cerca</Text>
           <Controller
@@ -181,7 +191,7 @@ export default function NewFecing() {
             render={({ field: { onChange, onBlur, value } }) => (
               <Picker
                 ref={pickerGeoRef}
-                selectedValue={value || true}
+                selectedValue={value}
                 onValueChange={onChange}
                 onBlur={onBlur}
                 style={styles.pickInput}
@@ -204,11 +214,11 @@ export default function NewFecing() {
             minimumTrackTintColor={defaultStyle.colors.mainColorBlue}
             maximumTrackTintColor={defaultStyle.colors.blueLightColor1}
             step={50}
-            value={radiusFence}
-            onValueChange={(value) => setRadiusFence(value)}
+            value={radius}
+            onValueChange={(value) => setradius(value)}
           />
           <Text style={styles.radiusText}>
-            Limite da Cerca: {radiusFence} metros
+            Limite da Cerca: {radius} metros
           </Text>
 
           <View>
@@ -220,7 +230,7 @@ export default function NewFecing() {
               </View>
               <View style={styles.targetSide}>
                 <Controller
-                  name="geoTarget"
+                  name="target"
                   control={control}
                   render={({ field: { onChange, onBlur, value } }) => (
                     <Switch
