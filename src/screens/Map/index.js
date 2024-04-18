@@ -40,7 +40,7 @@ const Map = () => {
           {
             accuracy: Location.LocationAccuracy.Highest,
             timeInterval: 1000,
-            distanceInterval: 10, //distancia de 10 metros
+            distanceInterval: 1, //distancia de 10 metros
           },
           (response) => {
             setLocation(response);
@@ -58,7 +58,7 @@ const Map = () => {
       const handleLocationUpdate = async (location) => {
         // Obtém a última localização salva na base de dados
         const kiddo = auth.user._id;
-        const device = 4321;
+        const device = 1245;
 
         const lastLocation = await getLastLocation(kiddo, device);
         if (lastLocation) {
@@ -73,8 +73,9 @@ const Map = () => {
               longitude: location.coords.longitude,
             }
           );
+          console.log(distance);
           // Verifica se a distância percorrida é maior ou igual a 50 metros
-          if (distance >= 50) {
+          if (distance >= 1) {
             // Salva a nova localização na base de dados
             try {
               await saveLocation(
