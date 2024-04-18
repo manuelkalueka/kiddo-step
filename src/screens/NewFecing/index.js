@@ -10,6 +10,7 @@ import {
   Keyboard,
   Switch,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import Slider from "@react-native-community/slider";
 import ActionButtom from "../../components/ActionButtom";
@@ -33,6 +34,8 @@ import { useAuth } from "../../contexts/auth";
 import { useNavigation } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
 import { createGeoFence } from "../../services/geofence"; //Criar Geo Cerca
+import { getLastLocation } from "../../services/location-service";
+import { Tracker } from "../../../tracker-data";
 
 const Schema = yup.object({
   name: yup.string().required("Informe um nome de identificação"),
@@ -48,7 +51,8 @@ export default function NewFecing() {
 
   const [location, setLocation] = useState(null);
   const [markerPosition, setMarkerPosition] = useState(null);
-  const [radius, setradius] = useState(100); // Valor padrão do raio da GeoFence
+  const [radius, setRadius] = useState(100); // Valor padrão do raio da GeoFence
+  const [loadingMap, setLoadingMap] = useState(true);
 
   useEffect(() => {
     async function getKiddo() {
@@ -99,7 +103,6 @@ export default function NewFecing() {
   const getLocationAsync = async () => {
     try {
       const { granted } = await requestForegroundPermissionsAsync();
-
       if (granted) {
         const currentPosition = await getCurrentPositionAsync();
         setLocation(currentPosition);
@@ -107,6 +110,7 @@ export default function NewFecing() {
           latitude: currentPosition.coords.latitude,
           longitude: currentPosition.coords.longitude,
         });
+        setLoadingMap(false);
       } else {
         Alert.alert(
           "Permissão de localização negada",
@@ -128,7 +132,7 @@ export default function NewFecing() {
   return (
     <View style={styles.container}>
       <View style={styles.mapContainer}>
-        {location && (
+        {location && !loadingMap ? (
           <MapView
             style={styles.map}
             initialRegion={{
@@ -160,6 +164,14 @@ export default function NewFecing() {
               </>
             )}
           </MapView>
+        ) : (
+          <View style={styles.mapContainer}>
+            <ActivityIndicator
+              size={"small"}
+              color={defaultStyle.colors.mainColorBlue}
+            />
+            <Text style={{ marginTop: 10 }}>Carregando o mapa...</Text>
+          </View>
         )}
       </View>
       <ScrollView
@@ -217,7 +229,7 @@ export default function NewFecing() {
             maximumTrackTintColor={defaultStyle.colors.blueLightColor1}
             step={50}
             value={radius}
-            onValueChange={(value) => setradius(value)}
+            onValueChange={(value) => setRadius(value)}
           />
           <Text style={styles.radiusText}>
             Limite da Cerca: {radius} metros
