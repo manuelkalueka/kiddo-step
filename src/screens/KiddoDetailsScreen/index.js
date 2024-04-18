@@ -234,7 +234,6 @@ const KiddoDetailsScreen = () => {
                 <Text style={styles.labels}>Gênero</Text>
                 <Picker
                   ref={pickerRef}
-                  
                   selectedValue={selectedGendre}
                   onValueChange={(itemValue, itemIndex) =>
                     setSelectedGendre(itemValue)

@@ -20,10 +20,13 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingBottom: 40,
   },
+  item: {
+    maxWidth: "80%",
+  },
   header: {
     color: defaultStyle.colors.dark,
     fontWeight: "bold",
-    fontSize: defaultStyle.sizes.titleSmall,
+    fontSize: defaultStyle.sizes.inputLabels,
     marginBottom: 10,
   },
   date: {

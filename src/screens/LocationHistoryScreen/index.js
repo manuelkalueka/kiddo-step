@@ -13,7 +13,9 @@ import {
   getCurrentLocation,
   getLocationHistory,
 } from "../../services/location-service";
-import { getKiddo } from "../../services/kiddo-service";
+import { getKiddoInfo } from "../../services/kiddo-service";
+import { useAuth } from "../../contexts/auth";
+import { Tracker } from "../../../tracker-data";
 
 const LocationHistoryScreen = () => {
   const bottomSheetRef = useRef(null);
@@ -22,6 +24,7 @@ const LocationHistoryScreen = () => {
   const [locationHistory, setLocationHistory] = useState(null);
   const [locationItem, setLocationItem] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [kiddo, setKiddo] = useState(null);
 
   const [visibleModalDetail, setVisibleModalDetail] = useState(false);
 
@@ -72,12 +75,14 @@ const LocationHistoryScreen = () => {
       console.log(error);
     }
   }
-
+  const { user } = useAuth();
   useEffect(() => {
     async function getLocHistory() {
       try {
-        const kiddo = getKiddo();
-        const locHistory = await getLocationHistory(kiddo, "1245");
+        const kiddoData = await getKiddoInfo(user);
+        const kiddo = kiddoData._id;
+        const device = Tracker.DEVICE_NAME;
+        const locHistory = await getLocationHistory(kiddo, device);
         setLocationHistory(locHistory);
       } catch (error) {
         console.log(error);
@@ -100,6 +105,14 @@ const LocationHistoryScreen = () => {
     setVisibleModalDetail(false);
   }
 
+  useEffect(() => {
+    async function getKiddo() {
+      const newKiddo = await getKiddoInfo(user);
+      setKiddo(newKiddo);
+    }
+    getKiddo();
+  }, []);
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -118,8 +131,10 @@ const LocationHistoryScreen = () => {
               <View style={styles.item}>
                 <Text style={styles.header}>
                   {item.place !== null && item.place !== undefined
-                    ? `${item.place.country} em ${item.place.city}`
-                    : `Movimento ${item.latitude.toFixed(4)}`}
+                    ? `${kiddo?.surname} em ${item.place.country} - ${item.place.city}`
+                    : `Movimento de ${kiddo?.surname} ${item.latitude.toFixed(
+                        4
+                      )}`}
                 </Text>
                 <Text style={styles.date}>{relativeTime(item?.timestamp)}</Text>
               </View>

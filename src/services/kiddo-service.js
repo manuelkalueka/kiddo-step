@@ -1,7 +1,4 @@
 import ApiMananger from "./api";
-
-import { useAuth } from "../contexts/auth";
-
 async function getKiddoInfo(user) {
   try {
     const { data } = await ApiMananger.get(`/kiddo/${user._id}`);

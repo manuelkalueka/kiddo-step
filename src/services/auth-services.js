@@ -60,10 +60,9 @@ async function updateUserService(dataUser, user) {
 
 const confirmEmail = async (data) => {
   const { email } = data;
-
   try {
     //Comunicacação com Backend
-    const response = await ApiMananger.post('',{email})
+    const response = await ApiMananger.post('/',{email})
   } catch (error) {
     console.log(error)
   }

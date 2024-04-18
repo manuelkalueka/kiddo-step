@@ -4,6 +4,8 @@ import * as Location from "expo-location";
 import geolib from "geolib";
 import { useAuth } from "../../contexts/auth";
 import { getLastLocation, saveLocation } from "../../services/location-service";
+import { getKiddoInfo } from "../../services/kiddo-service";
+import { Tracker } from "../../../tracker-data";
 
 const Map = () => {
   const [location, setLocation] = useState(null);
@@ -57,8 +59,9 @@ const Map = () => {
       // Função para lidar com a atualização da localização do usuário
       const handleLocationUpdate = async (location) => {
         // Obtém a última localização salva na base de dados
-        const kiddo = auth.user._id;
-        const device = 1245;
+        const kiddoData = await getKiddoInfo(user);
+        const kiddo = kiddoData._id;
+        const device = Tracker.DEVICE_NAME;
 
         const lastLocation = await getLastLocation(kiddo, device);
         if (lastLocation) {

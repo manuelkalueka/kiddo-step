@@ -12,7 +12,6 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useAuth } from "../../contexts/auth";
-import { useKiddo } from "../../contexts/kiddo";
 
 import styles from "./styles";
 import { Picker } from "@react-native-picker/picker";
@@ -44,7 +43,6 @@ const Schema = yup.object({
 
 const ConfigKiddoScreen = () => {
   const { user, updateUser } = useAuth();
-  const { createKiddo } = useKiddo();
 
   const {
     control,
@@ -74,6 +72,7 @@ const ConfigKiddoScreen = () => {
         relationship,
       } = data;
 
+      console.log("SOU O GENERO NO FRONT ", gendre);
       const AuthData = { identifyNumber, address, relationship };
       const kiddoData = {
         fullName,
@@ -88,16 +87,6 @@ const ConfigKiddoScreen = () => {
       // await updateUser(AuthData);
     } catch (error) {
       console.log("Erro ao concluir a configuração da conta ", error);
-
-      console.log("SOU O GENERO NO FRONT ", gendre);
-
-      const AuthData = { identifyNumber, address, relationship };
-      await Promise.all([
-        updateUser(AuthData),
-        setKiddoInfo(kiddoData, user._id),
-      ]);
-    } catch (error) {
-      console.log("Erro ao concluir a configuração da conta");
     }
   };
 
@@ -182,7 +171,6 @@ const ConfigKiddoScreen = () => {
             )}
           />
         </View> */}
-        </View>
         <View>
           <Text style={styles.mainLabel}>Dados da Criança</Text>
         </View>

@@ -63,3 +63,5 @@ export function useKiddo() {
   const context = useContext(KiddoContext);
   return context;
 }
+
+//AINDA NÃO FUNCIONA
