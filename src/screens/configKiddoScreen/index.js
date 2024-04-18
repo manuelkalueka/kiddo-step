@@ -238,7 +238,7 @@ const ConfigKiddoScreen = () => {
               onBlur={onBlur}
               style={styles.textInput}
               itemStyle={{
-                height: 50,
+                height: Platform.OS === "ios" ? 50 : "auto",
               }}
             >
               <Picker.Item key={0} label="Masculino" value="Masculino" />
