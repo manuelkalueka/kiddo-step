@@ -29,6 +29,8 @@ import * as yup from "yup";
 
 const kiddoAvatar = require("./../../../assets/img/boy-avatar.png");
 import { handleDisableKeyboard } from "../../../utils/dismiss-keyboard";
+import { getKiddoInfo } from "../../services/kiddo-service";
+import { useAuth } from "../../contexts/auth";
 
 const Schema = yup.object({
   geoName: yup.string().required("Informe um nome de identificação"),
@@ -39,6 +41,16 @@ export default function NewFecing({ navigation }) {
   const [location, setLocation] = useState(null);
   const [loading, setLoading] = useState(true);
   const mapRef = useRef(null);
+  const [kiddo, setKiddo] = useState(null);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    async function getKiddo() {
+      const newKiddo = await getKiddoInfo(user);
+      setKiddo(newKiddo);
+    }
+    getKiddo();
+  }, []);
 
   const {
     control,
@@ -216,7 +228,7 @@ export default function NewFecing({ navigation }) {
             <View style={styles.targetAvatarContainer}>
               <View style={styles.targetSide}>
                 <Image source={kiddoAvatar} style={styles.avatar} />
-                <Text style={styles.labelTarget}>Tiagão</Text>
+                <Text style={styles.labelTarget}>{kiddo?.surname}</Text>
               </View>
               <View style={styles.targetSide}>
                 <Controller

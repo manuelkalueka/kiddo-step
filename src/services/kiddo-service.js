@@ -1,10 +1,10 @@
 import ApiMananger from "./api";
+
 import { useAuth } from "../contexts/auth";
 
-async function getKiddoInfo(id) {
-  const { user } = useAuth();
+async function getKiddoInfo(user) {
   try {
-    const { data } = await ApiMananger.get(`/kiddo/${id}/${user._id}`);
+    const { data } = await ApiMananger.get(`/kiddo/${user._id}`);
     return data;
   } catch (error) {
     console.log("Erro ao Buscar criança ", error);
@@ -32,6 +32,8 @@ async function setKiddoInfo(kiddoData, user) {
       alergics,
       parent: user._id,
     });
+
+    console.log("Kiddo Salva na DB");
   } catch (error) {
     console.log("Erro ao salvar criança ", error);
   }

@@ -12,6 +12,7 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useAuth } from "../../contexts/auth";
+import { useKiddo } from "../../contexts/kiddo";
 
 import styles from "./styles";
 import { Picker } from "@react-native-picker/picker";
@@ -33,16 +34,18 @@ const Schema = yup.object({
   avatar: yup.string(),
   bloodType: yup.string(),
   alergics: yup.string(),
-  identifyNumber: yup
-    .string()
-    .required("BI Obrigatório")
-    .min(6, "Número do Bilhete Inválido"),
-  address: yup.string().required("Define um Endereço, como Casa..."),
-  relationship: yup.string(),
+  // identifyNumber: yup
+  //   .string()
+  //   .required("BI Obrigatório")
+  //   .min(6, "Número do Bilhete Inválido"),
+  // address: yup.string().required("Define um Endereço, como Casa..."),
+  // relationship: yup.string(),
 });
 
 const ConfigKiddoScreen = () => {
   const { user, updateUser } = useAuth();
+  const { createKiddo } = useKiddo();
+
   const {
     control,
     handleSubmit,
@@ -71,6 +74,7 @@ const ConfigKiddoScreen = () => {
         relationship,
       } = data;
 
+      const AuthData = { identifyNumber, address, relationship };
       const kiddoData = {
         fullName,
         surname,
@@ -80,6 +84,10 @@ const ConfigKiddoScreen = () => {
         bloodType,
         alergics,
       };
+      await setKiddoInfo(kiddoData, user);
+      // await updateUser(AuthData);
+    } catch (error) {
+      console.log("Erro ao concluir a configuração da conta ", error);
 
       console.log("SOU O GENERO NO FRONT ", gendre);
 
@@ -109,6 +117,7 @@ const ConfigKiddoScreen = () => {
         {/* <KeyboardAvoidingView
           behavior={Platform.OS == "ios" ? "height" : "padding"}
         > */}
+        {/* <View>
         <View>
           <Text style={styles.mainLabel}>Dados do Responsável</Text>
           <Text style={styles.label}>Número do BI</Text>
@@ -172,6 +181,7 @@ const ConfigKiddoScreen = () => {
               </Picker>
             )}
           />
+        </View> */}
         </View>
         <View>
           <Text style={styles.mainLabel}>Dados da Criança</Text>
