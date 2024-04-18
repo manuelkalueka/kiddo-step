@@ -45,6 +45,7 @@ const Schema = yup.object({
 const ConfigKiddoScreen = () => {
   const { user, updateUser } = useAuth();
   const { createKiddo } = useKiddo();
+
   const {
     control,
     handleSubmit,
@@ -87,6 +88,16 @@ const ConfigKiddoScreen = () => {
       // await updateUser(AuthData);
     } catch (error) {
       console.log("Erro ao concluir a configuração da conta ", error);
+
+      console.log("SOU O GENERO NO FRONT ", gendre);
+
+      const AuthData = { identifyNumber, address, relationship };
+      await Promise.all([
+        updateUser(AuthData),
+        setKiddoInfo(kiddoData, user._id),
+      ]);
+    } catch (error) {
+      console.log("Erro ao concluir a configuração da conta");
     }
   };
 
@@ -107,6 +118,7 @@ const ConfigKiddoScreen = () => {
           behavior={Platform.OS == "ios" ? "height" : "padding"}
         > */}
         {/* <View>
+        <View>
           <Text style={styles.mainLabel}>Dados do Responsável</Text>
           <Text style={styles.label}>Número do BI</Text>
           <Controller
@@ -170,6 +182,7 @@ const ConfigKiddoScreen = () => {
             )}
           />
         </View> */}
+        </View>
         <View>
           <Text style={styles.mainLabel}>Dados da Criança</Text>
         </View>

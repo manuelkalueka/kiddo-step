@@ -15,7 +15,9 @@ function AppRouterStrategy() {
   return setted ? <TabRoutes /> : <KiddoRouter />;
 }
 export function Router() {
-  const { signed, loading } = useAuth();
+  const { signed, loading, user } = useAuth();
+
+  // const isActive = !!user.isActive;
 
   if (loading) {
     return <LoadingComponent />;
