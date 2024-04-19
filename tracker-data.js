@@ -1,3 +1,3 @@
 export const Tracker = {
-  DEVICE_NAME: "1037681",
+  DEVICE_ID: "1037681",
 };

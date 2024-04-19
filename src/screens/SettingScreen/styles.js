@@ -46,6 +46,10 @@ const styles = StyleSheet.create({
   descText: {
     fontSize: defaultStyle.sizes.mainLabels,
   },
+  optionText: {
+    alignSelf: "flex-end",
+    color:defaultStyle.colors.grayAccent2
+  },
   footer: {
     flex: 1,
     paddingTop: "20%",

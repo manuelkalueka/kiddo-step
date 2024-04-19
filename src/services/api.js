@@ -3,7 +3,7 @@ import axios from "axios";
 
 const ApiMananger = axios.create({
   baseURL: "http://192.152.85.100:8080",
-  timeout: 2500, //2,5s
+  timeout: 9000, //9s
 });
 
 export default ApiMananger;

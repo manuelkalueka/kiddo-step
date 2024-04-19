@@ -10,6 +10,8 @@ const styles = StyleSheet.create({
   mapContainer: {
     width: "100%",
     height: "35%",
+    justifyContent: "center",
+    alignItems: "center",
   },
   map: {
     width: "100%",

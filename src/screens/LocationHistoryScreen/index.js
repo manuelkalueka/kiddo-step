@@ -31,7 +31,6 @@ const LocationHistoryScreen = () => {
   let coordenadas = {};
   if (locationItem) {
     const { latitude, longitude } = locationItem;
-
     coordenadas = {
       latitude,
       longitude,
@@ -65,6 +64,7 @@ const LocationHistoryScreen = () => {
     navigation.navigate("Mapa", {
       coordenadas,
     });
+    console.log("Vendo as Coordenas que vai para o MAPA, ", coordenadas);
   }
 
   async function getLocationItem(id) {
@@ -81,7 +81,7 @@ const LocationHistoryScreen = () => {
       try {
         const kiddoData = await getKiddoInfo(user);
         const kiddo = kiddoData._id;
-        const device = Tracker.DEVICE_NAME;
+        const device = Tracker.DEVICE_ID;
         const locHistory = await getLocationHistory(kiddo, device);
         setLocationHistory(locHistory);
       } catch (error) {

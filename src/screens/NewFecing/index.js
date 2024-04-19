@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
-  ActivityIndicator,
   Alert,
   TextInput,
   ScrollView,
@@ -11,13 +10,14 @@ import {
   Keyboard,
   Switch,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import Slider from "@react-native-community/slider";
 import ActionButtom from "../../components/ActionButtom";
 import MapView, { Marker, Circle } from "react-native-maps";
 import {
-  requestForegroundPermissionsAsync,
-  getCurrentPositionAsync,
+  requestForegroundPermissionsAsync, //Serve para pedir a Localização enquanto o App é Executado
+  getCurrentPositionAsync, //Pega a Localização Actual
 } from "expo-location";
 
 import styles from "./styles";
@@ -29,20 +29,29 @@ import * as yup from "yup";
 
 const kiddoAvatar = require("./../../../assets/img/boy-avatar.png");
 import { handleDisableKeyboard } from "../../../utils/dismiss-keyboard";
-import { getKiddoInfo } from "../../services/kiddo-service";
+import { getKiddoInfo } from "../../services/kiddo-service"; //Pegar a Criança na DB
 import { useAuth } from "../../contexts/auth";
 import { useNavigation } from "@react-navigation/native";
 import { Picker } from "@react-native-picker/picker";
+import { createGeoFence } from "../../services/geofence"; //Criar Geo Cerca
+import { getLastLocation } from "../../services/location-service";
+import { Tracker } from "../../../tracker-data";
 
 const Schema = yup.object({
-  geoName: yup.string().required("Informe um nome de identificação"),
-  geoType: yup.string(),
+  name: yup.string().required("Informe um nome de identificação"),
+  target: yup.bool(),
+  status: yup.bool(),
 });
 
 export default function NewFecing() {
   const navigation = useNavigation();
   const [kiddo, setKiddo] = useState(null);
   const { user } = useAuth();
+
+  const [location, setLocation] = useState(null);
+  const [markerPosition, setMarkerPosition] = useState(null);
+  const [radius, setRadius] = useState(100); // Valor padrão do raio da GeoFence
+  const [loadingMap, setLoadingMap] = useState(true);
 
   useEffect(() => {
     async function getKiddo() {
@@ -59,20 +68,32 @@ export default function NewFecing() {
   } = useForm({
     defaultValues: {
       status: true,
-      geoTarget: true, // Definindo o valor padrão do campo 'status' como true
+      target: true, // Definindo o valor padrão do campo 'status' como true
       geoType: true,
     },
     resolver: yupResolver(Schema),
   });
 
   const sendForm = async (data) => {
-    //Salvar os Dados e Voltar no Mapa
-    navigation.navigate("Mapa");
+    const { latitude, longitude } = location.coords;
+    const geoFenceData = {
+      ...data,
+      radius,
+      latitude,
+      longitude,
+    };
+    try {
+      const status = await createGeoFence(geoFenceData, kiddo._id); //Salvar a Fence
+      if (status === 200 || status === 201) {
+        //Mudar de Tela de Tudo Correr Bem
+        navigation.navigate("Mapa");
+      } else {
+        Alert.alert("Erro", "Tente Novamente!");
+      }
+    } catch (error) {
+      console.log("Erro ao Salvar Fence", error);
+    }
   };
-
-  const [location, setLocation] = useState(null);
-  const [markerPosition, setMarkerPosition] = useState(null);
-  const [radiusFence, setRadiusFence] = useState(100); // Valor padrão do raio da GeoFence
 
   useEffect(() => {
     getLocationAsync();
@@ -81,14 +102,14 @@ export default function NewFecing() {
   const getLocationAsync = async () => {
     try {
       const { granted } = await requestForegroundPermissionsAsync();
-
       if (granted) {
         const currentPosition = await getCurrentPositionAsync();
         setLocation(currentPosition);
         setMarkerPosition({
-          latitude: location.coords.latitude,
-          longitude: location.coords.longitude,
+          latitude: currentPosition.coords.latitude,
+          longitude: currentPosition.coords.longitude,
         });
+        setLoadingMap(false);
       } else {
         Alert.alert(
           "Permissão de localização negada",
@@ -101,23 +122,16 @@ export default function NewFecing() {
   };
 
   const handleMapPress = (e) => {
+    //Captura no Evento de Click no Mapa e Muda o Pin para a localização Clicada
     setMarkerPosition(e.nativeEvent.coordinate);
   };
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <Text style={{ backgroundColor: "red" }}>Fui Renderizado</Text>
-      ),
-    });
-  }, [navigation]);
 
   const pickerGeoRef = useRef();
 
   return (
     <View style={styles.container}>
       <View style={styles.mapContainer}>
-        {location && (
+        {location && !loadingMap ? (
           <MapView
             style={styles.map}
             initialRegion={{
@@ -134,9 +148,10 @@ export default function NewFecing() {
           >
             {markerPosition && (
               <>
+                {/* Funciona como o Fragment*/}
                 <Circle
                   center={markerPosition}
-                  radius={radiusFence}
+                  radius={radius}
                   strokeColor="rgba(162, 196, 224,1)"
                   fillColor="rgba(162, 196, 224,0.3)"
                 />
@@ -148,6 +163,14 @@ export default function NewFecing() {
               </>
             )}
           </MapView>
+        ) : (
+          <View style={styles.mapContainer}>
+            <ActivityIndicator
+              size={"small"}
+              color={defaultStyle.colors.mainColorBlue}
+            />
+            <Text style={{ marginTop: 10 }}>Carregando o mapa...</Text>
+          </View>
         )}
       </View>
       <ScrollView
@@ -160,7 +183,7 @@ export default function NewFecing() {
         >
           <Text style={styles.label}>Nome da Cerca</Text>
           <Controller
-            name="geoName"
+            name="name"
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
@@ -171,30 +194,9 @@ export default function NewFecing() {
               />
             )}
           />
-          {errors.geoName && (
-            <Text style={styles.msgAlerta}>{errors.geoName?.message}</Text>
+          {errors.name && (
+            <Text style={styles.msgAlerta}>{errors.name?.message}</Text>
           )}
-          <Text style={styles.label}>Tipo de Cerca</Text>
-          <Controller
-            name="geoType"
-            control={control}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Picker
-                ref={pickerGeoRef}
-                selectedValue={value || true}
-                onValueChange={onChange}
-                onBlur={onBlur}
-                style={styles.pickInput}
-                itemStyle={{
-                  height: Platform.OS === "ios" ? 50 : "auto",
-                  fontSize: 16,
-                }}
-              >
-                <Picker.Item key={0} label="Entrada" value={true} />
-                <Picker.Item key={1} label="Saída" value={false} />
-              </Picker>
-            )}
-          />
 
           <Slider
             style={styles.slider}
@@ -204,11 +206,11 @@ export default function NewFecing() {
             minimumTrackTintColor={defaultStyle.colors.mainColorBlue}
             maximumTrackTintColor={defaultStyle.colors.blueLightColor1}
             step={50}
-            value={radiusFence}
-            onValueChange={(value) => setRadiusFence(value)}
+            value={radius}
+            onValueChange={(value) => setRadius(value)}
           />
           <Text style={styles.radiusText}>
-            Limite da Cerca: {radiusFence} metros
+            Limite da Cerca: {radius} metros
           </Text>
 
           <View>
@@ -220,7 +222,7 @@ export default function NewFecing() {
               </View>
               <View style={styles.targetSide}>
                 <Controller
-                  name="geoTarget"
+                  name="target"
                   control={control}
                   render={({ field: { onChange, onBlur, value } }) => (
                     <Switch

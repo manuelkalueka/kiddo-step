@@ -8,7 +8,7 @@ import ActionButtom from "../../components/ActionButtom";
 
 import styles from "./styles";
 
-const SettingScreen = () => {
+const SettingScreen = ({ navigation }) => {
   function handleSignOut() {
     //ToDo pedir confirmação ao Sair
     signOut();
@@ -31,7 +31,7 @@ const SettingScreen = () => {
             <View style={styles.itemDesc}>
               <Text style={styles.descText}>Idioma</Text>
             </View>
-            <Text>Português</Text>
+            <Text style={styles.optionText}>Português</Text>
             <AntDesign
               name="right"
               color={defaultStyle.colors.grayAccent1}
@@ -66,8 +66,10 @@ const SettingScreen = () => {
           >
             <View style={styles.itemDesc}>
               <Text style={styles.descText}>Biométrica</Text>
-              <Text>Activa Impressão Digital & FaceID</Text>
             </View>
+            <Text style={styles.optionText}>
+              Activa Impressão Digital & FaceID
+            </Text>
             <AntDesign
               name="right"
               color={defaultStyle.colors.grayAccent1}
@@ -76,9 +78,7 @@ const SettingScreen = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.menuItem}
-            onPress={() =>
-              navigation.navigate("Profile", { screen: "Account" })
-            }
+            onPress={() => navigation.navigate("TermsAndPrivacy")}
           >
             <View style={styles.itemDesc}>
               <Text style={styles.descText}>Políticas de Privacidade</Text>
