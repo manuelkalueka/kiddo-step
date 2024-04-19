@@ -54,18 +54,6 @@ const KiddoDetailsScreen = () => {
       setKiddo(newKiddo);
     }
     getKiddo();
-
-    function getAge() {
-      const dataActual = new Date();
-      const dataNascimento = kiddo?.birthDate;
-      const AnoActual = dataActual.getFullYear();
-      const anoNasc = dataNascimento?.getFullYear();
-
-      const idade = Number(AnoActual - anoNasc);
-      console.log("Ano de Nascimento ", anoNasc, "\nIdade", idade);
-    }
-
-    getAge();
   }, []);
 
   const {
@@ -99,10 +87,7 @@ const KiddoDetailsScreen = () => {
   }
 
   const STATUS_DEVICE = true;
-  const BIRTH_DATE = () => {
-    const date = new Date().toLocaleDateString();
-    return date;
-  };
+
 
   function handleModalClose() {
     navigation?.goBack();
@@ -150,7 +135,7 @@ const KiddoDetailsScreen = () => {
             <View>
               <Text style={styles.headerSurname}>{kiddo?.surname}</Text>
               <Text style={styles.headerAge}>
-                {formatDate(kiddo?.birthDate)} anos{" "}
+                {formatDate(kiddo?.birthDate)} anos
               </Text>
             </View>
             <View style={styles.statusContainer}>

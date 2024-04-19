@@ -39,7 +39,6 @@ import { Tracker } from "../../../tracker-data";
 
 const Schema = yup.object({
   name: yup.string().required("Informe um nome de identificação"),
-  geoType: yup.string(),
   target: yup.bool(),
   status: yup.bool(),
 });
@@ -198,27 +197,6 @@ export default function NewFecing() {
           {errors.name && (
             <Text style={styles.msgAlerta}>{errors.name?.message}</Text>
           )}
-          <Text style={styles.label}>Tipo de Cerca</Text>
-          <Controller
-            name="geoType"
-            control={control}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <Picker
-                ref={pickerGeoRef}
-                selectedValue={value}
-                onValueChange={onChange}
-                onBlur={onBlur}
-                style={styles.pickInput}
-                itemStyle={{
-                  height: Platform.OS === "ios" ? 50 : "auto",
-                  fontSize: 16,
-                }}
-              >
-                <Picker.Item key={0} label="Entrada" value={true} />
-                <Picker.Item key={1} label="Saída" value={false} />
-              </Picker>
-            )}
-          />
 
           <Slider
             style={styles.slider}

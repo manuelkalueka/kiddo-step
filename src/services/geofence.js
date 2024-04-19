@@ -2,10 +2,9 @@ import ApiMananger from "../services/api";
 import { Alert } from "react-native";
 async function createGeoFence(data, idKiddo) {
   try {
-    const { target, geoType, name, radius, status, latitude, longitude } = data;
+    const { target, name, radius, status, latitude, longitude } = data;
     if (target === true) {
       const response = await ApiMananger.post("/geoFence", {
-        geoType,
         name,
         radius,
         status,
