@@ -1,9 +1,11 @@
+import React, { useState } from "react";
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
-  FlatList
+  FlatList,
+  RefreshControl
 } from "react-native";
 
 import { FontAwesome5, FontAwesome, AntDesign } from '@expo/vector-icons'
@@ -12,67 +14,83 @@ import { styles } from './styles'
 import defaultStyle from "../../defaultStyle";
 
 export default function AlertScreen() {
+  const [ colorIcon , setColorIcon ] = useState('#ff6f48')
+  const [ refreshingData , setRefreshingData] = useState(false)
 
   const data = [
     {
       id: 1,
       title: 'Lorem ipsum dolor sit',
-      subject: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam, quasi! Laborum iusto aperiam officiis consectetur libero, eius quasi minus quae. Blanditiis impedit aperiam illum, cupiditate laudantium error iusto consectetur enim?',
+      subject: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam, quasi! Laborum iusto ',
       data: '08/04/2024'
     },
     {
       id: 2,
       title: 'Lorem ipsum dolor sit',
-      subject: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam, quasi! Laborum iusto aperiam officiis consectetur libero, eius quasi minus quae. Blanditiis impedit aperiam illum, cupiditate laudantium error iusto consectetur enim?',
+      subject: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam, quasi! Laborum iusto',
       data: '08/04/2024'
     },
     {
       id: 3,
       title: 'Lorem ipsum dolor sit',
-      subject: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam, quasi! Laborum iusto aperiam officiis consectetur libero, eius quasi minus quae. Blanditiis impedit aperiam illum, cupiditate laudantium error iusto consectetur enim?',
+      subject: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam, quasi! Laborum iusto',
       data: '08/04/2024'
     },
     {
       id: 4,
       title: 'Lorem ipsum dolor sit',
-      subject: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam, quasi! Laborum iusto aperiam officiis consectetur libero, eius quasi minus quae. Blanditiis impedit aperiam illum, cupiditate laudantium error iusto consectetur enim?',
+      subject: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam, quasi! Laborum iusto, cupiditate laudantium error iusto consectetur enim?',
       data: '08/04/2024'
     },
     {
       id: 5,
       title: 'Lorem ipsum dolor sit',
-      subject: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam, quasi! Laborum iusto aperiam officiis consectetur libero, eius quasi minus quae. Blanditiis impedit aperiam illum, cupiditate laudantium error iusto consectetur enim?',
+      subject: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam, quasi! Laborum iusto ',
       data: '08/04/2024'
     },
     {
       id: 6,
       title: 'Lorem ipsum dolor sit',
-      subject: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam, quasi! Laborum iusto aperiam officiis consectetur libero, eius quasi minus quae. Blanditiis impedit aperiam illum, cupiditate laudantium error iusto consectetur enim?',
+      subject: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam, quasi! Laborum iusto ',
       data: '08/04/2024'
     },
     {
       id: 7,
       title: 'Lorem ipsum dolor sit',
-      subject: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam, quasi! Laborum iusto aperiam officiis consectetur libero, eius quasi minus quae. Blanditiis impedit aperiam illum, cupiditate laudantium error iusto consectetur enim?',
+      subject: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam, quasi! Laborum iusto',
       data: '08/04/2024'
     },
     {
       id: 8,
       title: 'Lorem ipsum dolor sit',
-      subject: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam, quasi! Laborum iusto aperiam officiis consectetur libero, eius quasi minus quae. Blanditiis impedit aperiam illum, cupiditate laudantium error iusto consectetur enim?',
+      subject: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam, quasi! Laborum iusto',
       data: '08/04/2024'
     },
     {
       id: 9,
       title: 'Lorem ipsum dolor sit',
-      subject: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam, quasi! Laborum iusto aperiam officiis consectetur libero, eius quasi minus quae. Blanditiis impedit aperiam illum, cupiditate laudantium error iusto consectetur enim?',
+      subject: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam, quasi! Laborum iusto',
       data: '08/04/2024'
     }
   ]
 
-  return (
-    <View style={styles.container}>
+  const handlerMarkAll = () => {
+    setColorIcon('#f5f5f5')
+  }
 
+  const refreshing = () => {
+   setRefreshingData(true)
+   //Logica para recarregar novas notificações na BD
+   setRefreshingData(false)
+  } 
+
+  return (
+    
+    <View style={styles.container}>
+      <RefreshControl
+        onRefresh={refreshing}
+        refreshing={refreshingData}
+      >
       {
         data == '' ? (
           <View style={styles.containerNo}>
@@ -80,7 +98,7 @@ export default function AlertScreen() {
           </View>
         ) : (
           <View style={styles.body}>
-            <TouchableOpacity style={styles.btnMarkAll}>
+            <TouchableOpacity style={styles.btnMarkAll} onPress={()=>handlerMarkAll()}>
               <Text style={styles.textBtnMark}>Marcar todas como lidas</Text>
             </TouchableOpacity>
 
@@ -88,6 +106,11 @@ export default function AlertScreen() {
               style={styles.containerNoti}
               data={data}
               renderItem={({ item }) => (
+                <View style={styles.containerItens}>
+                  <View style={styles.containerIcon}>
+                  <FontAwesome5 name='bell' size={25} color={defaultStyle.colors.defaultIcon}/>
+                  </View>
+
                 <TouchableOpacity style={styles.containerItem}>
                   <Text style={styles.itemDate}>{item.data}</Text>
                   <Text style={styles.itemTitle}>{item.title}</Text>
@@ -96,17 +119,18 @@ export default function AlertScreen() {
                   <FontAwesome5
                     name="check-circle"
                     size={12}
-                    color={defaultStyle.colors.mainColorBlue}
+                    color={colorIcon}
                     style={styles.icon}
                   />
                 </TouchableOpacity>
+                </View>
               )}
             />
           </View>
         )
       }
-
-
+ </RefreshControl>
     </View>
+   
   )
 }
