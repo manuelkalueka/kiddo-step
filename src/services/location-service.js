@@ -10,13 +10,14 @@ async function getLocationHistory(kiddo, device) {
   }
 }
 
-async function saveLocation(latitude, longitude, kiddo, device) {
+async function saveLocation(latitude, longitude, kiddo, device, timestamp) {
   try {
     const { data } = await ApiMananger.post(`/locations`, {
       latitude,
       longitude,
       kiddo,
       device,
+      timestamp,
     });
     return data;
   } catch (error) {
@@ -38,7 +39,7 @@ async function getCurrentLocation(id) {
 async function getLastLocation(kiddo, device) {
   try {
     const locations = await getLocationHistory(kiddo, device);
-    const location = locations.pop();
+    const location = locations?.pop();
     return location;
   } catch (error) {
     console.log("Erro ao buscar a ultima localização");

@@ -6,6 +6,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: defaultStyle.colors.light,
   },
+  containerEmpty: {
+    flex: 1,
+    backgroundColor: defaultStyle.colors.light,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  textEmpty: {
+    fontSize: defaultStyle.sizes.titleSmall,
+    justifyContent: "center",
+    alignItems: "center",
+    color: defaultStyle.colors.grayAccent4,
+    marginTop: 10,
+  },
   itemContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
