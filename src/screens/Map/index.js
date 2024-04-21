@@ -1,36 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
-import { View, Text, ActivityIndicator, TouchableOpacity } from "react-native";
+import React, { useEffect, useRef } from "react";
+import { View, Text } from "react-native";
 import * as Location from "expo-location";
 import getDistance from "geolib/es/getDistance";
 import { useAuth } from "../../contexts/auth";
 import { getLastLocation, saveLocation } from "../../services/location-service";
 import { Tracker } from "../../../tracker-data";
-import MapView, { Marker } from "react-native-maps";
-import { FontAwesome } from "@expo/vector-icons";
 
-import styles from "./styles";
-import defaultStyle from "../../defaultStyle";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useKiddo } from "../../contexts/kiddo";
 
 const Map = () => {
   const [location, setLocation] = useState(null);
-  const [loadingMap, setLoadingMap] = useState(true);
-  const [mapType, setMapType] = useState("standard");
-
-  async function toggleSetMapType() {
-    if (mapType === "standard") {
-      setMapType("hybrid");
-    } else if (mapType === "hybrid") {
-      setMapType("standard");
-    }
-    await AsyncStorage.setItem("@MapType", mapType);
-  }
-
   const { user } = useAuth();
   const { kiddo } = useKiddo();
-
-  const mapRef = useRef();
 
   async function requestLocationPermissions() {
     try {
@@ -66,7 +47,6 @@ const Map = () => {
           (response) => {
             setLocation(response);
             handleLocationUpdate(response);
-            setLoadingMap(false);
           }
         );
       } catch (error) {
@@ -141,68 +121,8 @@ const Map = () => {
   }
 
   return (
-    <View style={styles.mapContainer}>
-      {location && !loadingMap ? (
-        <>
-          <View style={styles.buttonMapConfigContainer}>
-            <TouchableOpacity
-              style={styles.mapButton}
-              activeOpacity={0.7}
-              onPress={toggleSetMapType}
-            >
-              <FontAwesome
-                name="map"
-                color={defaultStyle.colors.mainColorBlue}
-                size={30}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.mapButton} activeOpacity={0.7}>
-              <FontAwesome
-                name="location-arrow"
-                color={defaultStyle.colors.mainColorBlue}
-                size={30}
-              />
-            </TouchableOpacity>
-          </View>
-          <MapView
-            ref={mapRef}
-            style={styles.map}
-            initialRegion={{
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-              pitch: 45, // Inclinação da câmera em graus (0 é vista de cima)
-              heading: 90, // Direção da câmera em graus em relação ao norte
-            }}
-            onMapReady={() => {
-              // Centralize a câmera no marcador e ajuste o zoom para incluir o marcador na visualização
-              mapRef.current?.fitToCoordinates([location], {
-                edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
-                animated: true,
-              });
-            }}
-            mapType={mapType} //Mudar dinamicamente em função ao Mapa Principal
-          >
-            <Marker
-              coordinate={{
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
-              }}
-              title={kiddo?.surname}
-              description="Última Localização Registada"
-            />
-          </MapView>
-        </>
-      ) : (
-        <View style={styles.mapContainer}>
-          <ActivityIndicator
-            size={"large"}
-            color={defaultStyle.colors.mainColorBlue}
-          />
-          <Text style={{ marginTop: 10 }}>Carregando o mapa...</Text>
-        </View>
-      )}
+    <View>
+      <Text>Sou a Tela de Mapa</Text>
     </View>
   );
 };
