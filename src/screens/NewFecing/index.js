@@ -9,7 +9,6 @@ import {
   Pressable,
   Keyboard,
   Switch,
-  Platform,
   ActivityIndicator,
 } from "react-native";
 import Slider from "@react-native-community/slider";
@@ -32,10 +31,8 @@ import { handleDisableKeyboard } from "../../../utils/dismiss-keyboard";
 import { getKiddoInfo } from "../../services/kiddo-service"; //Pegar a Criança na DB
 import { useAuth } from "../../contexts/auth";
 import { useNavigation } from "@react-navigation/native";
-import { Picker } from "@react-native-picker/picker";
 import { createGeoFence } from "../../services/geofence"; //Criar Geo Cerca
-import { getLastLocation } from "../../services/location-service";
-import { Tracker } from "../../../tracker-data";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Schema = yup.object({
   name: yup.string().required("Informe um nome de identificação"),
@@ -52,6 +49,7 @@ export default function NewFecing() {
   const [markerPosition, setMarkerPosition] = useState(null);
   const [radius, setRadius] = useState(100); // Valor padrão do raio da GeoFence
   const [loadingMap, setLoadingMap] = useState(true);
+  const [mapType, setMapType] = useState("standard");
 
   useEffect(() => {
     async function getKiddo() {
@@ -59,6 +57,15 @@ export default function NewFecing() {
       setKiddo(newKiddo);
     }
     getKiddo();
+  }, [user]);
+
+  useEffect(() => {
+    async function loadMapType() {
+      const mtype = await AsyncStorage.getItem("@MapType");
+      setMapType(mtype);
+    }
+
+    loadMapType;
   }, []);
 
   const {
@@ -126,13 +133,14 @@ export default function NewFecing() {
     setMarkerPosition(e.nativeEvent.coordinate);
   };
 
-  const pickerGeoRef = useRef();
+  const mapRef = useRef();
 
   return (
     <View style={styles.container}>
       <View style={styles.mapContainer}>
         {location && !loadingMap ? (
           <MapView
+            ref={mapRef}
             style={styles.map}
             initialRegion={{
               latitude: markerPosition
@@ -143,8 +151,20 @@ export default function NewFecing() {
                 : location.coords.longitude,
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421,
+              pitch: 45, // Inclinação da câmera em graus (0 é vista de cima)
+              heading: 90, // Direção da câmera em graus em relação ao norte
             }}
             onPress={handleMapPress}
+            onMapReady={() => {
+              // Centralize a câmera no marcador e ajuste o zoom para incluir o marcador na visualização
+              if (markerPosition) {
+                mapRef.current?.fitToCoordinates([markerPosition], {
+                  edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+                  animated: true,
+                });
+              }
+            }}
+            mapType={mapType} //Mudar dinamicamente em função ao Mapa Principal
           >
             {markerPosition && (
               <>
@@ -166,7 +186,7 @@ export default function NewFecing() {
         ) : (
           <View style={styles.mapContainer}>
             <ActivityIndicator
-              size={"small"}
+              size={"large"}
               color={defaultStyle.colors.mainColorBlue}
             />
             <Text style={{ marginTop: 10 }}>Carregando o mapa...</Text>

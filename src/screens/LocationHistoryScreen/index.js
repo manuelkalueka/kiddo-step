@@ -16,12 +16,14 @@ import {
 import { getKiddoInfo } from "../../services/kiddo-service";
 import { useAuth } from "../../contexts/auth";
 import { Tracker } from "../../../tracker-data";
+import { FontAwesome } from "@expo/vector-icons";
 
 const LocationHistoryScreen = () => {
   const bottomSheetRef = useRef(null);
   const navigation = useNavigation();
 
   const [locationHistory, setLocationHistory] = useState(null);
+  const [historyLength, setHistoryLength] = useState(0);
   const [locationItem, setLocationItem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [kiddo, setKiddo] = useState(null);
@@ -37,6 +39,7 @@ const LocationHistoryScreen = () => {
     };
   }
 
+  //Pede Latitude e Longitude e retorna a Localidade tal como conhecemos
   async function revGeoCode(latitude, longitude) {
     try {
       const place = await reverseGeocodeAsync({ latitude, longitude });
@@ -84,6 +87,7 @@ const LocationHistoryScreen = () => {
         const device = Tracker.DEVICE_ID;
         const locHistory = await getLocationHistory(kiddo, device);
         setLocationHistory(locHistory);
+        setHistoryLength(locationHistory?.length);
       } catch (error) {
         console.log(error);
       }
@@ -113,60 +117,54 @@ const LocationHistoryScreen = () => {
     getKiddo();
   }, []);
 
-  return (
+  return historyLength > 0 ? (
     <View style={styles.container}>
       <FlatList
         data={locationHistory}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item) => item._id}
-        renderItem={({ item }) =>
-          locationHistory.length ? (
-            <TouchableOpacity
-              style={styles.itemContainer}
-              onLongPress={() =>
-                Alert.alert("FUNCIONALIDADE", "Ocultar Histórico")
-              }
-              activeOpacity={0.8}
-            >
-              <View style={styles.item}>
-                <Text style={styles.header}>
-                  {item.place !== null && item.place !== undefined
-                    ? `${kiddo?.surname} em ${item.place.country} - ${item.place.city}`
-                    : `Movimento de ${kiddo?.surname} ${item.latitude.toFixed(
-                        4
-                      )}`}
-                </Text>
-                <Text style={styles.date}>{relativeTime(item?.timestamp)}</Text>
-              </View>
-              <View>
-                <TouchableOpacity
-                  style={styles.itemAction}
-                  onPress={() => openBottomSheet(item._id)}
-                >
-                  <Text style={styles.textAction}>
-                    {/* {loading ? (
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={styles.itemContainer}
+            onLongPress={() =>
+              Alert.alert("FUNCIONALIDADE", "Ocultar Histórico")
+            }
+            activeOpacity={0.8}
+          >
+            <View style={styles.item}>
+              <Text style={styles.header}>
+                {item.place !== null && item.place !== undefined
+                  ? `${kiddo?.surname} em ${item.place.country} - ${item.place.city}`
+                  : `Movimento de ${kiddo?.surname} ${item.latitude.toFixed(
+                      4
+                    )}`}
+              </Text>
+              <Text style={styles.date}>{relativeTime(item?.timestamp)}</Text>
+            </View>
+            <View>
+              <TouchableOpacity
+                style={styles.itemAction}
+                onPress={() => openBottomSheet(item._id)}
+              >
+                <Text style={styles.textAction}>
+                  {/* {loading ? (
                       <ActivityIndicator
                         size={"small"}
                         color={defaultStyle.colors.mainColorBlue}
                       />
                     ) : ( */}
-                    Detalhes
-                    {/* )} */}
-                  </Text>
-                  <AntDesign
-                    name="right"
-                    size={defaultStyle.sizes.inputText}
-                    color={defaultStyle.colors.mainColorBlue}
-                  />
-                </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
-          ) : (
-            <Text style={{ justifyContent: "center", alignItems: "center" }}>
-              Sem Histórico Disponível
-            </Text>
-          )
-        }
+                  Detalhes
+                  {/* )} */}
+                </Text>
+                <AntDesign
+                  name="right"
+                  size={defaultStyle.sizes.inputText}
+                  color={defaultStyle.colors.mainColorBlue}
+                />
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        )}
       />
 
       {/* <Modal
@@ -249,6 +247,16 @@ const LocationHistoryScreen = () => {
           />
         </BottomSheetScrollView>
       </BottomSheet>
+    </View>
+  ) : (
+    <View style={styles.containerEmpty}>
+      <FontAwesome
+        name="calendar-times-o"
+        color={defaultStyle.colors.mainColorBlue}
+        size={40}
+      />
+
+      <Text style={styles.textEmpty}>Sem Histórico Disponível</Text>
     </View>
   );
 };

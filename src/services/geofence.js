@@ -1,5 +1,4 @@
 import ApiMananger from "../services/api";
-import { Alert } from "react-native";
 async function createGeoFence(data, idKiddo) {
   try {
     const { target, name, radius, status, latitude, longitude } = data;

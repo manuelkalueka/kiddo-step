@@ -62,10 +62,10 @@ const confirmEmail = async (data) => {
   const { email } = data;
   try {
     //Comunicacação com Backend
-    const response = await ApiMananger.post('/',{email})
+    const response = await ApiMananger.post("/", { email });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
 
 export { signInService, signUpService, updateUserService, confirmEmail };
