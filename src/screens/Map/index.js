@@ -4,7 +4,6 @@ import * as Location from "expo-location";
 import getDistance from "geolib/es/getDistance";
 import { useAuth } from "../../contexts/auth";
 import { getLastLocation, saveLocation } from "../../services/location-service";
-import { getKiddoInfo } from "../../services/kiddo-service";
 import { Tracker } from "../../../tracker-data";
 import MapView, { Marker } from "react-native-maps";
 import { FontAwesome } from "@expo/vector-icons";
@@ -12,12 +11,11 @@ import { FontAwesome } from "@expo/vector-icons";
 import styles from "./styles";
 import defaultStyle from "../../defaultStyle";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useKiddo } from "../../contexts/kiddo";
 
 const Map = () => {
   const [location, setLocation] = useState(null);
-  const [markerPosition, setMarkerPosition] = useState(null);
   const [loadingMap, setLoadingMap] = useState(true);
-  const [kiddo, setKiddo] = useState(null);
   const [mapType, setMapType] = useState("standard");
 
   async function toggleSetMapType() {
@@ -30,6 +28,8 @@ const Map = () => {
   }
 
   const { user } = useAuth();
+  const { kiddo } = useKiddo();
+
   const mapRef = useRef();
 
   async function requestLocationPermissions() {
@@ -49,19 +49,6 @@ const Map = () => {
       console.error("Erro ao obter permissões de localização:", error);
     }
   }
-
-  async function getKiddoOn() {
-    const kiddoTemp = await getKiddoInfo(user);
-    setKiddo(kiddoTemp);
-  }
-
-  useEffect(() => {
-    getKiddoOn();
-  }, [user]);
-
-  useEffect(() => {
-    getKiddoOn();
-  }, []);
 
   useEffect(() => {
     requestLocationPermissions();
@@ -86,69 +73,72 @@ const Map = () => {
         console.error("Erro ao iniciar a vigilância da localização:", error);
       }
     }
-
-    async function handleLocationUpdate(locationAsync) {
-      // Obtém a última localização salva na base de dados
-      const kiddoId = kiddo?._id;
-      const device = Tracker.DEVICE_ID;
-
-      const lastLocation = await getLastLocation(kiddoId, device);
-
-      if (lastLocation) {
-        const geoInput = {
-          latitude: parseFloat(lastLocation.latitude),
-          longitude: parseFloat(lastLocation.longitude),
-        };
-        const geoOutput = {
-          latitude: locationAsync.coords.latitude,
-          longitude: locationAsync.coords.longitude,
-        };
-        // Calcula a distância entre a localização atual e a última localização salva
-        const distance = getDistance(geoInput, geoOutput, 1);
-
-        if (distance >= 1000) {
-          //VERIFICAR A DISTANCIA A CADA LOCALIZAÇÃO SALVA
-          // Salva a nova localização na base de dados
-          try {
-            await saveLocation(
-              locationAsync.coords.latitude,
-              locationAsync.coords.longitude,
-              kiddoId,
-              device,
-              locationAsync.timestamp
-            );
-            console.log("Localização salva com sucesso.");
-          } catch (error) {
-            console.error("Erro ao salvar localização:", error);
-          }
-        } else {
-          console.log(
-            "Distância menor que 50 metros. Não é necessário salvar a localização."
-          );
-        }
-      } else {
-        // Se não houver localização anterior, salva a localização atual
-        try {
-          await saveLocation(
-            locationAsync.coords.latitude,
-            locationAsync.coords.longitude,
-            kiddoId,
-            device,
-            locationAsync.timestamp //tempo que pega a localização
-          );
-          console.log("Localização inicial salva com sucesso.");
-        } catch (error) {
-          console.error("Erro ao salvar localização inicial:", error);
-        }
-      }
-    }
-
     startLocationWatch();
 
     return () => {
       Location.stopLocationUpdatesAsync();
     };
   }, []);
+
+  async function handleLocationUpdate(locationAsync) {
+    if (!kiddo || !locationAsync || !locationAsync.coords) {
+      return;
+    }
+
+    // Obtém a última localização salva na base de dados
+    const kiddoId = kiddo?._id; // As vezes aqui vem undefined
+    const device = Tracker.DEVICE_ID;
+
+    const lastLocation = await getLastLocation(kiddoId, device);
+
+    if (lastLocation) {
+      const geoInput = {
+        latitude: parseFloat(lastLocation.latitude),
+        longitude: parseFloat(lastLocation.longitude),
+      };
+      const geoOutput = {
+        latitude: locationAsync.coords.latitude,
+        longitude: locationAsync.coords.longitude,
+      };
+      // Calcula a distância entre a localização atual e a última localização salva
+      const distance = getDistance(geoInput, geoOutput, 1);
+
+      if (distance >= 1000) {
+        //VERIFICAR A DISTANCIA A CADA LOCALIZAÇÃO SALVA
+        // Salva a nova localização na base de dados
+        try {
+          await saveLocation(
+            locationAsync.coords.latitude,
+            locationAsync.coords.longitude,
+            kiddoId,
+            device,
+            locationAsync.timestamp
+          );
+          console.log("Localização salva com sucesso.");
+        } catch (error) {
+          console.error("Erro ao salvar localização:", error);
+        }
+      } else {
+        console.log(
+          "Distância menor que 50 metros. Não é necessário salvar a localização."
+        );
+      }
+    } else {
+      // Se não houver localização anterior, salva a localização atual
+      try {
+        await saveLocation(
+          locationAsync.coords.latitude,
+          locationAsync.coords.longitude,
+          kiddoId,
+          device,
+          locationAsync.timestamp //tempo que pega a localização
+        );
+        console.log("Localização inicial salva com sucesso.");
+      } catch (error) {
+        console.error("Erro ao salvar localização inicial:", error);
+      }
+    }
+  }
 
   return (
     <View style={styles.mapContainer}>
@@ -157,6 +147,7 @@ const Map = () => {
           <View style={styles.buttonMapConfigContainer}>
             <TouchableOpacity
               style={styles.mapButton}
+              activeOpacity={0.7}
               onPress={toggleSetMapType}
             >
               <FontAwesome
@@ -165,7 +156,7 @@ const Map = () => {
                 size={30}
               />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.mapButton}>
+            <TouchableOpacity style={styles.mapButton} activeOpacity={0.7}>
               <FontAwesome
                 name="location-arrow"
                 color={defaultStyle.colors.mainColorBlue}
@@ -177,12 +168,8 @@ const Map = () => {
             ref={mapRef}
             style={styles.map}
             initialRegion={{
-              latitude: markerPosition
-                ? markerPosition.latitude
-                : location.coords.latitude,
-              longitude: markerPosition
-                ? markerPosition.longitude
-                : location.coords.longitude,
+              latitude: location.coords.latitude,
+              longitude: location.coords.longitude,
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421,
               pitch: 45, // Inclinação da câmera em graus (0 é vista de cima)
@@ -190,22 +177,21 @@ const Map = () => {
             }}
             onMapReady={() => {
               // Centralize a câmera no marcador e ajuste o zoom para incluir o marcador na visualização
-              if (markerPosition) {
-                mapRef.current?.fitToCoordinates([markerPosition], {
-                  edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
-                  animated: true,
-                });
-              }
+              mapRef.current?.fitToCoordinates([location], {
+                edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+                animated: true,
+              });
             }}
             mapType={mapType} //Mudar dinamicamente em função ao Mapa Principal
           >
-            {markerPosition && (
-              <Marker
-                coordinate={markerPosition}
-                title={kiddo?.surname}
-                description="Última Localização Registada"
-              />
-            )}
+            <Marker
+              coordinate={{
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+              }}
+              title={kiddo?.surname}
+              description="Última Localização Registada"
+            />
           </MapView>
         </>
       ) : (
