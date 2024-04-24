@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
     height: "auto",
     borderRadius: defaultStyle.borderRadio.borderRadioInput,
     borderWidth: 1,
+    borderColor: defaultStyle.colors.blueLightColor1,
     marginVertical: 10,
     paddingLeft: 10,
   },
