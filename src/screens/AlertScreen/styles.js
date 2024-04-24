@@ -14,7 +14,26 @@ const styles = StyleSheet.create({
   },
 
   containerNoti: {
-    padding: 10,
+    paddingLeft: 1,
+    paddingRight: 3
+  },
+
+  containerItens: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingLeft: 20,
+    paddingRight: 5
+  },
+
+  containerIcon: {
+    backgroundColor: '#fff1f1',
+    height: 50,
+    width: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 100,
+    marginRight: 10
   },
 
   containerItem: {
@@ -30,13 +49,14 @@ const styles = StyleSheet.create({
   itemTitle: {
     fontSize: defaultStyle.sizes.mainLabels,
     fontWeight: 'bold',
-    color: defaultStyle.colors.dark
+    color: defaultStyle.colors.black2
   },
 
   itemSubject: {
     fontSize: defaultStyle.sizes.inputLabels,
-    color: defaultStyle.colors.grayAccent4,
-    textAlign: 'justify'
+    color: defaultStyle.colors.grayAccent5,
+    textAlign: 'justify',
+    paddingRight: 12
   },
 
   btnMarkAll: {
@@ -54,9 +74,10 @@ const styles = StyleSheet.create({
   },
 
   containerNo: {
-    flex: 1,
+    paddingTop: '50%',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    backgroundColor: defaultStyle.colors.white,
   },
 
   titleContainerNo: {

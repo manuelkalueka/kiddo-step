@@ -1,4 +1,11 @@
-import React, { useState, useMemo, useRef, useCallback } from "react";
+import React, {
+  useState,
+  useMemo,
+  useRef,
+  useCallback,
+  Fragment,
+  useEffect,
+} from "react";
 import {
   View,
   Text,
@@ -11,10 +18,12 @@ import {
   Platform,
 } from "react-native";
 
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import BottomSheet from "@gorhom/bottom-sheet";
+import { formatDate } from "../../../utils/format-date";
+
 import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
+import { useAuth } from "./../../contexts/auth";
+import { getKiddoInfo } from "../../services/kiddo-service";
 
 import { Entypo, MaterialIcons, FontAwesome } from "@expo/vector-icons";
 
@@ -26,6 +35,7 @@ import styles from "./styles";
 import defaultStyle from "../../defaultStyle";
 import { StatusBar } from "expo-status-bar";
 import { handleDisableKeyboard } from "../../../utils/dismiss-keyboard";
+import PickerModal from "../../components/PickerModal";
 
 const KiddoSchema = yup.object({
   fullName: yup.string().required("Informe o Nome Completo"),
@@ -33,6 +43,19 @@ const KiddoSchema = yup.object({
 });
 
 const KiddoDetailsScreen = () => {
+  const { user } = useAuth();
+
+  const [kiddo, setKiddo] = useState(null);
+  const [kiddoAge, setKiddoAge] = useState(null);
+
+  useEffect(() => {
+    async function getKiddo() {
+      const newKiddo = await getKiddoInfo(user);
+      setKiddo(newKiddo);
+    }
+    getKiddo();
+  }, []);
+
   const {
     control,
     handleSubmit,
@@ -47,7 +70,11 @@ const KiddoDetailsScreen = () => {
 
   const navigation = useNavigation();
 
-  const [selectedLanguage, setSelectedLanguage] = useState();
+  const [selectedGendre, setSelectedGendre] = useState();
+  const itemsPicker = ["Masculino", "Feminino"];
+  const [visiblePicker, setVisiblePicker] = useState(false);
+
+  const [pickerResult, setPickerResult] = useState("Masculino");
 
   const pickerRef = useRef();
 
@@ -60,10 +87,7 @@ const KiddoDetailsScreen = () => {
   }
 
   const STATUS_DEVICE = true;
-  const BIRTH_DATE = () => {
-    const date = new Date().toLocaleDateString();
-    return date;
-  };
+
 
   function handleModalClose() {
     navigation?.goBack();
@@ -71,6 +95,13 @@ const KiddoDetailsScreen = () => {
 
   const kiddoAvatar = require("./../../../assets/img/boy-avatar.png");
 
+  const onClose = () => {
+    setVisiblePicker(false);
+  };
+
+  const onSelect = (value) => {
+    setPickerResult(value);
+  };
 
   return (
     <View style={styles.container}>
@@ -102,8 +133,10 @@ const KiddoDetailsScreen = () => {
           </View>
           <View style={styles.infoContainer}>
             <View>
-              <Text style={styles.headerSurname}>Tiagão</Text>
-              <Text style={styles.headerAge}>5 anos</Text>
+              <Text style={styles.headerSurname}>{kiddo?.surname}</Text>
+              <Text style={styles.headerAge}>
+                {formatDate(kiddo?.birthDate)} anos
+              </Text>
             </View>
             <View style={styles.statusContainer}>
               <View style={styles.buttonStatusContainer}>
@@ -169,36 +202,62 @@ const KiddoDetailsScreen = () => {
             <Text style={styles.labels}>Nome Completo</Text>
             <TextInput
               placeholder="Digite o Nome Completo"
-              value="TIAGO LUIS PEREIRA"
+              defaultValue={kiddo?.fullName}
               style={styles.input}
             />
           </View>
           <View>
             <Text style={styles.labels}>Data de Nascimento</Text>
-            <TextInput value={BIRTH_DATE().toString()} style={styles.input} />
+            <TextInput
+              defaultValue={formatDate(kiddo?.birthDate)}
+              style={styles.input}
+            />
           </View>
           <View>
-            <Text style={styles.labels}>Gênero</Text>
-            <Picker
-              ref={pickerRef}
-              selectedValue={selectedLanguage}
-              onValueChange={(itemValue, itemIndex) =>
-                setSelectedLanguage(itemValue)
-              }
-              onBlur={closePicker}
-              onFocus={openPicker}
-              style={{ width: 150, height: 50 }}
-            >
-              <Picker.Item key={0} label="Java" value="java" />
-              <Picker.Item key={1} label="JavaScript" value="js" />
-            </Picker>
+            {Platform.OS === "android" ? (
+              <Fragment>
+                <Text style={styles.labels}>Gênero</Text>
+                <Picker
+                  ref={pickerRef}
+                  selectedValue={selectedGendre}
+                  onValueChange={(itemValue, itemIndex) =>
+                    setSelectedGendre(itemValue)
+                  }
+                  onBlur={closePicker}
+                  onFocus={openPicker}
+                  style={{ width: 150, height: 50 }}
+                >
+                  <Picker.Item key={0} label="Masculino" value="Masculino" />
+                  <Picker.Item key={1} label="Feminino" value="Feminino" />
+                </Picker>
+              </Fragment>
+            ) : (
+              <Fragment>
+                <Text style={styles.labels}>Genero</Text>
+                <TextInput
+                  defaultValue={pickerResult}
+                  style={styles.input}
+                  editable={false}
+                  onPressIn={() => {
+                    setVisiblePicker(true);
+                  }}
+                />
+                <PickerModal
+                  items={itemsPicker}
+                  title="Gênero"
+                  visible={visiblePicker}
+                  onClose={onClose}
+                  onSelect={onSelect}
+                />
+              </Fragment>
+            )}
           </View>
           <Text style={styles.sectionTitle}>Detalhes de Saúde</Text>
           <View>
             <Text style={styles.labels}>Tipo Sanguíneo</Text>
             <TextInput
               placeholder="Digite o tipo sanguíneo"
-              value="A+"
+              defaultValue={kiddo?.bloodType}
               style={styles.input}
             />
           </View>
@@ -209,7 +268,7 @@ const KiddoDetailsScreen = () => {
               multiline={true}
               editable={true}
               numberOfLines={4}
-              value="TIAGO LUIS PEREIRA"
+              defaultValue={kiddo?.alergics}
               style={styles.input}
             />
           </View>

@@ -2,7 +2,7 @@ import moment from "moment";
 
 function relativeTime(dateStr) {
   // Parse a string no formato YYYYMMDD em um objeto Date
-  const date = moment(dateStr, "YYYYMMDD");
+  const date = moment(dateStr);
 
   // Define a localização para português de Portugal
   moment.locale("pt-PT");

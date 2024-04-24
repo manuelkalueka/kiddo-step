@@ -23,13 +23,17 @@ export default {
     white: "#fff",
     whiteSmooke:"#f5f5f5",
     black: "#000",
+    black2:'#12142b',
     light: "#f8f9fa",
     dark: "#343a40",
     grayAccent1: "#dbdbdb",
     grayAccent2: "#8a8a8a",
     grayAccent3: "#ccc",
     grayAccent4: "#616161",
-    link:'blue'
+    grayAccent5: "#9fa1a9",
+    link:'blue',
+    defaultIcon: '#f95850',
+    defaultIcon2: '#ff6f48'
   },
 
   borderRadio: {

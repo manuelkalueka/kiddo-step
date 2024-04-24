@@ -6,6 +6,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: defaultStyle.colors.light,
   },
+  containerEmpty: {
+    flex: 1,
+    backgroundColor: defaultStyle.colors.light,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  textEmpty: {
+    fontSize: defaultStyle.sizes.titleSmall,
+    justifyContent: "center",
+    alignItems: "center",
+    color: defaultStyle.colors.grayAccent4,
+    marginTop: 10,
+  },
   itemContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -20,10 +33,13 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingBottom: 40,
   },
+  item: {
+    maxWidth: "80%",
+  },
   header: {
     color: defaultStyle.colors.dark,
     fontWeight: "bold",
-    fontSize: defaultStyle.sizes.titleSmall,
+    fontSize: defaultStyle.sizes.inputLabels,
     marginBottom: 10,
   },
   date: {
@@ -68,6 +84,7 @@ const styles = StyleSheet.create({
     color: defaultStyle.colors.grayAccent2,
     marginBottom: 10,
   },
+  labelContent: { fontWeight: "bold" },
 });
 
 export default styles;

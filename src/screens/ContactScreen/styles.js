@@ -13,9 +13,12 @@ const styles = StyleSheet.create({
   },
   top: {
     paddingHorizontal: "5%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   buttonAdContact: {
-    width: "50%",
+    width: "30%",
     padding: 10,
     marginBottom: 10,
     alignSelf: "flex-end",

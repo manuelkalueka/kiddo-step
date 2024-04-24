@@ -69,6 +69,12 @@ const ContactScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.top}>
+        <Text
+          style={{ fontSize: 20, fontWeight: "bold", paddingVertical: "5%" }}
+        >
+          Contactos de Emergência
+        </Text>
+
         <TouchableOpacity
           onPress={handleOpenModal}
           style={styles.buttonAdContact}
@@ -81,7 +87,7 @@ const ContactScreen = () => {
             size={18}
           />
           <Text style={{ fontWeight: "bold", paddingLeft: 5, opacity: 0.4 }}>
-            Adicionar Contactos
+            Adicionar
           </Text>
         </TouchableOpacity>
       </View>
