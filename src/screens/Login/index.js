@@ -8,7 +8,8 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
-  View
+  View,
+  ScrollView
 } from "react-native";
 import { useAuth } from "../../contexts/auth";
 
@@ -53,10 +54,14 @@ export default function Login({ navigation }) {
 
   return (
     <TouchableWithoutFeedback onPress={() => handleDisableKeyboard(Keyboard)}>
-      <View style={styles.containerLogin}>
+      <View style={{ /**/ }}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+        >
         <KeyboardAvoidingView
+        style={styles.containerLogin}
           enabled
-          behavior={Platform.OS == "ios" ? "height" : "padding"}
+          behavior={Platform.OS == "ios" ? "padding" : null}
         >
           <View style={styles.headerLogin}>
             <Image
@@ -145,6 +150,7 @@ export default function Login({ navigation }) {
             </View>
           </View>
         </KeyboardAvoidingView>
+        </ScrollView>
       </View>
     </TouchableWithoutFeedback>
   );
