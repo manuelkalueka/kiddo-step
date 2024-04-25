@@ -1,6 +1,6 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import ConfigKiddoScreen from "../screens/ConfigKiddoScreen";
+import ConfigKiddoScreen from "../screens/ConfigKiddoScreen"
 import defaultStyle from "../defaultStyle";
 import Header from "../components/Header";
 const { Screen, Navigator } = createNativeStackNavigator();
