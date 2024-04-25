@@ -64,8 +64,9 @@ export default function TabRoutes() {
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModal2Visible, setisModal2Visible] = useState(false);
-  const [selectedValue1, setSelectedValue1] = useState(null);
-  const [selectedValue2, setSelectedValue2] = useState(null);
+  const [ selectedValueTypeAlert , setSelectedValueTypeAlert ] = useState('')
+  const [ seletedValueGeoFecing, setSeletedValueGeoFecing ] = useState('')
+
   const [date, setDate] = useState(new Date())
 
   const [open, setOpen] = useState(false);
@@ -215,31 +216,25 @@ export default function TabRoutes() {
                   />
 
                   <Text style={styles.labels}>Tipo de alerta</Text>
-                  <DropDownPicker
-                    open={openPickerAlert}
-                    value={valuePickerAlert}
-                    items={[
-                      {
-                        label: 'Entrada',
-                        value: 'entrada'
-                      },
-                      {
-                        label: 'Saída',
-                        value: 'saida'
-                      }
-                    ]}
-                    setOpen={setOpenPickerAlert}
-                    setValue={setValuePickerAlert}
-                  />
+                 <Picker
+                    selectedValue={selectedValueTypeAlert}
+                    onValueChange={(itemValue, itemIndex)=>(setSelectedValueTypeAlert(itemValue))}
+                    style={{ height: 50, width: 150 }}
+                >
+                  <Picker.Item label="A" value={'B'}/>
+                  <Picker.Item label="B" value={'A'}/>
+                 </Picker>
 
                   <Text style={styles.labels}>Cerca virtual</Text>
-                  <DropDownPicker
-                    open={open}
-                    value={value}
-                    items={cercasVirtuais}
-                    setOpen={setOpen}
-                    setValue={setValue}
-                  />
+                  <Picker
+                    selectedValue={seletedValueGeoFecing}
+                    onValueChange={(itemValue, itemIndex)=>(setSeletedValueGeoFecing(itemValue))}
+                    style={{ height: 50, width: 150 }}
+                >
+                  <Picker.Item label="A" value={'A'}/>
+                  <Picker.Item label="B" value={'B'}/>
+                 </Picker>
+                
                   
                   <View style={styles.containerSwitch}>
                     <Text style={styles.labels}>Definir hora ?</Text>
@@ -337,6 +332,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     backgroundColor: defaultStyle.colors.white,
     borderRadius: defaultStyle.borderRadio.borderRadioInput,
+    borderWidth: 1,
+    borderColor: defaultStyle.colors.mainColorBlue
   },
 
   buttonSave: {
