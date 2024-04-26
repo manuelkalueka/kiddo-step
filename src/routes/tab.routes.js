@@ -29,10 +29,8 @@ import { useNavigation } from "@react-navigation/native";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
-import DropDownPicker from "react-native-dropdown-picker";
 
 import defaultStyle from "../defaultStyle";
-import { handleDisableKeyboard } from "../../utils/dismiss-keyboard";
 
 import ButtonNewfecing from "../components/ButtonNewfecing";
 import {
@@ -46,27 +44,20 @@ import {
 import Header from "../components/Header";
 import { getKiddoInfo } from "../services/kiddo-service";
 import { useAuth } from "../contexts/auth";
+import { useKiddo } from "../contexts/kiddo";
 
 const Tab = createBottomTabNavigator();
 const { Navigator, Screen } = Tab;
 
 export default function TabRoutes() {
   const { user } = useAuth();
+  const { kiddo } = useKiddo();
 
-  const [kiddo, setKiddo] = useState(null);
   const navigation = useNavigation();
 
   function handleKiddoModalOpen() {
     navigation.navigate("KiddoDetails");
   }
-
-  useEffect(() => {
-    async function getKiddo() {
-      const newKiddo = await getKiddoInfo(user);
-      setKiddo(newKiddo);
-    }
-    getKiddo();
-  }, []);
 
   const handleChange = useCallback((index) => {
     //Se o bottomSheet arrastado todo ele para baixo então fecha o modal
@@ -86,11 +77,10 @@ export default function TabRoutes() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModal2Visible, setisModal2Visible] = useState(false);
 
-  const [ selectedValueTypeAlert , setSelectedValueTypeAlert ] = useState('')
-  const [ seletedValueGeoFecing, setSeletedValueGeoFecing ] = useState('')
+  const [selectedValueTypeAlert, setSelectedValueTypeAlert] = useState("");
+  const [seletedValueGeoFecing, setSeletedValueGeoFecing] = useState("");
 
-  const [date, setDate] = useState(new Date())
-
+  const [date, setDate] = useState(new Date());
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
@@ -239,26 +229,29 @@ export default function TabRoutes() {
 
                   <Text style={styles.labels}>Tipo de alerta</Text>
 
-                 <Picker
+                  <Picker
                     selectedValue={selectedValueTypeAlert}
-                    onValueChange={(itemValue, itemIndex)=>(setSelectedValueTypeAlert(itemValue))}
+                    onValueChange={(itemValue, itemIndex) =>
+                      setSelectedValueTypeAlert(itemValue)
+                    }
                     style={{ height: 50, width: 150 }}
-                >
-                  <Picker.Item label="A" value={'B'}/>
-                  <Picker.Item label="B" value={'A'}/>
-                 </Picker>
+                  >
+                    <Picker.Item label="A" value={"B"} />
+                    <Picker.Item label="B" value={"A"} />
+                  </Picker>
 
                   <Text style={styles.labels}>Cerca virtual</Text>
                   <Picker
                     selectedValue={seletedValueGeoFecing}
-                    onValueChange={(itemValue, itemIndex)=>(setSeletedValueGeoFecing(itemValue))}
+                    onValueChange={(itemValue, itemIndex) =>
+                      setSeletedValueGeoFecing(itemValue)
+                    }
                     style={{ height: 50, width: 150 }}
-                >
-                  <Picker.Item label="A" value={'A'}/>
-                  <Picker.Item label="B" value={'B'}/>
-                 </Picker>
-                
-                  
+                  >
+                    <Picker.Item label="A" value={"A"} />
+                    <Picker.Item label="B" value={"B"} />
+                  </Picker>
+
                   <View style={styles.containerSwitch}>
                     <Text style={styles.labels}>Definir hora ?</Text>
                     <Switch
@@ -353,7 +346,7 @@ const styles = StyleSheet.create({
     backgroundColor: defaultStyle.colors.white,
     borderRadius: defaultStyle.borderRadio.borderRadioInput,
     borderWidth: 1,
-    borderColor: defaultStyle.colors.mainColorBlue
+    borderColor: defaultStyle.colors.mainColorBlue,
   },
 
   buttonSave: {

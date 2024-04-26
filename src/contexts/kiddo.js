@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage"; //armazenar dados em string no dispositivo
 import { setKiddoInfo, getKiddoInfo } from "./../services/kiddo-service.js";
 const contextFormat = {
-  setted: true,
+  setted: false,
   kiddo: {},
   createKiddo: () => {},
   getKiddo: () => {},
@@ -39,8 +39,8 @@ export const KiddoProvider = ({ children }) => {
 
   async function getKiddo(id) {
     try {
-      const kiddo = await getKiddoInfo(id);
-      setKiddo(kiddo);
+      const newKiddo = await getKiddoInfo(id);
+      setKiddo(newKiddo);
       await AsyncStorage.setItem("@Kiddo", JSON.stringify(kiddo));
     } catch (error) {
       console.log(error);

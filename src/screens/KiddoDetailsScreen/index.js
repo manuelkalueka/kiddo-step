@@ -23,7 +23,6 @@ import { formatDate } from "../../../utils/format-date";
 import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "./../../contexts/auth";
-import { getKiddoInfo } from "../../services/kiddo-service";
 
 import { Entypo, MaterialIcons, FontAwesome } from "@expo/vector-icons";
 
@@ -36,6 +35,7 @@ import defaultStyle from "../../defaultStyle";
 import { StatusBar } from "expo-status-bar";
 import { handleDisableKeyboard } from "../../../utils/dismiss-keyboard";
 import PickerModal from "../../components/PickerModal";
+import { useKiddo } from "../../contexts/kiddo";
 
 const KiddoSchema = yup.object({
   fullName: yup.string().required("Informe o Nome Completo"),
@@ -44,17 +44,9 @@ const KiddoSchema = yup.object({
 
 const KiddoDetailsScreen = () => {
   const { user } = useAuth();
+  const { kiddo } = useKiddo();
 
-  const [kiddo, setKiddo] = useState(null);
   const [kiddoAge, setKiddoAge] = useState(null);
-
-  useEffect(() => {
-    async function getKiddo() {
-      const newKiddo = await getKiddoInfo(user);
-      setKiddo(newKiddo);
-    }
-    getKiddo();
-  }, []);
 
   const {
     control,
@@ -75,7 +67,7 @@ const KiddoDetailsScreen = () => {
   const [visiblePicker, setVisiblePicker] = useState(false);
 
   const [pickerResult, setPickerResult] = useState("Masculino");
-
+  console.log("Sou a Criança ", kiddo.birthDate);
   const pickerRef = useRef();
 
   function openPicker() {
@@ -87,7 +79,6 @@ const KiddoDetailsScreen = () => {
   }
 
   const STATUS_DEVICE = true;
-
 
   function handleModalClose() {
     navigation?.goBack();

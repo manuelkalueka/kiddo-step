@@ -26,8 +26,6 @@ export const AuthProvider = ({ children }) => {
       const storagedUser = await AsyncStorage.getItem("@KiddoStepAuth");
       const storagedToken = await AsyncStorage.getItem("@KiddoStepToken");
 
-      console.log("Sou o Usuário Armazenado ", storagedUser);
-
       if (storagedUser && storagedToken) {
         setUser(JSON.parse(storagedUser));
         ApiMananger.defaults.headers["x-access-token"] = `${storagedToken}`;
@@ -43,7 +41,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await signInService(email, password);
 
-      user(response.user);
+      setUser(response.user);
 
       await AsyncStorage.setItem(
         "@KiddoStepAuth",
@@ -51,7 +49,6 @@ export const AuthProvider = ({ children }) => {
       );
       await AsyncStorage.setItem("@KiddoStepToken", response.token);
       ApiMananger.defaults.headers["x-access-token"] = `${response.token}`;
-      console.log("User ", user);
     } catch (error) {
       console.log("ERRO NO CONTEXTO:", error);
     }
@@ -70,7 +67,8 @@ export const AuthProvider = ({ children }) => {
 
   async function updateUser(data) {
     try {
-      await updateUserService(data, user);
+      const newUser = await updateUserService(data, user);
+      return newUser;
     } catch (error) {
       console.log("Erro ao Actualizar o usuário");
     }
