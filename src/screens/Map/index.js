@@ -203,8 +203,5 @@ const Map = () => {
           <Text style={{ marginTop: 10 }}>Carregando o mapa...</Text>
         </View>
       )}
-    </View>
-  );
-};
 
 export default Map;
