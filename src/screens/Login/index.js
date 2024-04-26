@@ -54,12 +54,11 @@ export default function Login({ navigation }) {
 
   return (
     <TouchableWithoutFeedback onPress={() => handleDisableKeyboard(Keyboard)}>
-      <View style={{ /**/ }}>
+      <View style={styles.containerLogin}>
         <ScrollView
           showsVerticalScrollIndicator={false}
         >
         <KeyboardAvoidingView
-        style={styles.containerLogin}
           enabled
           behavior={Platform.OS == "ios" ? "padding" : null}
         >
