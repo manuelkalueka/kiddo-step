@@ -8,7 +8,7 @@ import {
 } from "./../services/auth-services.js";
 
 const contextFormat = {
-  signed: true,
+  signed: false,
   user: {},
   signIn: () => {},
   signOut: () => {},
@@ -26,6 +26,8 @@ export const AuthProvider = ({ children }) => {
       const storagedUser = await AsyncStorage.getItem("@KiddoStepAuth");
       const storagedToken = await AsyncStorage.getItem("@KiddoStepToken");
 
+      console.log("Sou o Usuário Armazenado ", storagedUser);
+
       if (storagedUser && storagedToken) {
         setUser(JSON.parse(storagedUser));
         ApiMananger.defaults.headers["x-access-token"] = `${storagedToken}`;
@@ -36,32 +38,20 @@ export const AuthProvider = ({ children }) => {
     loadStorageData();
   }, []);
 
-  async function getUserAuth() {
-    try {
-      const storagedUser = await AsyncStorage.getItem("@KiddoStepAuth");
-      const user = JSON.parse(storagedUser);
-      return user;
-    } catch (error) {
-      console.log("Erro ao carregar usuario", error);
-    }
-  }
-
   async function signIn(data) {
     const { email, password } = data;
     try {
       const response = await signInService(email, password);
 
-      ApiMananger.defaults.headers[
-        "Authorization"
-      ] = `Bearer ${response.token}`;
+      user(response.user);
 
-      setUser(response);
       await AsyncStorage.setItem(
         "@KiddoStepAuth",
         JSON.stringify(response.user)
       );
       await AsyncStorage.setItem("@KiddoStepToken", response.token);
       ApiMananger.defaults.headers["x-access-token"] = `${response.token}`;
+      console.log("User ", user);
     } catch (error) {
       console.log("ERRO NO CONTEXTO:", error);
     }
@@ -90,13 +80,12 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         signed: !!user,
-        user,
+        user: user,
         signIn,
         signOut,
         signUp,
         loading,
-        getUserAuth,
-        updateUser
+        updateUser,
       }}
     >
       {children}

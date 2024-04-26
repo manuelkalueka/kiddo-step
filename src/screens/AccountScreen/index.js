@@ -43,16 +43,7 @@ const Schema = yup.object({
 });
 
 const AccountScreen = ({ navigation }) => {
-  const { getUserAuth } = useAuth();
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    async function loadUser() {
-      const fetchedUser = await getUserAuth();
-      setUser(fetchedUser);
-    }
-    loadUser();
-  }, []);
+  const { user } = useAuth();
 
   const {
     control,

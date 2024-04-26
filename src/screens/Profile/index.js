@@ -13,21 +13,13 @@ import defaultStyle from "../../defaultStyle";
 import ActionButtom from "../../components/ActionButtom";
 
 export default function Profile({ navigation }) {
-  const { signOut, getUserAuth } = useAuth();
-
-  const [user, setUser] = useState(null);
-  useEffect(() => {
-    async function loadUser() {
-      const fetchedUser = await getUserAuth();
-      setUser(fetchedUser);
-    }
-    loadUser();
-  }, []);
+  const { signOut, user } = useAuth();
 
   function handleSignOut() {
     signOut();
   }
   const parentAvatar = require("./../../../assets/img/avatar-parent-man.png");
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>

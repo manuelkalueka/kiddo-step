@@ -1,6 +1,5 @@
 import React, { useRef } from "react";
 import {
-  KeyboardAvoidingView,
   Platform,
   Pressable,
   TextInput,
@@ -33,16 +32,16 @@ const Schema = yup.object({
   avatar: yup.string(),
   bloodType: yup.string(),
   alergics: yup.string(),
-  // identifyNumber: yup
-  //   .string()
-  //   .required("BI Obrigatório")
-  //   .min(6, "Número do Bilhete Inválido"),
-  // address: yup.string().required("Define um Endereço, como Casa..."),
-  // relationship: yup.string(),
+  identifyNumber: yup
+    .string()
+    .required("BI Obrigatório")
+    .min(6, "Número do Bilhete Inválido"),
+  address: yup.string().required("Define um Endereço, como Casa..."),
+  relationship: yup.string(),
 });
 
 const ConfigKiddoScreen = () => {
-  const { user, updateUser } = useAuth();
+  const { user } = useAuth();
 
   const {
     control,
@@ -103,10 +102,6 @@ const ConfigKiddoScreen = () => {
         </Text>
       </View>
       <Pressable style={styles.keyZone}>
-        {/* <KeyboardAvoidingView
-          behavior={Platform.OS == "ios" ? "height" : "padding"}
-        > */}
-        {/* <View>
         <View>
           <Text style={styles.mainLabel}>Dados do Responsável</Text>
           <Text style={styles.label}>Número do BI</Text>
@@ -170,7 +165,7 @@ const ConfigKiddoScreen = () => {
               </Picker>
             )}
           />
-        </View> */}
+        </View>
         <View>
           <Text style={styles.mainLabel}>Dados da Criança</Text>
         </View>
@@ -279,7 +274,6 @@ const ConfigKiddoScreen = () => {
           textButton="Começar a Rastrear"
           onPress={handleSubmit(sendForm)}
         />
-        {/* </KeyboardAvoidingView> */}
       </Pressable>
     </ScrollView>
   );

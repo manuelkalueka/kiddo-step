@@ -8,7 +8,7 @@ async function signInService(email, password) {
     //LOGICA PARA MANDAR NA API
     const { data } = await ApiMananger.post("/users/login", reqUser);
 
-    const { user, token } = data;
+    const { user, token, infoUser } = data;
     return { user, token };
   } catch (error) {
     Alert.alert(error?.message, "Tente Novamente!");
