@@ -10,6 +10,7 @@ import {
 const contextFormat = {
   signed: true,
   user: {},
+  isActive:false,
   signIn: () => {},
   signOut: () => {},
 };
@@ -50,12 +51,8 @@ export const AuthProvider = ({ children }) => {
     const { email, password } = data;
     try {
       const response = await signInService(email, password);
-
-      ApiMananger.defaults.headers[
-        "Authorization"
-      ] = `Bearer ${response.token}`;
-
       setUser(response);
+
       await AsyncStorage.setItem(
         "@KiddoStepAuth",
         JSON.stringify(response.user)
@@ -80,7 +77,9 @@ export const AuthProvider = ({ children }) => {
 
   async function updateUser(data) {
     try {
-      await updateUserService(data, user);
+      const newUser = await updateUserService(data, user);
+      setUser(newUser);
+      await AsyncStorage.setItem("@KiddoStepAuth", JSON.stringify(newUser));
     } catch (error) {
       console.log("Erro ao Actualizar o usuário");
     }
@@ -90,13 +89,14 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         signed: !!user,
+        isActive:user.isActive,
         user,
         signIn,
         signOut,
         signUp,
         loading,
         getUserAuth,
-        updateUser
+        updateUser,
       }}
     >
       {children}
