@@ -87,10 +87,7 @@ export default function AlertScreen() {
   return (
     
     <View style={styles.container}>
-      <RefreshControl
-        onRefresh={refreshing}
-        refreshing={refreshingData}
-      >
+    
       {
         data == '' ? (
           <View style={styles.containerNo}>
@@ -129,7 +126,6 @@ export default function AlertScreen() {
           </View>
         )
       }
- </RefreshControl>
     </View>
    
   )
