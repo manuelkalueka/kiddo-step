@@ -13,7 +13,7 @@ function AppRouterStrategy() {
   const { setted } = useKiddo();
 
   //Primeiro Uso, definir criança setted && user.isActive
-  return <TabRoutes />;
+  return setted && user.isActive ? <TabRoutes /> : <KiddoRouter />;
 }
 export function Router() {
   const { signed, loading } = useAuth();
