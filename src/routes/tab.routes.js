@@ -1,4 +1,11 @@
-import React, { Fragment, useCallback, useMemo, useRef, useState } from "react";
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   Text,
   View,
@@ -7,21 +14,22 @@ import {
   StyleSheet,
   Platform,
   Modal,
-  Keyboard,
-  TouchableWithoutFeedback,
-  Switch
+  Switch,
 } from "react-native";
 
-import { GestureHandlerRootView, TextInput } from "react-native-gesture-handler";
+import {
+  GestureHandlerRootView,
+  TextInput,
+} from "react-native-gesture-handler";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { Picker } from "@react-native-picker/picker";
-import DateTimePicker from '@react-native-community/datetimepicker'
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 import { useNavigation } from "@react-navigation/native";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Entypo, FontAwesome5 } from "@expo/vector-icons";
-import DropDownPicker from 'react-native-dropdown-picker';
+import DropDownPicker from "react-native-dropdown-picker";
 
 import defaultStyle from "../defaultStyle";
 import { handleDisableKeyboard } from "../../utils/dismiss-keyboard";
@@ -36,16 +44,29 @@ import {
 } from "../routes/stack.app.routes";
 
 import Header from "../components/Header";
+import { getKiddoInfo } from "../services/kiddo-service";
+import { useAuth } from "../contexts/auth";
 
 const Tab = createBottomTabNavigator();
 const { Navigator, Screen } = Tab;
 
 export default function TabRoutes() {
+  const { user } = useAuth();
+
+  const [kiddo, setKiddo] = useState(null);
   const navigation = useNavigation();
 
   function handleKiddoModalOpen() {
     navigation.navigate("KiddoDetails");
   }
+
+  useEffect(() => {
+    async function getKiddo() {
+      const newKiddo = await getKiddoInfo(user);
+      setKiddo(newKiddo);
+    }
+    getKiddo();
+  }, []);
 
   const handleChange = useCallback((index) => {
     //Se o bottomSheet arrastado todo ele para baixo então fecha o modal
@@ -57,17 +78,19 @@ export default function TabRoutes() {
   const onChangeDate = (event, selectedDate) => {
     const currentDate = selectedDate;
     setDate(currentDate);
-  }
+  };
 
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModal2Visible, setisModal2Visible] = useState(false);
+
   const [ selectedValueTypeAlert , setSelectedValueTypeAlert ] = useState('')
   const [ seletedValueGeoFecing, setSeletedValueGeoFecing ] = useState('')
 
   const [date, setDate] = useState(new Date())
+
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
@@ -76,8 +99,8 @@ export default function TabRoutes() {
   const [valuePickerAlert, setValuePickerAlert] = useState(null);
 
   const cercasVirtuais = [
-    { label: 'Escola', value: 'Escola' },
-    { label: 'Casa', value: 'Casa' }
+    { label: "Escola", value: "Escola" },
+    { label: "Casa", value: "Casa" },
   ];
 
   const bottomSheet = useRef(null);
@@ -126,7 +149,7 @@ export default function TabRoutes() {
                     style={styles.kiddoImg}
                   />
                 </View>
-                <Text style={styles.textSurname}>Tiagão</Text>
+                <Text style={styles.textSurname}>{kiddo?.surname}</Text>
               </TouchableOpacity>
             ),
             tabBarLabel: "Mapa",
@@ -167,8 +190,11 @@ export default function TabRoutes() {
                 style={styles.container}
                 onPress={() => setisModal2Visible(true)} //Põe visible o modal do bottomSheet
               >
-
-                <FontAwesome5 name='cog' size={25} color={defaultStyle.colors.white} />
+                <FontAwesome5
+                  name="cog"
+                  size={25}
+                  color={defaultStyle.colors.white}
+                />
               </TouchableOpacity>
             ),
             tabBarBadge: 3,
@@ -188,7 +214,6 @@ export default function TabRoutes() {
         />
       </Navigator>
 
-
       <Modal transparent={true} visible={isModal2Visible}>
         <View style={styles.modalFocus}>
           <GestureHandlerRootView style={{ flex: 1 }}>
@@ -203,19 +228,17 @@ export default function TabRoutes() {
                 backgroundColor: defaultStyle.colors.mainColorBlue,
               }}
             >
-              <BottomSheetScrollView
-                style={styles.bottomSheetScrollView}
-              >
-
+              <BottomSheetScrollView style={styles.bottomSheetScrollView}>
                 <View style={styles.containerAlert}>
-                  <Text style={styles.titleBottomSheet}>Configuração de alertas</Text>
+                  <Text style={styles.titleBottomSheet}>
+                    Configuração de alertas
+                  </Text>
 
                   <Text style={styles.labels}>Designação</Text>
-                  <TextInput
-                    style={styles.input}
-                  />
+                  <TextInput style={styles.input} />
 
                   <Text style={styles.labels}>Tipo de alerta</Text>
+
                  <Picker
                     selectedValue={selectedValueTypeAlert}
                     onValueChange={(itemValue, itemIndex)=>(setSelectedValueTypeAlert(itemValue))}
@@ -244,36 +267,33 @@ export default function TabRoutes() {
                         true: defaultStyle.colors.mainColorBlue,
                       }}
                       thumbColor={
-                        isEnabled ? defaultStyle.colors.blueLightColor1 : "#f4f3f4"
+                        isEnabled
+                          ? defaultStyle.colors.blueLightColor1
+                          : "#f4f3f4"
                       }
                       ios_backgroundColor="#3e3e3e"
                       onValueChange={toggleSwitch}
                       value={isEnabled}
                     />
                   </View>
-                  {
-                    isEnabled && (
-                      <DateTimePicker
-                        testID="dataTimePicker"
-                        mode="time"
-                        value={date}
-                        is24Hour={true}
-                        onChange={onChangeDate}
-                      />
-                    )
-                  }
+                  {isEnabled && (
+                    <DateTimePicker
+                      testID="dataTimePicker"
+                      mode="time"
+                      value={date}
+                      is24Hour={true}
+                      onChange={onChangeDate}
+                    />
+                  )}
 
                   <TouchableOpacity style={styles.buttonSave}>
                     <Text style={styles.textBtnSave}>Salvar</Text>
                   </TouchableOpacity>
-
                 </View>
               </BottomSheetScrollView>
-
             </BottomSheet>
           </GestureHandlerRootView>
         </View>
-
       </Modal>
     </Fragment>
   );
@@ -337,7 +357,7 @@ const styles = StyleSheet.create({
   },
 
   buttonSave: {
-    marginVertical: '8%',
+    marginVertical: "8%",
     padding: 16,
     backgroundColor: defaultStyle.colors.mainColorBlue,
     borderRadius: defaultStyle.borderRadio.borderRadioButton.small,
@@ -353,16 +373,14 @@ const styles = StyleSheet.create({
   titleBottomSheet: {
     fontSize: defaultStyle.sizes.title,
     color: defaultStyle.colors.black,
-    fontWeight: 'bold'
+    fontWeight: "bold",
   },
 
   bottomSheetScrollView: {
-    height: '100%'
+    height: "100%",
   },
 
   containerSwitch: {
-    flexDirection: 'row'
-  }
-
-
+    flexDirection: "row",
+  },
 });

@@ -9,7 +9,9 @@ const styles = StyleSheet.create({
   },
   mapContainer: {
     width: "100%",
-    height: "40%",
+    height: "35%",
+    justifyContent: "center",
+    alignItems: "center",
   },
   map: {
     width: "100%",
@@ -36,6 +38,13 @@ const styles = StyleSheet.create({
     borderColor: defaultStyle.colors.blueLightColor1,
   },
 
+  pickInput: {
+    borderRadius: defaultStyle.borderRadio.borderRadioInput,
+    marginTop: 5,
+    width: "100%",
+    borderWidth: 1,
+    borderColor: defaultStyle.colors.blueLightColor1,
+  },
   targetAvatarContainer: {
     flexDirection: "row",
     alignItems: "center",

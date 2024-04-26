@@ -33,16 +33,17 @@ const Schema = yup.object({
   avatar: yup.string(),
   bloodType: yup.string(),
   alergics: yup.string(),
-  identifyNumber: yup
-    .string()
-    .required("BI Obrigatório")
-    .min(6, "Número do Bilhete Inválido"),
-  address: yup.string().required("Define um Endereço, como Casa..."),
-  relationship: yup.string(),
+  // identifyNumber: yup
+  //   .string()
+  //   .required("BI Obrigatório")
+  //   .min(6, "Número do Bilhete Inválido"),
+  // address: yup.string().required("Define um Endereço, como Casa..."),
+  // relationship: yup.string(),
 });
 
 const ConfigKiddoScreen = () => {
   const { user, updateUser } = useAuth();
+
   const {
     control,
     handleSubmit,
@@ -71,6 +72,8 @@ const ConfigKiddoScreen = () => {
         relationship,
       } = data;
 
+      console.log("SOU O GENERO NO FRONT ", gendre);
+      const AuthData = { identifyNumber, address, relationship };
       const kiddoData = {
         fullName,
         surname,
@@ -80,16 +83,10 @@ const ConfigKiddoScreen = () => {
         bloodType,
         alergics,
       };
-
-      console.log("SOU O GENERO NO FRONT ", gendre);
-
-      const AuthData = { identifyNumber, address, relationship };
-      await Promise.all([
-        updateUser(AuthData),
-        setKiddoInfo(kiddoData, user._id),
-      ]);
+      await setKiddoInfo(kiddoData, user);
+      // await updateUser(AuthData);
     } catch (error) {
-      console.log("Erro ao concluir a configuração da conta");
+      console.log("Erro ao concluir a configuração da conta ", error);
     }
   };
 
@@ -109,6 +106,7 @@ const ConfigKiddoScreen = () => {
         {/* <KeyboardAvoidingView
           behavior={Platform.OS == "ios" ? "height" : "padding"}
         > */}
+        {/* <View>
         <View>
           <Text style={styles.mainLabel}>Dados do Responsável</Text>
           <Text style={styles.label}>Número do BI</Text>
@@ -172,7 +170,7 @@ const ConfigKiddoScreen = () => {
               </Picker>
             )}
           />
-        </View>
+        </View> */}
         <View>
           <Text style={styles.mainLabel}>Dados da Criança</Text>
         </View>
@@ -240,7 +238,7 @@ const ConfigKiddoScreen = () => {
               onBlur={onBlur}
               style={styles.textInput}
               itemStyle={{
-                height: 50,
+                height: Platform.OS === "ios" ? 50 : "auto",
               }}
             >
               <Picker.Item key={0} label="Masculino" value="Masculino" />

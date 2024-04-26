@@ -134,6 +134,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: defaultStyle.colors.white,
     borderRadius: defaultStyle.borderRadio.borderRadioInput,
+    borderWidth: 1,
+    borderColor: defaultStyle.colors.blueLightColor1,
   },
   picker: {
     // height: Platform.OS === "ios" ? 50 : null,

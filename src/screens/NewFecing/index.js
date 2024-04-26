@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
-  ActivityIndicator,
   Alert,
   TextInput,
   ScrollView,
@@ -10,14 +9,14 @@ import {
   Pressable,
   Keyboard,
   Switch,
+  ActivityIndicator,
 } from "react-native";
+import Slider from "@react-native-community/slider";
 import ActionButtom from "../../components/ActionButtom";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, Circle } from "react-native-maps";
 import {
-  requestForegroundPermissionsAsync,
-  getCurrentPositionAsync,
-  watchPositionAsync,
-  LocationAccuracy,
+  requestForegroundPermissionsAsync, //Serve para pedir a Localização enquanto o App é Executado
+  getCurrentPositionAsync, //Pega a Localização Actual
 } from "expo-location";
 
 import styles from "./styles";
@@ -29,16 +28,45 @@ import * as yup from "yup";
 
 const kiddoAvatar = require("./../../../assets/img/boy-avatar.png");
 import { handleDisableKeyboard } from "../../../utils/dismiss-keyboard";
+import { getKiddoInfo } from "../../services/kiddo-service"; //Pegar a Criança na DB
+import { useAuth } from "../../contexts/auth";
+import { useNavigation } from "@react-navigation/native";
+import { createGeoFence } from "../../services/geofence"; //Criar Geo Cerca
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Schema = yup.object({
-  geoName: yup.string().required("Informe um nome de identificação"),
-  geoType: yup.string().required("Informe um tipo válido"),
+  name: yup.string().required("Informe um nome de identificação"),
+  target: yup.bool(),
+  status: yup.bool(),
 });
 
-export default function NewFecing({ navigation }) {
+export default function NewFecing() {
+  const navigation = useNavigation();
+  const [kiddo, setKiddo] = useState(null);
+  const { user } = useAuth();
+
   const [location, setLocation] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const mapRef = useRef(null);
+  const [markerPosition, setMarkerPosition] = useState(null);
+  const [radius, setRadius] = useState(100); // Valor padrão do raio da GeoFence
+  const [loadingMap, setLoadingMap] = useState(true);
+  const [mapType, setMapType] = useState("standard");
+
+  useEffect(() => {
+    async function getKiddo() {
+      const newKiddo = await getKiddoInfo(user);
+      setKiddo(newKiddo);
+    }
+    getKiddo();
+  }, [user]);
+
+  useEffect(() => {
+    async function loadMapType() {
+      const mtype = await AsyncStorage.getItem("@MapType");
+      setMapType(mtype);
+    }
+
+    loadMapType;
+  }, []);
 
   const {
     control,
@@ -47,23 +75,48 @@ export default function NewFecing({ navigation }) {
   } = useForm({
     defaultValues: {
       status: true,
-      geoTarget: true, // Definindo o valor padrão do campo 'status' como true
+      target: true, // Definindo o valor padrão do campo 'status' como true
+      geoType: true,
     },
     resolver: yupResolver(Schema),
   });
 
   const sendForm = async (data) => {
-    //Salvar os Dados e Voltar no Mapa
-    navigation.navigate("Mapa");
+    const { latitude, longitude } = location.coords;
+    const geoFenceData = {
+      ...data,
+      radius,
+      latitude,
+      longitude,
+    };
+    try {
+      const status = await createGeoFence(geoFenceData, kiddo._id); //Salvar a Fence
+      if (status === 200 || status === 201) {
+        //Mudar de Tela de Tudo Correr Bem
+        navigation.navigate("Mapa");
+      } else {
+        Alert.alert("Erro", "Tente Novamente!");
+      }
+    } catch (error) {
+      console.log("Erro ao Salvar Fence", error);
+    }
   };
 
-  async function requestLocationPermissions() {
+  useEffect(() => {
+    getLocationAsync();
+  }, []);
+
+  const getLocationAsync = async () => {
     try {
       const { granted } = await requestForegroundPermissionsAsync();
-
       if (granted) {
         const currentPosition = await getCurrentPositionAsync();
         setLocation(currentPosition);
+        setMarkerPosition({
+          latitude: currentPosition.coords.latitude,
+          longitude: currentPosition.coords.longitude,
+        });
+        setLoadingMap(false);
       } else {
         Alert.alert(
           "Permissão de localização negada",
@@ -71,103 +124,73 @@ export default function NewFecing({ navigation }) {
         );
       }
     } catch (error) {
-      console.error("Erro ao obter permissões de localização:", error);
-      Alert.alert(
-        "Erro",
-        "Ocorreu um erro ao obter permissões de localização."
-      );
+      console.log("Erro ao buscar localização no Fencing ", error);
     }
-  }
+  };
 
-  useEffect(() => {
-    requestLocationPermissions();
-  }, []);
+  const handleMapPress = (e) => {
+    //Captura no Evento de Click no Mapa e Muda o Pin para a localização Clicada
+    setMarkerPosition(e.nativeEvent.coordinate);
+  };
 
-  useEffect(() => {
-    async function startLocationWatch() {
-      try {
-        watchPositionAsync(
-          {
-            accuracy: LocationAccuracy.Highest,
-            timeInterval: 1000,
-            distanceInterval: 1,
-          },
-          (response) => {
-            setLocation(response);
-            const { latitude, longitude } = response.coords;
-            mapRef.current?.animateCamera({
-              pitch: 70,
-              center: {
-                latitude,
-                longitude,
-              },
-              heading: response.coords.heading,
-            });
-          }
-        );
-      } catch (error) {
-        console.error("Erro ao iniciar a vigilância da localização:", error);
-        Alert.alert(
-          "Erro",
-          "Ocorreu um erro ao iniciar a vigilância da localização."
-        );
-      }
-    }
-
-    startLocationWatch();
-  }, []);
-
-  useEffect(() => {
-    if (location) {
-      setLoading(false);
-    }
-  }, [location]);
-
-  // //Funções do Switch
-  // const [isEnabled, setIsEnabled] = useState(false);
-  // const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+  const mapRef = useRef();
 
   return (
     <View style={styles.container}>
       <View style={styles.mapContainer}>
-        {loading ? (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator
-              size="large"
-              color={defaultStyle.colors.mainColorBlue}
-            />
-            <Text>Obtendo localização...</Text>
-          </View>
-        ) : location ? (
+        {location && !loadingMap ? (
           <MapView
             ref={mapRef}
             style={styles.map}
             initialRegion={{
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
-              latitudeDelta: 0.005,
-              longitudeDelta: 0.005,
+              latitude: markerPosition
+                ? markerPosition.latitude
+                : location.coords.latitude,
+              longitude: markerPosition
+                ? markerPosition.longitude
+                : location.coords.longitude,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+              pitch: 45, // Inclinação da câmera em graus (0 é vista de cima)
+              heading: 90, // Direção da câmera em graus em relação ao norte
             }}
-            camera={{
-              pitch: 70,
-              center: {
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
-              },
-              heading: location.coords.heading,
+            onPress={handleMapPress}
+            onMapReady={() => {
+              // Centralize a câmera no marcador e ajuste o zoom para incluir o marcador na visualização
+              if (markerPosition) {
+                mapRef.current?.fitToCoordinates([markerPosition], {
+                  edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+                  animated: true,
+                });
+              }
             }}
-            mapType="hybrid"
-            showsMyLocationButton={true}
+            mapType={mapType} //Mudar dinamicamente em função ao Mapa Principal
           >
-            <Marker
-              coordinate={{
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
-              }}
-            />
+            {markerPosition && (
+              <>
+                {/* Funciona como o Fragment*/}
+                <Circle
+                  center={markerPosition}
+                  radius={radius}
+                  strokeColor="rgba(162, 196, 224,1)"
+                  fillColor="rgba(162, 196, 224,0.3)"
+                />
+                <Marker
+                  coordinate={markerPosition}
+                  title="Cerca Geográfica"
+                  description="Aqui é onde a Cerca Será Criada"
+                />
+              </>
+            )}
           </MapView>
         ) : (
-          <Text>Falha ao obter localização.</Text>
+          <View style={styles.mapContainer}>
+            <ActivityIndicator
+              size={"large"}
+              color={defaultStyle.colors.mainColorBlue}
+            />
+            <Text style={{ marginTop: 10 }}>Carregando o mapa...</Text>
+          </View>
         )}
       </View>
       <ScrollView
@@ -180,7 +203,7 @@ export default function NewFecing({ navigation }) {
         >
           <Text style={styles.label}>Nome da Cerca</Text>
           <Controller
-            name="geoName"
+            name="name"
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
@@ -191,36 +214,35 @@ export default function NewFecing({ navigation }) {
               />
             )}
           />
-          {errors.geoName && (
-            <Text style={styles.msgAlerta}>{errors.geoName?.message}</Text>
+          {errors.name && (
+            <Text style={styles.msgAlerta}>{errors.name?.message}</Text>
           )}
-          <Text style={styles.label}>Tipo de Cerca</Text>
-          <Controller
-            name="geoType"
-            control={control}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                onChangeText={onChange}
-                onBlur={onBlur}
-                value={value}
-                style={styles.textInput}
-              />
-            )}
+
+          <Slider
+            style={styles.slider}
+            minimumValue={50}
+            maximumValue={1000}
+            thumbTintColor={defaultStyle.colors.white}
+            minimumTrackTintColor={defaultStyle.colors.mainColorBlue}
+            maximumTrackTintColor={defaultStyle.colors.blueLightColor1}
+            step={50}
+            value={radius}
+            onValueChange={(value) => setRadius(value)}
           />
-          {errors.geoType && (
-            <Text style={styles.msgAlerta}>{errors.geoType?.message}</Text>
-          )}
+          <Text style={styles.radiusText}>
+            Limite da Cerca: {radius} metros
+          </Text>
 
           <View>
             <Text style={styles.label}>Aplicar Para</Text>
             <View style={styles.targetAvatarContainer}>
               <View style={styles.targetSide}>
                 <Image source={kiddoAvatar} style={styles.avatar} />
-                <Text style={styles.labelTarget}>Tiagão</Text>
+                <Text style={styles.labelTarget}>{kiddo?.surname}</Text>
               </View>
               <View style={styles.targetSide}>
                 <Controller
-                  name="geoTarget"
+                  name="target"
                   control={control}
                   render={({ field: { onChange, onBlur, value } }) => (
                     <Switch

@@ -1,4 +1,11 @@
-import React, { useState, useMemo, useRef, useCallback, Fragment } from "react";
+import React, {
+  useState,
+  useMemo,
+  useRef,
+  useCallback,
+  Fragment,
+  useEffect,
+} from "react";
 import {
   View,
   Text,
@@ -11,8 +18,12 @@ import {
   Platform,
 } from "react-native";
 
+import { formatDate } from "../../../utils/format-date";
+
 import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
+import { useAuth } from "./../../contexts/auth";
+import { getKiddoInfo } from "../../services/kiddo-service";
 
 import { Entypo, MaterialIcons, FontAwesome } from "@expo/vector-icons";
 
@@ -32,6 +43,19 @@ const KiddoSchema = yup.object({
 });
 
 const KiddoDetailsScreen = () => {
+  const { user } = useAuth();
+
+  const [kiddo, setKiddo] = useState(null);
+  const [kiddoAge, setKiddoAge] = useState(null);
+
+  useEffect(() => {
+    async function getKiddo() {
+      const newKiddo = await getKiddoInfo(user);
+      setKiddo(newKiddo);
+    }
+    getKiddo();
+  }, []);
+
   const {
     control,
     handleSubmit,
@@ -63,10 +87,7 @@ const KiddoDetailsScreen = () => {
   }
 
   const STATUS_DEVICE = true;
-  const BIRTH_DATE = () => {
-    const date = new Date().toLocaleDateString();
-    return date;
-  };
+
 
   function handleModalClose() {
     navigation?.goBack();
@@ -112,8 +133,10 @@ const KiddoDetailsScreen = () => {
           </View>
           <View style={styles.infoContainer}>
             <View>
-              <Text style={styles.headerSurname}>Tiagão</Text>
-              <Text style={styles.headerAge}>5 anos</Text>
+              <Text style={styles.headerSurname}>{kiddo?.surname}</Text>
+              <Text style={styles.headerAge}>
+                {formatDate(kiddo?.birthDate)} anos
+              </Text>
             </View>
             <View style={styles.statusContainer}>
               <View style={styles.buttonStatusContainer}>
@@ -179,14 +202,14 @@ const KiddoDetailsScreen = () => {
             <Text style={styles.labels}>Nome Completo</Text>
             <TextInput
               placeholder="Digite o Nome Completo"
-              defaultValue="TIAGO LUIS PEREIRA"
+              defaultValue={kiddo?.fullName}
               style={styles.input}
             />
           </View>
           <View>
             <Text style={styles.labels}>Data de Nascimento</Text>
             <TextInput
-              defaultValue={BIRTH_DATE().toString()}
+              defaultValue={formatDate(kiddo?.birthDate)}
               style={styles.input}
             />
           </View>
@@ -234,7 +257,7 @@ const KiddoDetailsScreen = () => {
             <Text style={styles.labels}>Tipo Sanguíneo</Text>
             <TextInput
               placeholder="Digite o tipo sanguíneo"
-              defaultValue="A+"
+              defaultValue={kiddo?.bloodType}
               style={styles.input}
             />
           </View>
@@ -245,7 +268,7 @@ const KiddoDetailsScreen = () => {
               multiline={true}
               editable={true}
               numberOfLines={4}
-              defaultValue="TIAGO LUIS PEREIRA"
+              defaultValue={kiddo?.alergics}
               style={styles.input}
             />
           </View>
