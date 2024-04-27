@@ -19,7 +19,7 @@ async function setKiddoInfo(kiddoData, user) {
       bloodType,
       alergics,
     } = kiddoData;
-    await ApiMananger.post(`/kiddo`, {
+    const response = await ApiMananger.post(`/kiddo`, {
       fullName,
       surname,
       birthDate,
@@ -30,7 +30,7 @@ async function setKiddoInfo(kiddoData, user) {
       parent: user._id,
     });
 
-    console.log("Kiddo Salva na DB");
+    return response;
   } catch (error) {
     console.log("Erro ao salvar criança ", error);
   }

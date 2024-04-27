@@ -42,7 +42,6 @@ import {
 } from "../routes/stack.app.routes";
 
 import Header from "../components/Header";
-import { getKiddoInfo } from "../services/kiddo-service";
 import { useAuth } from "../contexts/auth";
 import { useKiddo } from "../contexts/kiddo";
 
@@ -88,7 +87,7 @@ export default function TabRoutes() {
   const [openPickerAlert, setOpenPickerAlert] = useState(false);
   const [valuePickerAlert, setValuePickerAlert] = useState(null);
 
-  const cercasVirtuais = [
+  const cercasVirtuais = [ //BUscar cercas na DB
     { label: "Escola", value: "Escola" },
     { label: "Casa", value: "Casa" },
   ];

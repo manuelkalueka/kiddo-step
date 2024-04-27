@@ -6,6 +6,7 @@ import {
   ScrollView,
   View,
   Text,
+  Alert,
 } from "react-native";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -16,7 +17,8 @@ import styles from "./styles";
 import { Picker } from "@react-native-picker/picker";
 import ActionButtom from "../../components/ActionButtom";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { setKiddoInfo } from "../../services/kiddo-service";
+import { useNavigation } from "@react-navigation/native";
+import { useKiddo } from "../../contexts/kiddo";
 
 const Schema = yup.object({
   fullName: yup
@@ -42,7 +44,8 @@ const Schema = yup.object({
 
 const ConfigKiddoScreen = () => {
   const { user, updateUser } = useAuth();
-
+  const { setKiddo } = useKiddo();
+  const navigation = useNavigation();
   const {
     control,
     handleSubmit,
@@ -71,8 +74,7 @@ const ConfigKiddoScreen = () => {
         relationship,
       } = data;
 
-      console.log("SOU O GENERO NO FRONT ", gendre);
-      const AuthData = { identifyNumber, address, relationship};
+      const AuthData = { identifyNumber, address, relationship };
       const kiddoData = {
         fullName,
         surname,
@@ -82,8 +84,15 @@ const ConfigKiddoScreen = () => {
         bloodType,
         alergics,
       };
-      await setKiddoInfo(kiddoData, user);
-      await updateUser(AuthData);
+      const statusKiddo = await setKiddo(kiddoData);
+      const statusUser = await updateUser(AuthData);
+
+      if (statusKiddo.status === 201 && statusUser.status === 201) {
+        //MUDAR DE TELA
+        navigation.push("Mapa");
+      } else {
+        Alert.alert("Erro ao Configurar conta", "Tente novamente!");
+      }
     } catch (error) {
       console.log("Erro ao concluir a configuração da conta ", error);
     }

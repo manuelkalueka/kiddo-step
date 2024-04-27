@@ -1,7 +1,8 @@
- import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import ApiMananger from "../services/api.js";
 import AsyncStorage from "@react-native-async-storage/async-storage"; //armazenar dados em string no dispositivo
 import {
+  getInfo,
   signInService,
   signUpService,
   updateUserService,
@@ -10,7 +11,7 @@ import {
 const contextFormat = {
   signed: false,
   user: {},
-  isActive:false,
+  isActive: false,
   signIn: () => {},
   signOut: () => {},
 };
@@ -20,6 +21,7 @@ const AuthContext = createContext(contextFormat);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
     async function loadStorageData() {
@@ -35,6 +37,15 @@ export const AuthProvider = ({ children }) => {
     }
 
     loadStorageData();
+  }, []);
+
+  useEffect(() => {
+    async function activate() {
+      const info = await getInfo(user);
+      setIsActive(!!info);
+    }
+
+    activate();
   }, []);
 
   async function signIn(data) {
@@ -68,10 +79,10 @@ export const AuthProvider = ({ children }) => {
 
   async function updateUser(data) {
     try {
-      const newUser = await updateUserService(data, user);
-      return newUser;
+      const response = await updateUserService(data, user);
+      return response;
     } catch (error) {
-      console.log("Erro ao Actualizar o usuário");
+      console.log("Erro ao Actualizar o usuário ", error);
     }
   }
 
@@ -80,6 +91,7 @@ export const AuthProvider = ({ children }) => {
       value={{
         signed: !!user,
         user: user,
+        isActive,
         signIn,
         signOut,
         signUp,

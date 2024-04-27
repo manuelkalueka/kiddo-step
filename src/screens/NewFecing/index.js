@@ -164,7 +164,7 @@ export default function NewFecing() {
                 });
               }
             }}
-            mapType={mapType} //Mudar dinamicamente em função ao Mapa Principal
+            mapType={"satellite"} //Mudar dinamicamente em função ao Mapa Principal
           >
             {markerPosition && (
               <>
@@ -219,7 +219,7 @@ export default function NewFecing() {
           )}
 
           <Slider
-            style={styles.slider}
+            style={styles.slider} //Estlizar para android
             minimumValue={50}
             maximumValue={1000}
             thumbTintColor={defaultStyle.colors.white}

@@ -1,11 +1,4 @@
-import React, {
-  useState,
-  useMemo,
-  useRef,
-  useCallback,
-  Fragment,
-  useEffect,
-} from "react";
+import React, { useState, useRef, Fragment } from "react";
 import {
   View,
   Text,
@@ -22,7 +15,6 @@ import { formatDate } from "../../../utils/format-date";
 
 import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
-import { useAuth } from "./../../contexts/auth";
 
 import { Entypo, MaterialIcons, FontAwesome } from "@expo/vector-icons";
 
@@ -43,10 +35,7 @@ const KiddoSchema = yup.object({
 });
 
 const KiddoDetailsScreen = () => {
-  const { user } = useAuth();
-  const { kiddo } = useKiddo();
-
-  const [kiddoAge, setKiddoAge] = useState(null);
+  const { kiddo, kiddoAge } = useKiddo();
 
   const {
     control,
@@ -125,7 +114,7 @@ const KiddoDetailsScreen = () => {
             <View>
               <Text style={styles.headerSurname}>{kiddo?.surname}</Text>
               <Text style={styles.headerAge}>
-                {formatDate(kiddo?.birthDate)} anos
+                {kiddoAge > 1 ? `${kiddoAge} anos` : `${kiddoAge} ano`}
               </Text>
             </View>
             <View style={styles.statusContainer}>

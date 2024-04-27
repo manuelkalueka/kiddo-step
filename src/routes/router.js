@@ -9,11 +9,11 @@ import TabRoutes from "../routes/tab.routes";
 import KiddoRouter from "./stack.config.kiddo.routes";
 //-----------------------------------------------
 function AppRouterStrategy() {
-  const { user } = useAuth();
+  const { isActive } = useAuth();
   const { setted } = useKiddo();
 
   //Primeiro Uso, definir criança setted && user.isActive
-  return setted && user.isActive ? <TabRoutes /> : <KiddoRouter />;
+  return <TabRoutes />;
 }
 export function Router() {
   const { signed, loading } = useAuth();

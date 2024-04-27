@@ -37,22 +37,26 @@ async function signUpService({ fullName, email, password, phone }) {
 
 async function updateUserService(infoUser, user) {
   try {
-    const { data, status } = await axios.get(
-      `https://angolaapi.onrender.com/api/v1/validate/bi/${infoUser.identifyNumber}`
+    // const { data, status } = await axios.get(
+    //   `https://angolaapi.onrender.com/api/v1/validate/bi/${infoUser.identifyNumber}`
+    // );
+    // console.log("Resultado da Verificação do BI ", data);
+    const response = await ApiMananger.post(
+      `/users/info/${user._id}`,
+      infoUser
     );
-    console.log("Resultado da Verificação do BI ", data);
-    if (status === 200) {
-      const { data } = await ApiMananger.post(
-        `/user-info/${user._id}`,
-        infoUser
-      );
-      return data;
-    } else {
-      Alert.alert("Inválido", "Verificar Identidade");
-      return;
-    }
+    return response;
   } catch (error) {
     console.log("Erro ao Actualizar o usuário", error);
+  }
+}
+
+async function getInfo(user) {
+  try {
+    const { data } = await ApiMananger.get(`/users/info/${user._id}`);
+    return data;
+  } catch (error) {
+    console.log(error);
   }
 }
 
@@ -66,4 +70,4 @@ const confirmEmail = async (data) => {
   }
 };
 
-export { signInService, signUpService, updateUserService, confirmEmail };
+export { signInService, signUpService, updateUserService, confirmEmail, getInfo };
