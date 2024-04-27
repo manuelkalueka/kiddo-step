@@ -67,7 +67,6 @@ const KiddoDetailsScreen = () => {
   const [visiblePicker, setVisiblePicker] = useState(false);
 
   const [pickerResult, setPickerResult] = useState("Masculino");
-  console.log("Sou a Criança ", kiddo.birthDate);
   const pickerRef = useRef();
 
   function openPicker() {
