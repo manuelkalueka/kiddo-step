@@ -10,6 +10,7 @@ import {
 const contextFormat = {
   signed: false,
   user: {},
+  isActive:false,
   signIn: () => {},
   signOut: () => {},
 };
