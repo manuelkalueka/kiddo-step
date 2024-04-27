@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+ import React, { createContext, useContext, useEffect, useState } from "react";
 import ApiMananger from "../services/api.js";
 import AsyncStorage from "@react-native-async-storage/async-storage"; //armazenar dados em string no dispositivo
 import {

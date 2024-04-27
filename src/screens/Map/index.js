@@ -1,15 +1,21 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, Text, ActivityIndicator, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import {
   requestForegroundPermissionsAsync,
   getCurrentPositionAsync,
   watchPositionAsync,
   stopLocationUpdatesAsync,
-  LocationAccuracy
-} from "expo-location";
-import getDistance from "geolib/es/getDistance";
-import { useAuth } from "../../contexts/auth";
-import { getLastLocation, saveLocation } from "../../services/location-service";
+  LocationAccuracy,
+} from "expo-location"; //Módulo de localização
+import getDistance from "geolib/es/getDistance"; //calculo de distancia
+import { useAuth } from "../../contexts/auth"; // Contexto do Usuário
+import { getLastLocation, saveLocation } from "../../services/location-service"; //Serviço para interagir com a API
 import { Tracker } from "../../../tracker-data";
 import MapView, { Marker } from "react-native-maps";
 import { FontAwesome } from "@expo/vector-icons";
@@ -20,9 +26,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useKiddo } from "../../contexts/kiddo";
 
 const Map = () => {
-  const [location, setLocation] = useState(null);
+  const [location, setLocation] = useState(null); //Localização actual
   const [loadingMap, setLoadingMap] = useState(true);
-  const [mapType, setMapType] = useState("standard");
+  const [mapType, setMapType] = useState("standard"); //Tipo de Mapa em função ao botão [Sattelite ou standard]
 
   async function toggleSetMapType() {
     if (mapType === "standard") {
@@ -30,10 +36,9 @@ const Map = () => {
     } else if (mapType === "hybrid") {
       setMapType("standard");
     }
-    await AsyncStorage.setItem("@MapType", mapType);
+    await AsyncStorage.setItem("@MapType", mapType); //Salva o Tipo no Storage
   }
 
-  const { user } = useAuth();
   const { kiddo } = useKiddo();
 
   const mapRef = useRef();
@@ -46,7 +51,7 @@ const Map = () => {
         const currentLocation = await getCurrentPositionAsync();
         setLocation(currentLocation);
       } else {
-        console.log(
+        Alert.alert(
           "Permissão de localização negada",
           "O aplicativo precisa de permissão de localização para funcionar corretamente."
         );
@@ -178,8 +183,8 @@ const Map = () => {
               longitude: location.coords.longitude,
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421,
-              pitch: 45, // Inclinação da câmera em graus (0 é vista de cima)
-              heading: 90, // Direção da câmera em graus em relação ao norte
+              // pitch: 45, // Inclinação da câmera em graus (0 é vista de cima)
+              // heading: 90, // Direção da câmera em graus em relação ao norte
             }}
             onMapReady={() => {
               // Centralize a câmera no marcador e ajuste o zoom para incluir o marcador na visualização
@@ -189,6 +194,14 @@ const Map = () => {
               });
             }}
             mapType={mapType} //Mudar dinamicamente em função ao Mapa Principal
+            initialCamera={{
+              pitch: 45, // Inclinação da câmera em graus (0 é vista de cima)
+              center: {
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+              },
+              heading: location.coords.heading, // Direção da câmera em graus em relação ao norte
+            }}
           >
             <Marker
               coordinate={{

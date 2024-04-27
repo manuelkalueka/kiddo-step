@@ -18,8 +18,6 @@ function AppRouterStrategy() {
 export function Router() {
   const { signed, loading } = useAuth();
 
-  // const isActive = !!user.isActive;
-
   if (loading) {
     return <LoadingComponent />;
   } else {
