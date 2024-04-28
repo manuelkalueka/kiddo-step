@@ -1,10 +1,11 @@
-import { StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 import defaultStyle from '../../defaultStyle'
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: defaultStyle.colors.white,
+    paddingHorizontal: '5%'
   },
 
   body: {
@@ -22,8 +23,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingLeft: 20,
-    paddingRight: 5
+    paddingLeft: Platform.OS == 'ios'?20:10,
+    paddingRight: 5,
+    borderBottomWidth: .5,
+    borderColor: defaultStyle.colors.mainColorBlue1,
   },
 
   containerIcon: {
@@ -33,13 +36,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 100,
-    marginRight: 10
+    marginRight: Platform.OS == 'android'?10:2,
+    marginLeft: Platform.OS == 'ios'?12:0
   },
 
   containerItem: {
-    borderBottomWidth: .5,
     paddingBottom: 10,
-    borderColor: defaultStyle.colors.mainColorBlue1
+    padding: 15
   },
 
   itemDate: {

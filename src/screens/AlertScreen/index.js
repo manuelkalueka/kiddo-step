@@ -96,6 +96,7 @@ export default function AlertScreen() {
             <FlatList
               style={styles.containerNoti}
               data={data}
+              showsVerticalScrollIndicator={false}
               renderItem={({ item }) => (
                 <View style={styles.containerItens}>
                   <View style={styles.containerIcon}>
