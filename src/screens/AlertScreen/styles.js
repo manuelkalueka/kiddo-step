@@ -4,27 +4,23 @@ import defaultStyle from '../../defaultStyle'
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: defaultStyle.colors.white,
-    paddingHorizontal: '5%'
+    backgroundColor: defaultStyle.colors.white
   },
 
   body: {
     width: '100%',
     height: '100%',
+    paddingHorizontal: '5%',
     backgroundColor: defaultStyle.colors.white,
   },
 
   containerNoti: {
-    paddingLeft: 1,
-    paddingRight: 3
+    
   },
 
   containerItens: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    paddingLeft: Platform.OS == 'ios'?20:10,
-    paddingRight: 5,
     borderBottomWidth: .5,
     borderColor: defaultStyle.colors.mainColorBlue1,
   },
@@ -36,8 +32,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 100,
-    marginRight: Platform.OS == 'android'?10:2,
-    marginLeft: Platform.OS == 'ios'?12:0
   },
 
   containerItem: {
@@ -86,7 +80,7 @@ const styles = StyleSheet.create({
   titleContainerNo: {
     fontSize: defaultStyle.sizes.title,
     fontWeight: 'bold',
-    color: defaultStyle.colors.dark
+    color: defaultStyle.colors.grayAccent1
   }
 
  //defaultStyle.colors.grayAccent3
