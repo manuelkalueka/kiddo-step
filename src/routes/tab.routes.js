@@ -15,6 +15,7 @@ import {
   Platform,
   Modal,
   Switch,
+  Alert,
 } from "react-native";
 
 import {
@@ -24,6 +25,10 @@ import {
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
+
+import { yupResolver } from '@hookform/resolvers/yup'
+import { Controller, useForm } from 'react-hook-form'
+import * as yup from 'yup'
 
 import { useNavigation } from "@react-navigation/native";
 
@@ -45,10 +50,30 @@ import Header from "../components/Header";
 import { useAuth } from "../contexts/auth";
 import { useKiddo } from "../contexts/kiddo";
 
+const Schema = yup.object({
+  title: yup.string().required('Precisa preencher a designação'),
+  type: yup.string(),
+  geofecing: yup.string(),
+  hourTrigger: yup.string()
+})
+
 const Tab = createBottomTabNavigator();
 const { Navigator, Screen } = Tab;
 
 export default function TabRoutes() {
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(Schema),
+  });
+
+  const sendForm = (data) => {
+    console.log('Fumo!!!')
+  }
+
   const { user } = useAuth();
   const { kiddo } = useKiddo();
 
@@ -73,27 +98,15 @@ export default function TabRoutes() {
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModal2Visible, setisModal2Visible] = useState(false);
-
-  const [selectedValueTypeAlert, setSelectedValueTypeAlert] = useState("");
-  const [seletedValueGeoFecing, setSeletedValueGeoFecing] = useState("");
 
   const [date, setDate] = useState(new Date());
 
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
-
-  const [openPickerAlert, setOpenPickerAlert] = useState(false);
-  const [valuePickerAlert, setValuePickerAlert] = useState(null);
-
-  const cercasVirtuais = [ //BUscar cercas na DB
-    { label: "Escola", value: "Escola" },
-    { label: "Casa", value: "Casa" },
-  ];
-
   const bottomSheet = useRef(null);
   const snapPoints = useMemo(() => ["55%", "70%"], []);
+
+  const pickerAlertRef = useRef();
+  const pickerGeofencigRef = useRef();
 
   return (
     <Fragment>
@@ -228,32 +241,54 @@ export default function TabRoutes() {
 
                   <Text style={styles.labels}>Tipo de alerta</Text>
 
-                  <Picker
-                    selectedValue={selectedValueTypeAlert}
-                    onValueChange={(itemValue, itemIndex) =>
-                      setSelectedValueTypeAlert(itemValue)
-                    }
-                    style={{ height: 50, width: 150 }}
-                  >
-                    <Picker.Item label="A" value={"B"} />
-                    <Picker.Item label="B" value={"A"} />
-                  </Picker>
+                  <Controller
+                    name="type"
+                    control={control}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <Picker
+                        ref={pickerAlertRef}
+                        selectedValue={value || "Entrada"}
+                        onValueChange={onChange}
+                        onBlur={onBlur}
+                        style={styles.textInput}
+                        itemStyle={{
+                          height: Platform.OS === "ios" ? 50 : "auto",
+                        }}
+                      >
+                        <Picker.Item key={0} label="Entrada" value="Entrada" />
+                        <Picker.Item key={1} label="Saida" value="Saida" />
+                      </Picker>
+                    )}
+                  />
+                   {errors.type && (
+              <Text style={styles.msgAlerta}>{errors.type?.message}</Text>
+            )}
 
                   <Text style={styles.labels}>Cerca virtual</Text>
-                  <Picker
-                    selectedValue={seletedValueGeoFecing}
-                    onValueChange={(itemValue, itemIndex) =>
-                      setSeletedValueGeoFecing(itemValue)
-                    }
-                    style={{ height: 50, width: 150 }}
-                  >
-                    <Picker.Item label="A" value={"A"} />
-                    <Picker.Item label="B" value={"B"} />
-                  </Picker>
+                  <Controller
+                    name="geofecing"
+                    control={control}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <Picker
+                        ref={pickerGeofencigRef}
+                        selectedValue={value || "Escola"}
+                        onValueChange={onChange}
+                        onBlur={onBlur}
+                        style={styles.textInput}
+                        itemStyle={{
+                          height: Platform.OS === "ios" ? 50 : "auto",
+                        }}
+                      >
+                        <Picker.Item key={0} label="Escola" value="Escola" />
+                        <Picker.Item key={1} label="Curso" value="Curso" />
+                      </Picker>
+                    )}
+                  />
 
                   <View style={styles.containerSwitch}>
                     <Text style={styles.labels}>Definir hora ?</Text>
                     <Switch
+                      style={styles.switchTime}
                       trackColor={{
                         false: "#767577",
                         true: defaultStyle.colors.mainColorBlue,
@@ -278,7 +313,7 @@ export default function TabRoutes() {
                     />
                   )}
 
-                  <TouchableOpacity style={styles.buttonSave}>
+                  <TouchableOpacity style={styles.buttonSave} onPress={()=>(sendForm)}>
                     <Text style={styles.textBtnSave}>Salvar</Text>
                   </TouchableOpacity>
                 </View>
@@ -374,5 +409,11 @@ const styles = StyleSheet.create({
 
   containerSwitch: {
     flexDirection: "row",
+    alignItems: 'center',
+    justifyContent: 'space-between'
   },
+
+  switchTime: {
+    alignSelf: 'center'
+  }
 });
