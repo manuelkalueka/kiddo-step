@@ -96,18 +96,18 @@ const LocationHistoryScreen = () => {
     getLocHistory();
   }, []);
 
-  async function handleOpenModalDetail(id) {
-    try {
-      await openBottomSheet(id);
-      setVisibleModalDetail(true);
-    } catch (error) {
-      console.log("Erro ao Abrir o Modal", error);
-    }
-  }
+  // async function handleOpenModalDetail(id) {
+  //   try {
+  //     await openBottomSheet(id);
+  //     setVisibleModalDetail(true);
+  //   } catch (error) {
+  //     console.log("Erro ao Abrir o Modal", error);
+  //   }
+  // }
 
-  function handleCloseModalDetail() {
-    setVisibleModalDetail(false);
-  }
+  // function handleCloseModalDetail() {
+  //   setVisibleModalDetail(false);
+  // }
 
   useEffect(() => {
     async function getKiddo() {
