@@ -56,7 +56,7 @@ export default function ForgotPassword() {
       content: {
         title: 'Confirmação de email',
         body: 'Confirmamos o teu email através de um código de segurança enviado',
-        data: [],
+        data: { data: 'Tiago Bondo'},
       },
       trigger: {
         seconds:1
@@ -193,6 +193,7 @@ export default function ForgotPassword() {
                 style={styles.textInput}
                 placeholder='Digite o email da conta'
                 autoCapitalize='none'
+                keyboardType='email-address'
                 onChangeText={onChange}
                 onBlur={onBlur}
                 value={value}
