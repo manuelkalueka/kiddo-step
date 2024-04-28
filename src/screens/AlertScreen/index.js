@@ -78,19 +78,10 @@ export default function AlertScreen() {
     setColorIcon('#f5f5f5')
   }
 
-  const refreshing = () => {
-   setRefreshingData(true)
-   //Logica para recarregar novas notificações na BD
-   setRefreshingData(false)
-  } 
 
   return (
     
     <View style={styles.container}>
-      <RefreshControl
-        onRefresh={refreshing}
-        refreshing={refreshingData}
-      >
       {
         data == '' ? (
           <View style={styles.containerNo}>
@@ -129,7 +120,6 @@ export default function AlertScreen() {
           </View>
         )
       }
- </RefreshControl>
     </View>
    
   )

@@ -16,7 +16,7 @@ export const KiddoProvider = ({ children }) => {
 
   useEffect(() => {
     function getAge() {
-      const birthDate = new Date(kiddo.birthDate);
+      const birthDate = new Date(kiddo?.birthDate);
       const birthYear = birthDate.getFullYear();
       const dataActual = new Date();
       const anoActual = dataActual.getFullYear();
