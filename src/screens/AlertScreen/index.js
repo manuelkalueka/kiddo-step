@@ -27,7 +27,7 @@ export default function AlertScreen() {
   useEffect(() => {
     const geoFecingId = '662e46543fa5166d5e52a999'
 
-    ApiMananger.get(`/alerts/${geoFecingId}`)
+    ApiMananger.get(`/alertSchedule/${geoFecingId}`)
       .then(res => {
         setData(res.data)
         setLoadingAlert(false)
