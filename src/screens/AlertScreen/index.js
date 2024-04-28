@@ -62,7 +62,7 @@ export default function AlertScreen() {
               style={styles.containerNoti}
               data={data}
               showsVerticalScrollIndicator={false}
-              renderItem={({ item }) => (
+              renderItem={({ item, index }) => (
                 <View style={styles.containerItens}>
                   <View style={styles.containerIcon}>
                     <FontAwesome5 name='bell' size={25} color={defaultStyle.colors.defaultIcon} />
