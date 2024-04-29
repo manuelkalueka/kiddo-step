@@ -1,12 +1,9 @@
-import ApiMananger from "../../services/api";
 import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   FlatList,
-  Modal,
   RefreshControl,
 } from "react-native";
 
@@ -14,10 +11,11 @@ import LoadingComponent from "../../components/LoadingComponent";
 
 import { formatDate } from "../../../utils/format-date";
 
-import { FontAwesome5, FontAwesome, AntDesign } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 import { styles } from "./styles";
 import defaultStyle from "../../defaultStyle";
+import { listAlertsService } from "../../services/alert-service";
 
 export default function AlertScreen() {
   const [colorIcon, setColorIcon] = useState("#ff6f48");
@@ -37,9 +35,9 @@ export default function AlertScreen() {
   async function getAlerts() {
     const geoFecingId = "662e46543fa5166d5e52a999"; //Tornar Dinamico
 
-    ApiMananger.get(`/alertSchedule/${geoFecingId}`) //Ajustar a chamada
+    listAlertsService(geoFecingId) //Ajustar a chamada
       .then((res) => {
-        setData(res.data);
+        setData(res);
         setLoadingAlert(false);
       })
       .catch((error) => console.log("Erro ao buscar alertas", error));

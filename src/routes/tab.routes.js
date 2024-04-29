@@ -1,11 +1,4 @@
-import React, {
-  Fragment,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { Fragment, useCallback, useMemo, useRef, useState } from "react";
 import {
   Text,
   View,
@@ -15,20 +8,14 @@ import {
   Platform,
   Modal,
   Switch,
+  TextInput,
   Alert,
 } from "react-native";
 
-import {
-  GestureHandlerRootView,
-  TextInput,
-} from "react-native-gesture-handler";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
-
-import { yupResolver } from '@hookform/resolvers/yup'
-import { Controller, useForm } from 'react-hook-form'
-import * as yup from 'yup'
 
 import { useNavigation } from "@react-navigation/native";
 
@@ -49,19 +36,24 @@ import {
 import Header from "../components/Header";
 import { useAuth } from "../contexts/auth";
 import { useKiddo } from "../contexts/kiddo";
-
-const Schema = yup.object({
-  title: yup.string().required('Precisa preencher a designação'),
-  type: yup.string(),
-  geofecing: yup.string(),
-  hourTrigger: yup.string()
-})
+import { getGeoFencings } from "../services/geo-fencing-service";
+import ActionButtom from "../components/ActionButtom";
 
 const Tab = createBottomTabNavigator();
 const { Navigator, Screen } = Tab;
 
-export default function TabRoutes() {
+import { Controller, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
+const Schema = yup.object({
+  title: yup.string().required("Precisa preencher a designação"),
+  type: yup.string(),
+  geofecing: yup.string(),
+  hourTrigger: yup.string(),
+});
+
+export default function TabRoutes() {
   const {
     control,
     handleSubmit,
@@ -70,12 +62,26 @@ export default function TabRoutes() {
     resolver: yupResolver(Schema),
   });
 
-  const sendForm = (data) => {
-    console.log('Fumo!!!')
+  const sendForm = async (data) => {
+    alertMe(data);
+  };
+
+  function alertMe(data) {
+    Alert.alert("Função de Alert", data);
   }
 
   const { user } = useAuth();
   const { kiddo } = useKiddo();
+  const [geoFences, setGeoFences] = useState(null);
+
+  async function getGeoFence() {
+    try {
+      const fence = await getGeoFencings(kiddo);
+      setGeoFences(fence);
+    } catch (error) {
+      console.log("Erro ao buscar cercas", error);
+    }
+  }
 
   const navigation = useNavigation();
 
@@ -109,7 +115,7 @@ export default function TabRoutes() {
   const pickerGeofencigRef = useRef();
 
   return (
-    <Fragment>
+    <>
       <Navigator
         initialRouteName="MapaTab"
         screenOptions={{
@@ -190,7 +196,10 @@ export default function TabRoutes() {
             headerRight: () => (
               <TouchableOpacity
                 style={styles.container}
-                onPress={() => setisModal2Visible(true)} //Põe visible o modal do bottomSheet
+                onPress={async () => {
+                  await getGeoFence();
+                  setisModal2Visible(true);
+                }} //Põe visible o modal do bottomSheet
               >
                 <FontAwesome5
                   name="cog"
@@ -260,9 +269,9 @@ export default function TabRoutes() {
                       </Picker>
                     )}
                   />
-                   {errors.type && (
-              <Text style={styles.msgAlerta}>{errors.type?.message}</Text>
-            )}
+                  {errors.type && (
+                    <Text style={styles.msgAlerta}>{errors.type?.message}</Text>
+                  )}
 
                   <Text style={styles.labels}>Cerca virtual</Text>
                   <Controller
@@ -279,8 +288,13 @@ export default function TabRoutes() {
                           height: Platform.OS === "ios" ? 50 : "auto",
                         }}
                       >
-                        <Picker.Item key={0} label="Escola" value="Escola" />
-                        <Picker.Item key={1} label="Curso" value="Curso" />
+                        {geoFences.map((item) => (
+                          <Picker.Item
+                            key={item._id}
+                            label={item.name}
+                            value={item._id}
+                          />
+                        ))}
                       </Picker>
                     )}
                   />
@@ -313,16 +327,20 @@ export default function TabRoutes() {
                     />
                   )}
 
-                  <TouchableOpacity style={styles.buttonSave} onPress={()=>(sendForm)}>
-                    <Text style={styles.textBtnSave}>Salvar</Text>
-                  </TouchableOpacity>
+                  <ActionButtom
+                    textButton="Salvar"
+                    onPress={() => {
+                      Alert.alert("Sou o Alert", "Bruto");
+                      handleSubmit(sendForm);
+                    }}
+                  />
                 </View>
               </BottomSheetScrollView>
             </BottomSheet>
           </GestureHandlerRootView>
         </View>
       </Modal>
-    </Fragment>
+    </>
   );
 }
 const styles = StyleSheet.create({
@@ -409,11 +427,11 @@ const styles = StyleSheet.create({
 
   containerSwitch: {
     flexDirection: "row",
-    alignItems: 'center',
-    justifyContent: 'space-between'
+    alignItems: "center",
+    justifyContent: "space-between",
   },
 
   switchTime: {
-    alignSelf: 'center'
-  }
+    alignSelf: "center",
+  },
 });
