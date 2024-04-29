@@ -29,6 +29,8 @@ const Map = () => {
   const [location, setLocation] = useState(null); //Localização actual
   const [loadingMap, setLoadingMap] = useState(true);
   const [mapType, setMapType] = useState("standard"); //Tipo de Mapa em função ao botão [Sattelite ou standard]
+  const [markerPosition, setMarkerPosition] = useState(null);
+  const [knownLocation, setKnownLocation] = useState(null);
 
   async function toggleSetMapType() {
     if (mapType === "standard") {
@@ -68,6 +70,7 @@ const Map = () => {
   useEffect(() => {
     async function startLocationWatch() {
       try {
+        const taskName = "locationUpdateTask"; // Nome da tarefa pelo backgroudLocation
         await watchPositionAsync(
           {
             accuracy: LocationAccuracy.Highest,
@@ -76,6 +79,10 @@ const Map = () => {
           },
           (response) => {
             setLocation(response);
+            setMarkerPosition({
+              latitude: response.coords.latitude,
+              longitude: response.coords.longitude,
+            });
             handleLocationUpdate(response);
             setLoadingMap(false);
           }
@@ -98,10 +105,10 @@ const Map = () => {
 
     // Obtém a última localização salva na base de dados
     const kiddoId = kiddo?._id; // As vezes aqui vem undefined
-    const device = Tracker.DEVICE_ID;
+    // const device = Tracker.DEVICE_ID;
 
-    const lastLocation = await getLastLocation(kiddoId, device);
-
+    const lastLocation = await getLastLocation(kiddoId);
+    setKnownLocation(lastLocation);
     if (lastLocation) {
       const geoInput = {
         latitude: parseFloat(lastLocation.latitude),
@@ -114,7 +121,8 @@ const Map = () => {
       // Calcula a distância entre a localização atual e a última localização salva
       const distance = getDistance(geoInput, geoOutput, 1);
 
-      if (distance >= 1000) {
+      if (distance >= 100) {
+        //TEstar 100 metros pelo erro do telefone e rede
         //VERIFICAR A DISTANCIA A CADA LOCALIZAÇÃO SALVA
         // Salva a nova localização na base de dados
         try {
@@ -122,7 +130,6 @@ const Map = () => {
             locationAsync.coords.latitude,
             locationAsync.coords.longitude,
             kiddoId,
-            device,
             locationAsync.timestamp
           );
           console.log("Localização salva com sucesso.");
@@ -141,7 +148,6 @@ const Map = () => {
           locationAsync.coords.latitude,
           locationAsync.coords.longitude,
           kiddoId,
-          device,
           locationAsync.timestamp //tempo que pega a localização
         );
         console.log("Localização inicial salva com sucesso.");
@@ -179,16 +185,20 @@ const Map = () => {
             ref={mapRef}
             style={styles.map}
             initialRegion={{
-              latitude: location.coords.latitude,
-              longitude: location.coords.longitude,
+              latitude: knownLocation
+                ? knownLocation.latitude
+                : location.coords.latitude,
+              longitude: knownLocation
+                ? knownLocation.latitude
+                : location.coords.latitude,
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421,
-              // pitch: 45, // Inclinação da câmera em graus (0 é vista de cima)
-              // heading: 90, // Direção da câmera em graus em relação ao norte
+              pitch: 45, // Inclinação da câmera em graus (0 é vista de cima)
+              heading: 90, // Direção da câmera em graus em relação ao norte
             }}
             onMapReady={() => {
               // Centralize a câmera no marcador e ajuste o zoom para incluir o marcador na visualização
-              mapRef.current?.fitToCoordinates([location], {
+              mapRef.current?.fitToCoordinates([markerPosition], {
                 edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
                 animated: true,
               });
