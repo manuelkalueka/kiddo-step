@@ -62,13 +62,9 @@ export default function TabRoutes() {
     resolver: yupResolver(Schema),
   });
 
-  const sendForm = async (data) => {
-    alertMe(data);
+  const sendForm = (data) => {
+    Alert.alert("Alert", "Fumo");
   };
-
-  function alertMe(data) {
-    Alert.alert("Função de Alert", data);
-  }
 
   const { user } = useAuth();
   const { kiddo } = useKiddo();
