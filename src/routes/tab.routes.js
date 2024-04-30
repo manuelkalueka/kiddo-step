@@ -68,7 +68,7 @@ export default function TabRoutes() {
 
   const { user } = useAuth();
   const { kiddo } = useKiddo();
-  const [geoFences, setGeoFences] = useState(null);
+  const [geoFences, setGeoFences] = useState([]);
 
   async function getGeoFence() {
     try {
@@ -204,7 +204,7 @@ export default function TabRoutes() {
                 />
               </TouchableOpacity>
             ),
-            tabBarBadge: 3,
+            tabBarBadge: 3, //Não deixar estático
             tabBarLabel: "Alertas",
           }}
         />
@@ -314,13 +314,15 @@ export default function TabRoutes() {
                     />
                   </View>
                   {isEnabled && (
-                    <DateTimePicker
-                      testID="dataTimePicker"
-                      mode="time"
-                      value={date}
-                      is24Hour={true}
-                      onChange={onChangeDate}
-                    />
+                    <View style={{ alignItems: "flex-start" }}>
+                      <DateTimePicker
+                        testID="dataTimePicker"
+                        mode="time"
+                        value={date}
+                        is24Hour={true}
+                        onChange={onChangeDate}
+                      />
+                    </View>
                   )}
 
                   <ActionButtom

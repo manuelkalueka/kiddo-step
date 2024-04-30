@@ -70,11 +70,10 @@ const Map = () => {
   useEffect(() => {
     async function startLocationWatch() {
       try {
-        const taskName = "locationUpdateTask"; // Nome da tarefa pelo backgroudLocation
         await watchPositionAsync(
           {
             accuracy: LocationAccuracy.Highest,
-            timeInterval: 2000,
+            timeInterval: 1000, // 1minuto
             distanceInterval: 10, //distancia de 10 metros
           },
           (response) => {
@@ -121,8 +120,8 @@ const Map = () => {
       // Calcula a distância entre a localização atual e a última localização salva
       const distance = getDistance(geoInput, geoOutput, 1);
 
-      if (distance >= 100) {
-        //TEstar 100 metros pelo erro do telefone e rede
+      if (distance >= 50) {
+        //TEstar 50 metros pelo erro do telefone e rede
         //VERIFICAR A DISTANCIA A CADA LOCALIZAÇÃO SALVA
         // Salva a nova localização na base de dados
         try {

@@ -31,7 +31,7 @@ import { handleDisableKeyboard } from "../../../utils/dismiss-keyboard";
 import { getKiddoInfo } from "../../services/kiddo-service"; //Pegar a Criança na DB
 import { useAuth } from "../../contexts/auth";
 import { useNavigation } from "@react-navigation/native";
-import { createGeoFence } from "../../services/geofence"; //Criar Geo Cerca
+import { createGeoFence } from "../../services/geo-fencing-service"; //Criar Geo Cerca
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Schema = yup.object({

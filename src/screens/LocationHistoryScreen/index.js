@@ -20,7 +20,6 @@ import {
   getCurrentLocation,
   getLocationHistory,
 } from "../../services/location-service";
-import { useAuth } from "../../contexts/auth";
 import { Tracker } from "../../../tracker-data";
 import { FontAwesome } from "@expo/vector-icons";
 
@@ -28,13 +27,13 @@ import { useKiddo } from "../../contexts/kiddo";
 import LoadingComponent from "../../components/LoadingComponent";
 
 const LocationHistoryScreen = () => {
-  const bottomSheetRef = useRef(null);
   const navigation = useNavigation();
+  const bottomSheetRef = useRef(null);
 
   const { kiddo } = useKiddo();
 
-  const [locationHistory, setLocationHistory] = useState(null);
-  const [locationItem, setLocationItem] = useState(null);
+  const [locationHistory, setLocationHistory] = useState([]);
+  const [locationItem, setLocationItem] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
