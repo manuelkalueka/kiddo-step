@@ -56,7 +56,7 @@ async function getInfo(user) {
     const { data } = await ApiMananger.get(`/users/info/${user._id}`);
     return data;
   } catch (error) {
-    console.log(error);
+    console.log("Erro ao pegar informações do usuário", error);
   }
 }
 
@@ -70,4 +70,10 @@ const confirmEmail = async (data) => {
   }
 };
 
-export { signInService, signUpService, updateUserService, confirmEmail, getInfo };
+export {
+  signInService,
+  signUpService,
+  updateUserService,
+  confirmEmail,
+  getInfo,
+};
