@@ -30,10 +30,22 @@ import { StatusBar } from "expo-status-bar";
 import { handleDisableKeyboard } from "../../../utils/dismiss-keyboard";
 import PickerModal from "../../components/PickerModal";
 import { useKiddo } from "../../contexts/kiddo";
+import ActionButtom from "../../components/ActionButtom";
 
-const KiddoSchema = yup.object({
-  fullName: yup.string().required("Informe o Nome Completo"),
-  gender: yup.string().required("Informe o Genero"),
+const Schema = yup.object({
+  fullName: yup
+    .string()
+    .required("Nome é obrigatório")
+    .test("fullName", "Insira um nome completo válido", (value) => {
+      // Verifica se o valor contém pelo menos um espaço em branco
+      return /\s/.test(value);
+    }),
+  surname: yup.string().required("Alcunha Obrigatória"),
+  birthDate: yup.date().required("Data de Nascimento Obrigatório"),
+  gendre: yup.string(),
+  avatar: yup.string(),
+  bloodType: yup.string(),
+  alergics: yup.string(),
 });
 
 const KiddoDetailsScreen = () => {
@@ -44,7 +56,8 @@ const KiddoDetailsScreen = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(KiddoSchema),
+    defaultValues: { gendre: "Masculino" },
+    resolver: yupResolver(Schema),
   });
 
   const sendForm = (data) => {
@@ -53,22 +66,9 @@ const KiddoDetailsScreen = () => {
 
   const navigation = useNavigation();
 
-  const [selectedGendre, setSelectedGendre] = useState();
-  const itemsPicker = ["Masculino", "Feminino"];
-  const [visiblePicker, setVisiblePicker] = useState(false);
-
-  const [pickerResult, setPickerResult] = useState("Masculino");
   const [netInfo, setNetInfo] = useState(false);
 
   const pickerRef = useRef();
-
-  function openPicker() {
-    pickerRef.current.focus();
-  }
-
-  function closePicker() {
-    pickerRef.current.blur();
-  }
 
   async function getNetInfoOnDevice() {
     try {
@@ -94,14 +94,6 @@ const KiddoDetailsScreen = () => {
   }
 
   const kiddoAvatar = require("./../../../assets/img/boy-avatar.png");
-
-  const onClose = () => {
-    setVisiblePicker(false);
-  };
-
-  const onSelect = (value) => {
-    setPickerResult(value);
-  };
 
   return (
     <View style={styles.container}>
@@ -173,7 +165,10 @@ const KiddoDetailsScreen = () => {
         <View style={styles.actionButtons}>
           <TouchableOpacity
             style={styles.actionItem}
-            onPress={() => navigation.navigate("AlertasTab")}
+            onPress={() => {
+              handleModalClose();
+              navigation.navigate("AlertasTab");
+            }}
           >
             <MaterialIcons
               name="add-alert"
@@ -185,6 +180,7 @@ const KiddoDetailsScreen = () => {
           <TouchableOpacity
             style={styles.actionItem}
             onPress={() => {
+              handleModalClose();
               navigation.navigate("CercaTab");
             }}
           >
@@ -201,10 +197,19 @@ const KiddoDetailsScreen = () => {
         <View>
           <View>
             <Text style={styles.labels}>Nome Completo</Text>
-            <TextInput
-              placeholder="Digite o Nome Completo"
-              defaultValue={kiddo?.fullName}
-              style={styles.input}
+            <Controller
+              name="fullName"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  placeholder="Digite o Nome Completo"
+                  defaultValue={kiddo?.fullName}
+                  style={styles.input}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                />
+              )}
             />
           </View>
           <View>
@@ -215,69 +220,71 @@ const KiddoDetailsScreen = () => {
             />
           </View>
           <View>
-            {Platform.OS === "android" ? (
-              <Fragment>
-                <Text style={styles.labels}>Gênero</Text>
+            <Text style={styles.labels}>Género</Text>
+            <Controller
+              name="gendre"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
                 <Picker
                   ref={pickerRef}
-                  selectedValue={selectedGendre}
-                  onValueChange={(itemValue, itemIndex) =>
-                    setSelectedGendre(itemValue)
-                  }
-                  onBlur={closePicker}
-                  onFocus={openPicker}
-                  style={{ width: 150, height: 50 }}
+                  selectedValue={value || "Masculino"}
+                  onValueChange={onChange}
+                  onBlur={onBlur}
+                  style={styles.input}
+                  itemStyle={{
+                    height: Platform.OS === "ios" ? 50 : "auto",
+                  }}
                 >
                   <Picker.Item key={0} label="Masculino" value="Masculino" />
                   <Picker.Item key={1} label="Feminino" value="Feminino" />
                 </Picker>
-              </Fragment>
-            ) : (
-              <Fragment>
-                <Text style={styles.labels}>Genero</Text>
-                <TextInput
-                  defaultValue={pickerResult}
-                  style={styles.input}
-                  editable={false}
-                  onPressIn={() => {
-                    setVisiblePicker(true);
-                  }}
-                />
-                <PickerModal
-                  items={itemsPicker}
-                  title="Gênero"
-                  visible={visiblePicker}
-                  onClose={onClose}
-                  onSelect={onSelect}
-                />
-              </Fragment>
-            )}
+              )}
+            />
           </View>
           <Text style={styles.sectionTitle}>Detalhes de Saúde</Text>
           <View>
             <Text style={styles.labels}>Tipo Sanguíneo</Text>
-            <TextInput
-              placeholder="Digite o tipo sanguíneo"
-              defaultValue={kiddo?.bloodType}
-              style={styles.input}
+            <Controller
+              name="bloodType"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  placeholder="Digite o tipo sanguíneo"
+                  defaultValue={kiddo?.bloodType}
+                  style={styles.input}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                />
+              )}
             />
           </View>
           <View>
             <Text style={styles.labels}>Alergias</Text>
-            <TextInput
-              placeholder="Descreve as Alergias e Restrições"
-              multiline={true}
-              editable={true}
-              numberOfLines={4}
-              defaultValue={kiddo?.alergics}
-              style={styles.input}
+            <Controller
+              name="alergics"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  placeholder="Descreve as Alergias e Restrições"
+                  multiline={true}
+                  editable={true}
+                  numberOfLines={4}
+                  defaultValue={kiddo?.alergics}
+                  style={styles.input}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                />
+              )}
             />
           </View>
         </View>
         <View style={styles.mainButtonContainer}>
-          <TouchableOpacity style={styles.MainButton}>
-            <Text style={styles.textButton}>Salvar Alterações</Text>
-          </TouchableOpacity>
+          <ActionButtom
+            textButton="Salvar Alterações"
+            onPress={() => handleSubmit(sendForm)}
+          />
         </View>
       </ScrollView>
     </View>

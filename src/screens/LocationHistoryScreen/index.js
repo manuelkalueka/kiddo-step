@@ -141,7 +141,7 @@ const LocationHistoryScreen = () => {
               <TouchableOpacity
                 style={styles.itemContainer}
                 onLongPress={() =>
-                  Alert.alert("FUNCIONALIDADE", "Ocultar Histórico")
+                  Alert.alert("FUNCIONALIDADE FUTURA", "Ocultar Histórico")
                 }
                 activeOpacity={0.8}
               >

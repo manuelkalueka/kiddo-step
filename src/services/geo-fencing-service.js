@@ -10,6 +10,7 @@ async function getGeoFencings(kiddo) {
   }
 }
 
+
 async function setGeoFencing(kiddo) {
   const id = kiddo._id;
   try {
@@ -41,4 +42,8 @@ async function createGeoFence(data, idKiddo) {
   }
 }
 
-export { getGeoFencings, setGeoFencing, createGeoFence };
+export {
+  getGeoFencings,
+  setGeoFencing,
+  createGeoFence,
+};

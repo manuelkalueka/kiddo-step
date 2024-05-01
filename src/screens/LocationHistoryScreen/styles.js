@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import defaultStyle from "../../defaultStyle";
 
 const styles = StyleSheet.create({
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   header: {
     color: defaultStyle.colors.dark,
     fontWeight: "bold",
-    fontSize: defaultStyle.sizes.inputLabels,
+    fontSize: Platform.OS === "ios" ? defaultStyle.sizes.inputLabels : 14,
     marginBottom: 10,
   },
   date: {

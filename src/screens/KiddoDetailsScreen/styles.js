@@ -42,11 +42,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     position: "absolute",
-    right: "2%",
+    right: Platform.OS === "ios" ? "2%" : "0%",
     width: "80%",
   },
   headerSurname: {
-    fontSize: defaultStyle.sizes.bigTitle,
+    fontSize:
+      Platform.OS === "ios"
+        ? defaultStyle.sizes.bigTitle
+        : defaultStyle.sizes.title,
     color: defaultStyle.colors.light,
     fontWeight: "bold",
   },
@@ -164,7 +167,7 @@ const styles = StyleSheet.create({
   },
   mainButtonContainer: {
     marginTop: 20,
-    marginBottom: "8%",
+    marginBottom: Platform.OS === "ios" ? "8%" : "10%",
   },
 });
 

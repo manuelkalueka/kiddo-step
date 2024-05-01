@@ -10,6 +10,7 @@ import {
   Keyboard,
   Switch,
   ActivityIndicator,
+  Platform,
 } from "react-native";
 import Slider from "@react-native-community/slider";
 import ActionButtom from "../../components/ActionButtom";
@@ -220,12 +221,16 @@ export default function NewFecing() {
 
           <Slider
             style={styles.slider} //Estlizar para android
-            minimumValue={50}
+            minimumValue={25}
             maximumValue={1000}
             thumbTintColor={defaultStyle.colors.white}
             minimumTrackTintColor={defaultStyle.colors.mainColorBlue}
-            maximumTrackTintColor={defaultStyle.colors.blueLightColor1}
-            step={50}
+            maximumTrackTintColor={
+              Platform.OS !== "android"
+                ? defaultStyle.colors.blueLightColor1
+                : defaultStyle.colors.blueDarkColor2
+            }
+            step={25}
             value={radius}
             onValueChange={(value) => setRadius(value)}
           />

@@ -51,12 +51,14 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { saveAlertSchedule } from "../services/alert-service";
+import * as Location from "expo-location";
+import * as TaskManager from "expo-task-manager";
 
 const Schema = yup.object({
   title: yup.string().required("Precisa preencher a designação"),
   type: yup.string(),
   geofecing: yup.string().required("Selecione um geoFecing"),
-  // hourTrigger: yup.string(),
+  hourTrigger: yup.date(),
 });
 
 export default function TabRoutes() {
@@ -83,6 +85,7 @@ export default function TabRoutes() {
   } = useForm({
     defaultValues: {
       type: "Entrada",
+      hourTrigger: new Date(),
     },
     resolver: yupResolver(Schema),
   });
@@ -130,6 +133,80 @@ export default function TabRoutes() {
     const currentDate = selectedDate;
     setDate(currentDate);
   };
+
+  /*
+  async function requestBackLocation() {
+    try {
+      const { status: backgroundStatus } =
+        await Location.requestBackgroundPermissionsAsync();
+      if (backgroundStatus === "granted") {
+        await startLocationUpdatesAsync("BACK_TRACKING", {
+          accuracy: Location.Accuracy.Balanced,
+        });
+      }
+    } catch (error) {
+      console.log("Não permitido ", error);
+    }
+  }
+
+  TaskManager.defineTask("BACK_TRACKING", ({ data, error }) => {
+    if (error) {
+      // Error occurred - check `error.message` for more details.
+      console.log(error?.message);
+      return;
+    }
+    if (data) {
+      const { locations } = data;
+      console.log("Localizações no Back", locations);
+    }
+  });
+
+  useEffect(() => {
+    requestBackLocation();
+  }, []);
+
+  // Função para iniciar o monitoramento da cerca virtual
+  const GeofencingActivity = (nome, latitude, longitude, radius) => {
+    const geofence = {
+      identifier: nome,
+      latitude,
+      longitude,
+      radius,
+      notifyOnEnter: true,
+      notifyOnExit: true,
+    };
+
+    Location.startGeofencingAsync("geofencing", [geofence])
+      .then(() => console.log("Geofencing iniciado com sucesso"))
+      .catch((error) => console.error("Erro ao iniciar geofencing:", error));
+  };
+
+  // Função para parar o monitoramento da cerca virtual
+  const stopGeofencing = () => {
+    Location.stopGeofencingAsync("geofencing")
+      .then(() => console.log("Geofencing parado com sucesso"))
+      .catch((error) => console.error("Erro ao parar geofencing:", error));
+  };
+
+  // Exemplo de uso para iniciar o monitoramento
+  GeofencingActivity("Cerca1", -7.6246, 15.0552, 100); // Inicia o monitoramento da cerca virtual com nome 'Cerca1', coordenadas e raio
+
+  TaskManager.defineTask(
+    //ESCOPO GLOBAL
+    "geofencing",
+    ({ data: { eventType, region }, error }) => {
+      if (error) {
+        // check `error.message` for more details.
+        console.log("Erro no gestor de tarefas");
+        return;
+      }
+      if (eventType === Location.GeofencingEventType.Enter) {
+        console.log("You've entered region:", region);
+      } else if (eventType === Location.GeofencingEventType.Exit) {
+        console.log("You've left region:", region);
+      }
+    }
+  );*/
 
   return (
     <>
@@ -348,13 +425,19 @@ export default function TabRoutes() {
                     />
                   </View>
                   {isEnabled && (
-                    <View style={{ alignItems: "flex-start" }}>
-                      <DateTimePicker
-                        testID="dataTimePicker"
-                        mode="time"
-                        value={date}
-                        is24Hour={true}
-                        onChange={onChangeDate}
+                    <View>
+                      <Controller
+                        name="hourTrigger"
+                        control={control}
+                        render={({ field: { onChange, onBlur, value } }) => (
+                          <TextInput
+                            placeholder={`Digite a hora ex.: ${new Date().getHours()}:${new Date().getMinutes()}`}
+                            style={styles.input}
+                            onChangeText={onChange}
+                            onBlur={onBlur}
+                            value={value}
+                          />
+                        )}
                       />
                     </View>
                   )}

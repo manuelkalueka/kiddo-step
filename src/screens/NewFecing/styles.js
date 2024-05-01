@@ -64,6 +64,10 @@ const styles = StyleSheet.create({
     height: 50,
   },
 
+  slider: {
+    height: Platform.OS === "android" && 30,
+  },
+
   msgAlerta: {
     color: defaultStyle.colors.danger,
     fontSize: defaultStyle.sizes.bodyText,

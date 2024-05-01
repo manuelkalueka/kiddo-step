@@ -13,11 +13,7 @@ import {
   watchPositionAsync,
   stopLocationUpdatesAsync,
   LocationAccuracy,
-  startLocationUpdatesAsync,
-  Accuracy,
-  requestBackgroundPermissionsAsync,
 } from "expo-location"; //Módulo de localização
-import * as TaskManager from "expo-task-manager";
 import getDistance from "geolib/es/getDistance"; //calculo de distancia
 import { getLastLocation, saveLocation } from "../../services/location-service"; //Serviço para interagir com a API
 import MapView, { Marker } from "react-native-maps";
@@ -66,32 +62,6 @@ const Map = () => {
       console.error("Erro ao obter permissões de localização:", error);
     }
   }
-
-  async function requestBackLocation() {
-    try {
-      const { status: backgroundStatus } =
-        await requestBackgroundPermissionsAsync();
-      if (backgroundStatus === "granted") {
-        await startLocationUpdatesAsync("BACK_TRACKING", {
-          accuracy: Accuracy.Balanced,
-        });
-      }
-    } catch (error) {
-      console.log("Não permitido ", error);
-    }
-  }
-
-  TaskManager.defineTask("BACK_TRACKING", ({ data, error }) => {
-    if (error) {
-      // Error occurred - check `error.message` for more details.
-      console.log(error?.message);
-      return;
-    }
-    if (data) {
-      const { locations } = data;
-      console.log("Localizações no Back", locations);
-    }
-  });
 
   useEffect(() => {
     requestLocationPermissions();
@@ -206,7 +176,7 @@ const Map = () => {
               activeOpacity={0.7}
               onPress={async () => {
                 setTrackingEnabled(!trackingEnabled);
-                await requestBackLocation();
+                //Voltar o foco no Marker do Mapa
                 Vibration.vibrate();
               }}
             >

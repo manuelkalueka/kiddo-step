@@ -19,6 +19,7 @@ import ActionButtom from "../../components/ActionButtom";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation } from "@react-navigation/native";
 import { useKiddo } from "../../contexts/kiddo";
+import { formatDate } from "../../../utils/format-date";
 
 const Schema = yup.object({
   fullName: yup
@@ -28,7 +29,7 @@ const Schema = yup.object({
       // Verifica se o valor contém pelo menos um espaço em branco
       return /\s/.test(value);
     }),
-  surname: yup.string(),
+  surname: yup.string().required("Alcunha Obrigatória"),
   birthDate: yup.date().required("Data de Nascimento Obrigatório"),
   gendre: yup.string(),
   avatar: yup.string(),
@@ -216,18 +217,30 @@ const ConfigKiddoScreen = () => {
         <Controller
           name="birthDate"
           control={control}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <DateTimePicker
-              value={value || new Date()}
-              mode="date"
-              display="default"
-              onChange={(event, selectedDate) => {
-                const currentDate = selectedDate || value;
-                onChange(currentDate);
-              }}
-              style={styles.textInput}
-            />
-          )}
+          render={({ field: { onChange, onBlur, value } }) =>
+            Platform.OS === "ios" ? (
+              <DateTimePicker
+                value={value || new Date()}
+                mode="date"
+                display="default"
+                onChange={(event, selectedDate) => {
+                  const currentDate = selectedDate || value;
+                  onChange(currentDate);
+                }}
+                style={styles.textInput}
+              />
+            ) : (
+              <TextInput
+                onChangeText={onChange}
+                onBlur={onBlur}
+                value={value}
+                placeholder={`Data de nascimento Ex.: ${formatDate(
+                  new Date()
+                )}`}
+                style={styles.textInput}
+              />
+            )
+          }
         />
         <Text style={styles.label}>Género</Text>
 
