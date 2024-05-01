@@ -1,4 +1,4 @@
-import React, { useState, useRef, Fragment } from "react";
+import React, { useState, useRef, Fragment, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,6 +10,8 @@ import {
   ScrollView,
   Platform,
 } from "react-native";
+import { useBatteryLevel } from "expo-battery";
+import * as Network from "expo-network";
 
 import { formatDate } from "../../../utils/format-date";
 
@@ -56,6 +58,8 @@ const KiddoDetailsScreen = () => {
   const [visiblePicker, setVisiblePicker] = useState(false);
 
   const [pickerResult, setPickerResult] = useState("Masculino");
+  const [netInfo, setNetInfo] = useState(false);
+
   const pickerRef = useRef();
 
   function openPicker() {
@@ -66,7 +70,24 @@ const KiddoDetailsScreen = () => {
     pickerRef.current.blur();
   }
 
-  const STATUS_DEVICE = true;
+  async function getNetInfoOnDevice() {
+    try {
+      const { isConnected, isInternetReachable } =
+        await Network.getNetworkStateAsync();
+      const currentStatus = isConnected && isInternetReachable;
+      setNetInfo(currentStatus);
+    } catch (error) {
+      console.log("Erro ao pegar a rede ", error);
+    }
+  }
+
+  useEffect(() => {
+    getNetInfoOnDevice();
+  }, [kiddo]);
+
+  const battery = useBatteryLevel(); //Pega o nivel da bateria, NORMALMENTE PEGAR DO KIDDO
+  const BATTERY_LEVEL = Math.floor(battery * 100);
+  const STATUS_DEVICE = netInfo;
 
   function handleModalClose() {
     navigation?.goBack();
@@ -123,27 +144,28 @@ const KiddoDetailsScreen = () => {
                   style={[
                     styles.buttonStatusIcon,
                     {
-                      backgroundColor:
-                        STATUS_DEVICE === true
-                          ? defaultStyle.colors.success
-                          : defaultStyle.colors.danger,
+                      backgroundColor: STATUS_DEVICE
+                        ? defaultStyle.colors.success
+                        : defaultStyle.colors.danger,
                     },
                   ]}
                 ></View>
                 <Text style={styles.textStatus}>
-                  {STATUS_DEVICE === true ? "online" : "offline"}
+                  {STATUS_DEVICE ? "online" : "offline"}
                 </Text>
               </View>
               <View style={styles.buttonBatteryContainer}>
                 <FontAwesome
                   name="battery"
                   color={
-                    STATUS_DEVICE === true
+                    BATTERY_LEVEL < 50 && BATTERY_LEVEL > 20
+                      ? defaultStyle.colors.warning
+                      : BATTERY_LEVEL > 50
                       ? defaultStyle.colors.success
                       : defaultStyle.colors.danger
                   }
                 />
-                <Text style={styles.textStatus}>75%</Text>
+                <Text style={styles.textStatus}>{BATTERY_LEVEL}%</Text>
               </View>
             </View>
           </View>

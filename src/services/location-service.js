@@ -36,7 +36,6 @@ async function getCurrentLocation(id) {
 
 async function getLastLocation(kiddo) {
   try {
-    console.log("Estou recebendo esse ID para trabalhar: ", kiddo);
     const locations = await getLocationHistory(kiddo);
     const location = locations[locations.length - 1];
     return location;
