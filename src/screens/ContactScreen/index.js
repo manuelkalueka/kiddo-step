@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   TextInput,
@@ -8,6 +8,7 @@ import {
   Text,
   Pressable,
   Keyboard,
+  RefreshControl,
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 
@@ -38,16 +39,26 @@ const ContactScreen = () => {
 
   const [contactList, setContactList] = useState([]);
 
-  useEffect(() => {
-    async function getCont() {
-      try {
-        const contacts = await getContacts();
-        setContactList(contacts);
-      } catch (error) {
-        console.log("Erro ao Carregar os Contactos");
-      }
-    }
+  const [refreshing, setRefreshing] = useState(false);
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => {
+      getCont();
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
+  async function getCont() {
+    try {
+      const contacts = await getContacts();
+      setContactList(contacts);
+    } catch (error) {
+      console.log("Erro ao Carregar os Contactos");
+    }
+  }
+
+  useEffect(() => {
     getCont();
   }, []);
 
@@ -94,6 +105,9 @@ const ContactScreen = () => {
       <FlatList
         data={contactList}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
           <TouchableOpacity style={styles.contactContainer}>

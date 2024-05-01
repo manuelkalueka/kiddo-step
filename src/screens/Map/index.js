@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Alert,
+  Vibration,
 } from "react-native";
 import {
   requestForegroundPermissionsAsync,
@@ -29,6 +30,7 @@ const Map = () => {
   const [mapType, setMapType] = useState("hybrid"); //Tipo de Mapa em função ao botão [hybrid ou standard]
   const [markerPosition, setMarkerPosition] = useState(null);
   const [knownLocation, setKnownLocation] = useState(null);
+  const [trackingEnabled, setTrackingEnabled] = useState(false);
 
   async function toggleSetMapType() {
     if (mapType === "hybrid") {
@@ -89,11 +91,10 @@ const Map = () => {
       }
     }
     startLocationWatch();
-
     return () => {
       stopLocationUpdatesAsync();
     };
-  }, []);
+  }, [trackingEnabled]); // depende do tracking
 
   async function handleLocationUpdate(locationAsync) {
     if (!kiddo || !locationAsync || !locationAsync.coords) {
@@ -106,6 +107,7 @@ const Map = () => {
 
     const lastLocation = await getLastLocation(kiddoId);
     setKnownLocation(lastLocation);
+    console.log("Sou a ultima localização: ", lastLocation);
     if (lastLocation) {
       const geoInput = {
         latitude: parseFloat(lastLocation.latitude),
@@ -170,9 +172,16 @@ const Map = () => {
                 size={30}
               />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.mapButton} activeOpacity={0.7}>
+            <TouchableOpacity
+              style={styles.mapButton}
+              activeOpacity={0.7}
+              onPress={() => {
+                setTrackingEnabled(!trackingEnabled);
+                Vibration.vibrate();
+              }}
+            >
               <FontAwesome
-                name="location-arrow"
+                name={trackingEnabled ? "stop" : "location-arrow"}
                 color={defaultStyle.colors.mainColorBlue}
                 size={30}
               />
