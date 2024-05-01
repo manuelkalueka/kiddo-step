@@ -164,7 +164,7 @@ export default function NewFecing() {
                 });
               }
             }}
-            mapType={"satellite"} //Mudar dinamicamente em função ao Mapa Principal
+            mapType={"hybrid"} //Mudar dinamicamente em função ao Mapa Principal
           >
             {markerPosition && (
               <>
@@ -177,7 +177,7 @@ export default function NewFecing() {
                 />
                 <Marker
                   coordinate={markerPosition}
-                  title="Cerca Geográfica"
+                  title={`Cerca para ${kiddo?.surname}`}
                   description="Aqui é onde a Cerca Será Criada"
                 />
               </>

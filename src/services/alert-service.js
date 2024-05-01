@@ -10,15 +10,9 @@ async function listAlertsService(geoFence) {
 }
 
 async function saveAlertSchedule(data) {
-  const { title, body, type, hourTrigger, geofecing } = data;
   try {
-    await ApiMananger.post("/alertSchedule", {
-      title,
-      body,
-      type,
-      hourTrigger,
-      geofecing,
-    });
+    const response = await ApiMananger.post("/alertSchedule", data);
+    return response;
   } catch (error) {
     console.log("erro ao salvar alerta", error);
   }

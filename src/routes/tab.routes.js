@@ -1,4 +1,10 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   Text,
   View,
@@ -34,7 +40,6 @@ import {
 } from "../routes/stack.app.routes";
 
 import Header from "../components/Header";
-import { useAuth } from "../contexts/auth";
 import { useKiddo } from "../contexts/kiddo";
 import { getGeoFencings } from "../services/geo-fencing-service";
 import ActionButtom from "../components/ActionButtom";
@@ -45,30 +50,55 @@ const { Navigator, Screen } = Tab;
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { saveAlertSchedule } from "../services/alert-service";
 
 const Schema = yup.object({
   title: yup.string().required("Precisa preencher a designação"),
   type: yup.string(),
-  geofecing: yup.string(),
-  hourTrigger: yup.string(),
+  geofecing: yup.string().required("Selecione um geoFecing"),
+  // hourTrigger: yup.string(),
 });
 
 export default function TabRoutes() {
+  const { kiddo } = useKiddo();
+  const [geoFences, setGeoFences] = useState([]);
+
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
+
+  const [isModal2Visible, setisModal2Visible] = useState(false);
+
+  const [date, setDate] = useState(new Date());
+
+  const bottomSheet = useRef(null);
+  const snapPoints = useMemo(() => ["55%", "70%"], []);
+
+  const pickerAlertRef = useRef();
+  const pickerGeofencigRef = useRef();
+
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({
+    defaultValues: {
+      type: "Entrada",
+    },
     resolver: yupResolver(Schema),
   });
 
-  const sendForm = (data) => {
-    Alert.alert("Alert", "Fumo");
+  const sendForm = async (data) => {
+    try {
+      //verificar se existe date;
+      const alertData = isEnabled ? { ...data, date } : data;
+      const response = await saveAlertSchedule(alertData);
+      if (response.status === 201) {
+        Alert.alert("Sucesso", `Alerta definido com sucesso!`);
+      }
+    } catch (error) {
+      Alert(error, "Tente Novamente!");
+    }
   };
-
-  const { user } = useAuth();
-  const { kiddo } = useKiddo();
-  const [geoFences, setGeoFences] = useState([]);
 
   async function getGeoFence() {
     try {
@@ -78,6 +108,10 @@ export default function TabRoutes() {
       console.log("Erro ao buscar cercas", error);
     }
   }
+
+  useEffect(() => {
+    getGeoFence();
+  }, [kiddo]);
 
   const navigation = useNavigation();
 
@@ -96,19 +130,6 @@ export default function TabRoutes() {
     const currentDate = selectedDate;
     setDate(currentDate);
   };
-
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
-
-  const [isModal2Visible, setisModal2Visible] = useState(false);
-
-  const [date, setDate] = useState(new Date());
-
-  const bottomSheet = useRef(null);
-  const snapPoints = useMemo(() => ["55%", "70%"], []);
-
-  const pickerAlertRef = useRef();
-  const pickerGeofencigRef = useRef();
 
   return (
     <>
@@ -192,8 +213,7 @@ export default function TabRoutes() {
             headerRight: () => (
               <TouchableOpacity
                 style={styles.container}
-                onPress={async () => {
-                  await getGeoFence();
+                onPress={() => {
                   setisModal2Visible(true);
                 }} //Põe visible o modal do bottomSheet
               >
@@ -242,7 +262,24 @@ export default function TabRoutes() {
                   </Text>
 
                   <Text style={styles.labels}>Designação</Text>
-                  <TextInput style={styles.input} />
+
+                  <Controller
+                    name="title"
+                    control={control}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <TextInput
+                        style={styles.input}
+                        onChangeText={onChange}
+                        onBlur={onBlur}
+                        value={value}
+                      />
+                    )}
+                  />
+                  {errors.title && (
+                    <Text style={styles.msgAlerta}>
+                      {errors.title?.message}
+                    </Text>
+                  )}
 
                   <Text style={styles.labels}>Tipo de alerta</Text>
 
@@ -265,9 +302,6 @@ export default function TabRoutes() {
                       </Picker>
                     )}
                   />
-                  {errors.type && (
-                    <Text style={styles.msgAlerta}>{errors.type?.message}</Text>
-                  )}
 
                   <Text style={styles.labels}>Cerca virtual</Text>
                   <Controller
@@ -328,8 +362,7 @@ export default function TabRoutes() {
                   <ActionButtom
                     textButton="Salvar"
                     onPress={() => {
-                      Alert.alert("Sou o Alert", "Bruto");
-                      handleSubmit(sendForm);
+                      handleSubmit(sendForm)(); //Tiago, faltava adicionar o () fora
                     }}
                   />
                 </View>
@@ -431,5 +464,11 @@ const styles = StyleSheet.create({
 
   switchTime: {
     alignSelf: "center",
+  },
+
+  msgAlerta: {
+    color: defaultStyle.colors.danger,
+    fontSize: defaultStyle.sizes.bodyText,
+    alignSelf: "flex-start",
   },
 });

@@ -14,9 +14,7 @@ import {
   LocationAccuracy,
 } from "expo-location"; //Módulo de localização
 import getDistance from "geolib/es/getDistance"; //calculo de distancia
-import { useAuth } from "../../contexts/auth"; // Contexto do Usuário
 import { getLastLocation, saveLocation } from "../../services/location-service"; //Serviço para interagir com a API
-import { Tracker } from "../../../tracker-data";
 import MapView, { Marker } from "react-native-maps";
 import { FontAwesome } from "@expo/vector-icons";
 
@@ -28,15 +26,15 @@ import { useKiddo } from "../../contexts/kiddo";
 const Map = () => {
   const [location, setLocation] = useState(null); //Localização actual
   const [loadingMap, setLoadingMap] = useState(true);
-  const [mapType, setMapType] = useState("standard"); //Tipo de Mapa em função ao botão [Sattelite ou standard]
+  const [mapType, setMapType] = useState("hybrid"); //Tipo de Mapa em função ao botão [hybrid ou standard]
   const [markerPosition, setMarkerPosition] = useState(null);
   const [knownLocation, setKnownLocation] = useState(null);
 
   async function toggleSetMapType() {
-    if (mapType === "standard") {
-      setMapType("hybrid");
-    } else if (mapType === "hybrid") {
+    if (mapType === "hybrid") {
       setMapType("standard");
+    } else if (mapType === "standard") {
+      setMapType("hybrid");
     }
     await AsyncStorage.setItem("@MapType", mapType); //Salva o Tipo no Storage
   }
@@ -74,7 +72,7 @@ const Map = () => {
           {
             accuracy: LocationAccuracy.Highest,
             timeInterval: 1000, // 1minuto
-            distanceInterval: 10, //distancia de 10 metros
+            distanceInterval: 50, //distancia de 50 metros
           },
           (response) => {
             setLocation(response);

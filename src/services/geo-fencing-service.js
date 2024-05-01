@@ -4,7 +4,6 @@ async function getGeoFencings(kiddo) {
   const id = kiddo._id;
   try {
     const { data } = await ApiMananger.get(`/geoFence/${id}`);
-    console.log("Sou as Fencings ", data);
     return data;
   } catch (error) {
     console.log("Erro ao Buscar geo fencings", error);
