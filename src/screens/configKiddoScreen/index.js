@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
   Platform,
   Pressable,
@@ -17,9 +17,10 @@ import styles from "./styles";
 import { Picker } from "@react-native-picker/picker";
 import ActionButtom from "../../components/ActionButtom";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { useNavigation } from "@react-navigation/native";
 import { useKiddo } from "../../contexts/kiddo";
 import { formatDate } from "../../../utils/format-date";
+import { ActivityIndicator } from "react-native-paper";
+import { setKiddoInfo } from "../../services/kiddo-service";
 
 const Schema = yup.object({
   fullName: yup
@@ -46,7 +47,8 @@ const Schema = yup.object({
 const ConfigKiddoScreen = () => {
   const { user, updateUser } = useAuth();
   const { setKiddo } = useKiddo();
-  const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
+
   const {
     control,
     handleSubmit,
@@ -62,6 +64,7 @@ const ConfigKiddoScreen = () => {
 
   const sendForm = async (data) => {
     try {
+      setLoading(true);
       const {
         fullName,
         surname,
@@ -85,15 +88,10 @@ const ConfigKiddoScreen = () => {
         bloodType,
         alergics,
       };
-      const statusKiddo = await setKiddo(kiddoData);
-      const statusUser = await updateUser(AuthData);
-
-      if (statusKiddo.status === 201 && statusUser.status === 201) {
-        //MUDAR DE TELA
-        navigation.push("Mapa");
-      } else {
-        Alert.alert("Erro ao Configurar conta", "Tente novamente!");
-      }
+      console.log("Dados da criança: ", kiddoData);
+      await updateUser(AuthData);
+      await setKiddoInfo(kiddoData, user);
+      setLoading(false);
     } catch (error) {
       console.log("Erro ao concluir a configuração da conta ", error);
     }
@@ -293,7 +291,9 @@ const ConfigKiddoScreen = () => {
           )}
         />
         <ActionButtom
-          textButton="Começar a Rastrear"
+          textButton={
+            loading ? <ActivityIndicator color="blue" /> : "Começar a Rastrear"
+          }
           onPress={handleSubmit(sendForm)}
         />
       </Pressable>

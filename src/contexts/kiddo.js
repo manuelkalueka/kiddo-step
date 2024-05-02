@@ -6,6 +6,8 @@ const contextFormat = {
   setted: false,
   kiddo: {},
   getKiddo: () => {},
+  setKiddo: () => {},
+  kiddoAge: 0,
 };
 const KiddoContext = createContext(contextFormat);
 
@@ -43,6 +45,7 @@ export const KiddoProvider = ({ children }) => {
 
   async function setKiddo(data) {
     try {
+      console.log("Não estou caindo aqui");
       const response = await setKiddoInfo(data, user);
       return response;
     } catch (error) {

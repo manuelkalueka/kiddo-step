@@ -51,14 +51,12 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { saveAlertSchedule } from "../services/alert-service";
-import * as Location from "expo-location";
-import * as TaskManager from "expo-task-manager";
 
 const Schema = yup.object({
   title: yup.string().required("Precisa preencher a designação"),
   type: yup.string(),
   geofecing: yup.string().required("Selecione um geoFecing"),
-  hourTrigger: yup.date(),
+  hourTrigger: yup.string(),
 });
 
 export default function TabRoutes() {
@@ -85,7 +83,6 @@ export default function TabRoutes() {
   } = useForm({
     defaultValues: {
       type: "Entrada",
-      hourTrigger: new Date(),
     },
     resolver: yupResolver(Schema),
   });

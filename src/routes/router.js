@@ -2,31 +2,30 @@ import React from "react";
 import LoadingComponent from "../../src/components/LoadingComponent";
 
 import { useAuth } from "../contexts/auth";
-import { useKiddo, KiddoProvider } from "../contexts/kiddo";
+import { KiddoProvider } from "../contexts/kiddo";
 // ----------- Stacks ---------------------
 import AuthRoutes from "./stack.auth.routes";
 import TabRoutes from "../routes/tab.routes";
 import KiddoRouter from "./stack.config.kiddo.routes";
-//-----------------------------------------------
-function AppRouterStrategy() {
-  const { isActive } = useAuth();
-  const { setted } = useKiddo();
 
-  //Primeiro Uso, definir criança setted && user.isActive
-  return setted && isActive ? <TabRoutes /> : <KiddoRouter />;
-}
 export function Router() {
-  const { signed, loading } = useAuth();
+  const { signed, loading, isActive } = useAuth();
 
   if (loading) {
     return <LoadingComponent />;
+  } else if (signed) {
+    console.log("Usuario Activo: ", isActive);
+
+    if (!isActive) {
+      return <KiddoRouter />; // Tela para ativar a conta
+    } else {
+      return (
+        <KiddoProvider>
+          <TabRoutes />
+        </KiddoProvider>
+      );
+    }
   } else {
-    return signed ? (
-      <KiddoProvider>
-        <AppRouterStrategy />
-      </KiddoProvider>
-    ) : (
-      <AuthRoutes />
-    );
+    return <AuthRoutes />;
   }
 }

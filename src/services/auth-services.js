@@ -41,22 +41,13 @@ async function updateUserService(infoUser, user) {
     //   `https://angolaapi.onrender.com/api/v1/validate/bi/${infoUser.identifyNumber}`
     // );
     // console.log("Resultado da Verificação do BI ", data);
-    const response = await ApiMananger.post(
-      `/users/info/${user._id}`,
+    const response = await ApiMananger.put(
+      `/users/edit/${user._id}`,
       infoUser
     );
     return response;
   } catch (error) {
     console.log("Erro ao Actualizar o usuário", error);
-  }
-}
-
-async function getInfo(user) {
-  try {
-    const { data } = await ApiMananger.get(`/users/info/${user._id}`);
-    return data;
-  } catch (error) {
-    console.log("Erro ao pegar informações do usuário", error);
   }
 }
 
@@ -70,10 +61,4 @@ const confirmEmail = async (data) => {
   }
 };
 
-export {
-  signInService,
-  signUpService,
-  updateUserService,
-  confirmEmail,
-  getInfo,
-};
+export { signInService, signUpService, updateUserService, confirmEmail };

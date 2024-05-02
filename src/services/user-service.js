@@ -18,4 +18,15 @@ async function setContacts(data) {
   }
 }
 
-export { getContacts, setContacts };
+async function getInfo(user) {
+  try {
+    const id = user._id;
+    const { data } = await ApiMananger.get(`/users/info/${id}`);
+    console.log("Sou a informação do usuário ", data);
+    return data;
+  } catch (error) {
+    console.log("Erro ao pegar informações do usuário", error);
+  }
+}
+
+export { getContacts, setContacts, getInfo };

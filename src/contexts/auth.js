@@ -2,11 +2,11 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import ApiMananger from "../services/api.js";
 import AsyncStorage from "@react-native-async-storage/async-storage"; //armazenar dados em string no dispositivo
 import {
-  getInfo,
   signInService,
   signUpService,
   updateUserService,
 } from "./../services/auth-services.js";
+import KiddoRouter from "../routes/stack.config.kiddo.routes.js";
 
 const contextFormat = {
   signed: false,
@@ -20,8 +20,8 @@ const AuthContext = createContext(contextFormat);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [isActive, setIsActive] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadStorageData() {
@@ -32,6 +32,11 @@ export const AuthProvider = ({ children }) => {
       if (storagedUser && storagedToken) {
         setUser(JSON.parse(storagedUser));
         ApiMananger.defaults.headers["x-access-token"] = `${storagedToken}`;
+        const myUser = JSON.parse(storagedUser);
+        console.log("Sou o estado desse User: ", myUser?.isActive);
+        if (myUser.isActive === true) {
+          setIsActive(true);
+        }
       }
       setLoading(false);
     }
@@ -39,21 +44,10 @@ export const AuthProvider = ({ children }) => {
     loadStorageData();
   }, []);
 
-  useEffect(() => {
-    async function activate() {
-      const info = await getInfo(user);
-      setIsActive(!!info);
-    }
-
-    activate();
-  }, []);
-
   async function signIn(data) {
     const { email, password } = data;
     try {
       const response = await signInService(email, password);
-
-      setUser(response.user);
 
       await AsyncStorage.setItem(
         "@KiddoStepAuth",
@@ -61,6 +55,11 @@ export const AuthProvider = ({ children }) => {
       );
       await AsyncStorage.setItem("@KiddoStepToken", response.token);
       ApiMananger.defaults.headers["x-access-token"] = `${response.token}`;
+
+      if (response.data.user.isActive === true) {
+        console.log("Cai aqui");
+        setIsActive(true);
+      }
     } catch (error) {
       console.log("ERRO NO CONTEXTO:", error);
     }
@@ -80,6 +79,14 @@ export const AuthProvider = ({ children }) => {
   async function updateUser(data) {
     try {
       const response = await updateUserService(data, user);
+      if (response.data.isActive === true) {
+        setIsActive(true);
+        await AsyncStorage.removeItem("@KiddoStepAuth");
+        await AsyncStorage.setItem(
+          "@KiddoStepAuth",
+          JSON.stringify(response.data)
+        );
+      }
       return response;
     } catch (error) {
       console.log("Erro ao Actualizar o usuário ", error);
@@ -90,7 +97,7 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         signed: !!user,
-        user: user,
+        user,
         isActive,
         signIn,
         signOut,

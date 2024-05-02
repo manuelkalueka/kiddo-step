@@ -124,6 +124,7 @@ function Signup({ navigation }) {
                   placeholder="Email"
                   style={[styles.input]}
                   keyboardType="email-address"
+                  autoCapitalize="none"
                   onChangeText={onChange}
                   onBlur={onBlur}
                   value={value}
