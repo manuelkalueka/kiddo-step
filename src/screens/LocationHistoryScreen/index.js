@@ -8,13 +8,11 @@ import {
   RefreshControl,
   Modal,
   Pressable,
+  Platform,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import defaultStyle from "../../defaultStyle";
-import BottomSheet, {
-  BottomSheetScrollView,
-  BottomSheetView,
-} from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { reverseGeocodeAsync } from "expo-location";
 import { gestureHandlerRootHOC } from "react-native-gesture-handler";
 import { relativeTime, formatDate, getHour } from "../../../utils/format-date";
@@ -30,6 +28,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useKiddo } from "../../contexts/kiddo";
 import LoadingComponent from "../../components/LoadingComponent";
 import MapView, { Marker } from "react-native-maps";
+import { StatusBar } from "expo-status-bar";
 
 const LocationHistoryScreen = () => {
   const { kiddo } = useKiddo();
@@ -42,7 +41,6 @@ const LocationHistoryScreen = () => {
 
   const bottomSheetRef = useRef(null);
   const staticMapRef = useRef();
-  const staticSheetRef = useRef();
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -134,6 +132,7 @@ const LocationHistoryScreen = () => {
         </View>
       ) : (
         <>
+          {Platform.OS === "ios" && <StatusBar style="light" />}
           <FlatList
             data={locationHistory}
             showsVerticalScrollIndicator={false}
@@ -293,7 +292,9 @@ const LocationHistoryScreen = () => {
                   title={kiddo?.surname}
                   description={`Localização de ${formatDate(
                     locationItem?.timestamp
-                  )} em ${coordenadas.latitude} - ${coordenadas.longitude}`}
+                  )} em ${coordenadas.latitude?.toFixed(
+                    4
+                  )} - ${coordenadas.longitude?.toFixed(4)}`}
                 />
               </MapView>
             </View>
