@@ -28,7 +28,6 @@ import styles from "./styles";
 import defaultStyle from "../../defaultStyle";
 import { StatusBar } from "expo-status-bar";
 import { handleDisableKeyboard } from "../../../utils/dismiss-keyboard";
-import PickerModal from "../../components/PickerModal";
 import { useKiddo } from "../../contexts/kiddo";
 import ActionButtom from "../../components/ActionButtom";
 
@@ -93,7 +92,10 @@ const KiddoDetailsScreen = () => {
     navigation?.goBack();
   }
 
-  const kiddoAvatar = require("./../../../assets/img/boy-avatar.png");
+  const kiddoAvatar =
+    kiddo?.gendre === "Masculino"
+      ? require("../../../assets/img/boy-avatar.png")
+      : require("../../../assets/img/girl-avatar.png");
 
   return (
     <View style={styles.container}>

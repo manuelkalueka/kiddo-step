@@ -47,18 +47,20 @@ export const AuthProvider = ({ children }) => {
     const { email, password } = data;
     try {
       const response = await signInService(email, password);
-
+      console.log("Fazendo o Login");
       await AsyncStorage.setItem(
         "@KiddoStepAuth",
         JSON.stringify(response.user)
       );
       await AsyncStorage.setItem("@KiddoStepToken", response.token);
-      ApiMananger.defaults.headers["x-access-token"] = `${response.token}`;
+      console.log("Guardei os Tokens");
+
 
       if (response.data.user.isActive === true) {
         console.log("Cai aqui");
         setIsActive(true);
       }
+      ApiMananger.defaults.headers["x-access-token"] = `${response.token}`;
     } catch (error) {
       console.log("ERRO NO CONTEXTO:", error);
     }
@@ -96,7 +98,7 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         signed: !!user,
-        user,
+        user: user,
         isActive,
         signIn,
         signOut,

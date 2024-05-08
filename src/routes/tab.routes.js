@@ -75,6 +75,10 @@ export default function TabRoutes() {
 
   const pickerAlertRef = useRef();
   const pickerGeofencigRef = useRef();
+  const avatar =
+    kiddo?.gendre === "Masculino"
+      ? require("./../../assets/img/boy-avatar.png")
+      : require("./../../assets/img/girl-avatar.png");
 
   const {
     control,
@@ -243,10 +247,7 @@ export default function TabRoutes() {
                 }}
               >
                 <View>
-                  <Image
-                    source={require("./../../assets/img/boy-avatar.png")}
-                    style={styles.kiddoImg}
-                  />
+                  <Image source={avatar} style={styles.kiddoImg} />
                 </View>
                 <Text style={styles.textSurname}>{kiddo?.surname}</Text>
               </TouchableOpacity>

@@ -85,6 +85,39 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   labelContent: { fontWeight: "bold" },
+  mapStatic: {
+    height: "95%",
+    width: "100%",
+    alignSelf: "baseline",
+  },
+  modalView: {
+    flex: 1,
+    justifyContent: "flex-end",
+    // shadowColor: "#000",
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 2,
+    // },
+    // shadowOpacity: 0.25,
+    // shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    width: 100,
+    padding: 10,
+    height: "auto",
+  },
+  buttonClose: {
+    backgroundColor: "transparent",
+    justifyContent: "center",
+    alignItems: "flex-end",
+  },
+  textStyle: {
+    textAlign: "center",
+    color: defaultStyle.colors.mainColorBlue,
+    fontWeight: "bold",
+    fontSize: 18,
+  },
 });
 
 export default styles;

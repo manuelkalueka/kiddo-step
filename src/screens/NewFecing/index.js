@@ -27,7 +27,6 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-const kiddoAvatar = require("./../../../assets/img/boy-avatar.png");
 import { handleDisableKeyboard } from "../../../utils/dismiss-keyboard";
 import { getKiddoInfo } from "../../services/kiddo-service"; //Pegar a Criança na DB
 import { useAuth } from "../../contexts/auth";
@@ -51,6 +50,11 @@ export default function NewFecing() {
   const [radius, setRadius] = useState(100); // Valor padrão do raio da GeoFence
   const [loadingMap, setLoadingMap] = useState(true);
   const [mapType, setMapType] = useState("standard");
+
+  const kiddoAvatar =
+    kiddo?.gendre === "Masculino"
+      ? require("../../../assets/img/boy-avatar.png")
+      : require("../../../assets/img/girl-avatar.png");
 
   useEffect(() => {
     async function getKiddo() {

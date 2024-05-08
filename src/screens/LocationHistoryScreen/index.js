@@ -6,11 +6,15 @@ import {
   TouchableOpacity,
   Alert,
   RefreshControl,
+  Modal,
+  Pressable,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import defaultStyle from "../../defaultStyle";
-import { useNavigation } from "@react-navigation/native";
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import BottomSheet, {
+  BottomSheetScrollView,
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
 import { reverseGeocodeAsync } from "expo-location";
 import { gestureHandlerRootHOC } from "react-native-gesture-handler";
 import { relativeTime, formatDate, getHour } from "../../../utils/format-date";
@@ -25,17 +29,20 @@ import { FontAwesome } from "@expo/vector-icons";
 
 import { useKiddo } from "../../contexts/kiddo";
 import LoadingComponent from "../../components/LoadingComponent";
+import MapView, { Marker } from "react-native-maps";
 
 const LocationHistoryScreen = () => {
-  const navigation = useNavigation();
-  const bottomSheetRef = useRef(null);
-
   const { kiddo } = useKiddo();
 
   const [locationHistory, setLocationHistory] = useState([]);
   const [locationItem, setLocationItem] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const bottomSheetRef = useRef(null);
+  const staticMapRef = useRef();
+  const staticSheetRef = useRef();
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -89,11 +96,8 @@ const LocationHistoryScreen = () => {
   }
 
   function closeBottomSheet() {
+    setModalVisible(true);
     bottomSheetRef.current?.close();
-    navigation.navigate("Mapa", {
-      coordenadas,
-    });
-    console.log("Vendo as Coordenas que vai para o MAPA, ", coordenadas);
   }
 
   async function getLocationItem(id) {
@@ -249,6 +253,51 @@ const LocationHistoryScreen = () => {
               />
             </BottomSheetScrollView>
           </BottomSheet>
+          <Modal
+            animationType="slide"
+            visible={modalVisible}
+            onRequestClose={() => {
+              setModalVisible(!modalVisible);
+            }}
+            presentationStyle="formSheet"
+          >
+            <View style={styles.modalView}>
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => setModalVisible(!modalVisible)}
+              >
+                <Text style={styles.textStyle}>Fechar</Text>
+              </Pressable>
+              <MapView
+                ref={staticMapRef}
+                style={styles.mapStatic}
+                initialRegion={{
+                  latitude: coordenadas.latitude,
+                  longitude: coordenadas.longitude,
+                  latitudeDelta: 0.0922,
+                  longitudeDelta: 0.0421,
+                  pitch: 45, // Inclinação da câmera em graus (0 é vista de cima)
+                  heading: 90, // Direção da câmera em graus em relação ao norte
+                }}
+                onMapReady={() => {
+                  // Centralize a câmera no marcador e ajuste o zoom para incluir o marcador na visualização
+                  staticMapRef.current?.fitToCoordinates([coordenadas], {
+                    edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
+                    animated: true,
+                  });
+                }}
+                mapType="hybrid"
+              >
+                <Marker
+                  coordinate={coordenadas}
+                  title={kiddo?.surname}
+                  description={`Localização de ${formatDate(
+                    locationItem?.timestamp
+                  )} em ${coordenadas.latitude} - ${coordenadas.longitude}`}
+                />
+              </MapView>
+            </View>
+          </Modal>
         </>
       )}
     </View>
