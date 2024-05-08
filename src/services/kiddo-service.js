@@ -1,4 +1,5 @@
 import ApiMananger from "./api";
+
 async function getKiddoInfo(user) {
   try {
     const { data } = await ApiMananger.get(`/kiddo/${user._id}`);
@@ -22,7 +23,7 @@ async function setKiddoInfo(kiddoData, user) {
     const response = await ApiMananger.post(`/kiddo`, {
       fullName,
       surname,
-      birthDate,
+      birthDate: new Date(birthDate.trim()),
       gendre,
       avatar,
       bloodType,

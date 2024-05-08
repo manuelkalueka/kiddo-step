@@ -6,7 +6,6 @@ import {
   signUpService,
   updateUserService,
 } from "./../services/auth-services.js";
-import KiddoRouter from "../routes/stack.config.kiddo.routes.js";
 
 const contextFormat = {
   signed: false,

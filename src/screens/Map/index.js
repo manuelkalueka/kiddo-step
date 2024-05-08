@@ -45,6 +45,17 @@ const Map = () => {
 
   const mapRef = useRef();
 
+  const focusOnMarker = () => {
+    if (mapRef.current) {
+      mapRef.current.animateToRegion({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
+      });
+    }
+  };
+
   async function requestLocationPermissions() {
     try {
       const { granted } = await requestForegroundPermissionsAsync();
@@ -178,6 +189,7 @@ const Map = () => {
                 setTrackingEnabled(!trackingEnabled);
                 //Voltar o foco no Marker do Mapa
                 Vibration.vibrate();
+                focusOnMarker();
               }}
             >
               <FontAwesome

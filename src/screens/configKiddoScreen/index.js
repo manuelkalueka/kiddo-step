@@ -7,6 +7,7 @@ import {
   View,
   Text,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -17,9 +18,7 @@ import styles from "./styles";
 import { Picker } from "@react-native-picker/picker";
 import ActionButtom from "../../components/ActionButtom";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { useKiddo } from "../../contexts/kiddo";
 import { formatDate } from "../../../utils/format-date";
-import { ActivityIndicator } from "react-native-paper";
 import { setKiddoInfo } from "../../services/kiddo-service";
 
 const Schema = yup.object({
@@ -31,7 +30,10 @@ const Schema = yup.object({
       return /\s/.test(value);
     }),
   surname: yup.string().required("Alcunha Obrigatória"),
-  birthDate: yup.date().required("Data de Nascimento Obrigatório"),
+  birthDate:
+    Platform.OS === "android"
+      ? yup.string().required("Data de Nascimento Obrigatório")
+      : yup.date().required("Data de Nascimento Obrigatório"),
   gendre: yup.string(),
   avatar: yup.string(),
   bloodType: yup.string(),
@@ -46,7 +48,6 @@ const Schema = yup.object({
 
 const ConfigKiddoScreen = () => {
   const { user, updateUser } = useAuth();
-  const { setKiddo } = useKiddo();
   const [loading, setLoading] = useState(false);
 
   const {
@@ -88,7 +89,6 @@ const ConfigKiddoScreen = () => {
         bloodType,
         alergics,
       };
-      console.log("Dados da criança: ", kiddoData);
       await updateUser(AuthData);
       await setKiddoInfo(kiddoData, user);
       setLoading(false);
@@ -178,7 +178,6 @@ const ConfigKiddoScreen = () => {
           <Text style={styles.mainLabel}>Dados da Criança</Text>
         </View>
         <Text style={styles.label}>Nome Completo</Text>
-
         <Controller
           name="fullName"
           control={control}
@@ -196,7 +195,6 @@ const ConfigKiddoScreen = () => {
           <Text style={styles.msgAlerta}>{errors.fullName?.message}</Text>
         )}
         <Text style={styles.label}>Alcunha</Text>
-
         <Controller
           name="surname"
           control={control}
@@ -211,7 +209,6 @@ const ConfigKiddoScreen = () => {
           )}
         />
         <Text style={styles.label}>Data de Nascimento</Text>
-
         <Controller
           name="birthDate"
           control={control}
@@ -240,8 +237,10 @@ const ConfigKiddoScreen = () => {
             )
           }
         />
+        {errors.birthDate && (
+          <Text style={styles.msgAlerta}>{errors.birthDate?.message}</Text>
+        )}
         <Text style={styles.label}>Género</Text>
-
         <Controller
           name="gendre"
           control={control}
@@ -262,7 +261,6 @@ const ConfigKiddoScreen = () => {
           )}
         />
         <Text style={styles.label}>Tipo Sanguíneo</Text>
-
         <Controller
           name="bloodType"
           control={control}
