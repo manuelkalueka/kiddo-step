@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, ScrollView, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  ScrollView,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import {
   FontAwesome,
   FontAwesome5,
@@ -18,7 +25,10 @@ export default function Profile({ navigation }) {
   function handleSignOut() {
     signOut();
   }
-  const parentAvatar = require("./../../../assets/img/avatar-parent-man.png");
+  const parentAvatar =
+    user?.relashionShip == "Mãe" || user?.relashionShip == "Mãe"
+      ? require("./../../../assets/img/avatar-parent-woman.png")
+      : require("./../../../assets/img/avatar-parent-man.png"); //Ainda não funciona
 
   return (
     <View style={styles.container}>
@@ -55,7 +65,10 @@ export default function Profile({ navigation }) {
             size={20}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => Alert.alert("Tela Futura...", "OK")}
+        >
           <View style={styles.itemDesc}>
             <View style={styles.itemIcon}>
               <Ionicons
@@ -114,7 +127,10 @@ export default function Profile({ navigation }) {
             size={20}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem}>
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => Alert.alert("Tela Futura...", "OK")}
+        >
           <View style={styles.itemDesc}>
             <View style={styles.itemIcon}>
               <Entypo

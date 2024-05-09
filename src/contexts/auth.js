@@ -6,6 +6,7 @@ import {
   signUpService,
   updateUserService,
 } from "./../services/auth-services.js";
+import { getInfo } from "../services/user-service.js";
 
 const contextFormat = {
   signed: false,
@@ -25,19 +26,28 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     async function loadStorageData() {
       //Criar dentro do useEffect (Como Gambiarra)
-      const storagedUser = await AsyncStorage.getItem("@KiddoStepAuth");
-      const storagedToken = await AsyncStorage.getItem("@KiddoStepToken");
+      try {
+        const storagedUser = await AsyncStorage.getItem("@KiddoStepAuth");
+        const storagedToken = await AsyncStorage.getItem("@KiddoStepToken");
 
-      if (storagedUser && storagedToken) {
-        setUser(JSON.parse(storagedUser));
-        ApiMananger.defaults.headers["x-access-token"] = `${storagedToken}`;
-        const myUser = JSON.parse(storagedUser);
-        console.log("Sou o estado desse User: ", myUser?.isActive);
-        if (myUser.isActive === true) {
-          setIsActive(true);
+        if (storagedUser && storagedToken) {
+          setUser(JSON.parse(storagedUser));
+          ApiMananger.defaults.headers["x-access-token"] = `${storagedToken}`;
+          const myUser = JSON.parse(storagedUser);
+          const newUser = await getInfo(myUser);
+          if (newUser.isActive === true) {
+            setIsActive(true);
+          }
+          // await AsyncStorage.removeItem("@KiddoStepAuth");
+          await AsyncStorage.setItem("@KiddoStepAuth", JSON.stringify(newUser));
         }
+        setLoading(false);
+      } catch (error) {
+        console.log(
+          "Erro ao carregar informações do Usuário no CONTEXT ",
+          error
+        );
       }
-      setLoading(false);
     }
 
     loadStorageData();
@@ -47,17 +57,13 @@ export const AuthProvider = ({ children }) => {
     const { email, password } = data;
     try {
       const response = await signInService(email, password);
-      console.log("Fazendo o Login");
       await AsyncStorage.setItem(
         "@KiddoStepAuth",
         JSON.stringify(response.user)
       );
       await AsyncStorage.setItem("@KiddoStepToken", response.token);
-      console.log("Guardei os Tokens");
 
-
-      if (response.data.user.isActive === true) {
-        console.log("Cai aqui");
+      if (response.user.isActive === true) {
         setIsActive(true);
       }
       ApiMananger.defaults.headers["x-access-token"] = `${response.token}`;

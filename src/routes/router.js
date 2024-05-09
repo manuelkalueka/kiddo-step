@@ -13,18 +13,13 @@ export function Router() {
 
   if (loading) {
     return <LoadingComponent />;
-  }
-  if (signed) {
-    console.log("Usuario Activo: ", isActive);
-
-    return isActive ? (
+  } else {
+    return signed ? (
       <KiddoProvider>
-        <TabRoutes />
+        {isActive ? <TabRoutes /> : <KiddoRouter />}
       </KiddoProvider>
     ) : (
-      <KiddoRouter />
-    ); // Tela para ativar a conta
-  } else {
-    return <AuthRoutes />;
+      <AuthRoutes />
+    );
   }
 }

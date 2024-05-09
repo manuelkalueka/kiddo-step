@@ -8,6 +8,7 @@ import SettingScreen from "../screens/SettingScreen";
 import AccountScreen from "./../screens/AccountScreen";
 import ContactScreen from "../screens/ContactScreen";
 import TermsAndPrivacyScreen from "../screens/TermsAndPrivacyScreen";
+import ContactUsScreen from "../screens/ContactUsScreen";
 
 const SettingStack = () => {
   return(
@@ -16,6 +17,7 @@ const SettingStack = () => {
   }}>
     <Screen name="Setting" component={SettingScreen} />
     <Screen name="TermsAndPrivacy" component={TermsAndPrivacyScreen} />
+    <Screen name="ContactUs" component={ContactUsScreen} />
   </Navigator>)
 };
 

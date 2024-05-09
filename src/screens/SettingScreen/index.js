@@ -1,5 +1,5 @@
 import React from "react";
-import { View, ScrollView, Text, TouchableOpacity } from "react-native";
+import { View, ScrollView, Text, TouchableOpacity, Alert } from "react-native";
 import { useAuth } from "../../contexts/auth";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -24,9 +24,7 @@ const SettingScreen = ({ navigation }) => {
         <View style={styles.wrapper}>
           <TouchableOpacity
             style={styles.menuItem}
-            onPress={() =>
-              navigation.navigate("Profile", { screen: "Account" })
-            }
+            onPress={() => Alert.alert("Função Futura...", "OK")}
           >
             <View style={styles.itemDesc}>
               <Text style={styles.descText}>Idioma</Text>
@@ -40,9 +38,7 @@ const SettingScreen = ({ navigation }) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.menuItem}
-            onPress={() =>
-              navigation.navigate("Profile", { screen: "Account" })
-            }
+            onPress={() => navigation.navigate("ContactUs")}
           >
             <View style={styles.itemDesc}>
               <Text style={styles.descText}>Contacte-nos</Text>
@@ -60,9 +56,7 @@ const SettingScreen = ({ navigation }) => {
         <View style={styles.wrapper}>
           <TouchableOpacity
             style={styles.menuItem}
-            onPress={() =>
-              navigation.navigate("Profile", { screen: "Account" })
-            }
+            onPress={() => Alert.alert("Função Futura...", "OK")}
           >
             <View style={styles.itemDesc}>
               <Text style={styles.descText}>Biométrica</Text>
