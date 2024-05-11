@@ -106,8 +106,10 @@ export default function TabRoutes() {
 
   async function getGeoFence() {
     try {
-      const fence = await getGeoFencings(kiddo);
-      setGeoFences(fence);
+      if (kiddo) {
+        const fence = await getGeoFencings(kiddo);
+        setGeoFences(fence);
+      }
     } catch (error) {
       console.log("Erro ao buscar cercas", error);
     }

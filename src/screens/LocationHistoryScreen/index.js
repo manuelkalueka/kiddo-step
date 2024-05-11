@@ -9,6 +9,7 @@ import {
   Modal,
   Pressable,
   Platform,
+  ScrollView,
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import defaultStyle from "../../defaultStyle";
@@ -121,15 +122,24 @@ const LocationHistoryScreen = () => {
       {loading ? (
         <LoadingComponent />
       ) : locationHistory === null || locationHistory.length === 0 ? (
-        <View style={styles.containerEmpty}>
-          <FontAwesome
-            name="calendar-times-o"
-            color={defaultStyle.colors.mainColorBlue}
-            size={40}
-          />
+        <ScrollView
+          style={{ flex: 1 }}
+          contentContainerStyle={styles.containerEmpty}
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          <View style={styles.containerEmpty}>
+            <FontAwesome
+              name="calendar-times-o"
+              color={defaultStyle.colors.mainColorBlue}
+              size={40}
+            />
 
-          <Text style={styles.textEmpty}>Sem Histórico Disponível</Text>
-        </View>
+            <Text style={styles.textEmpty}>Sem Histórico Disponível</Text>
+          </View>
+        </ScrollView>
       ) : (
         <>
           {Platform.OS === "ios" && <StatusBar style="light" />}

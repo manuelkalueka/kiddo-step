@@ -3,7 +3,7 @@ import { useAuth } from "./auth"; // Supondo que você tenha um contexto de aute
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getKiddoInfo, setKiddoInfo } from "../services/kiddo-service";
 const contextFormat = {
-  setted: false,
+  setted: true,
   kiddo: {},
   getKiddo: () => {},
   // setKiddo: () => {},
@@ -13,6 +13,7 @@ const KiddoContext = createContext(contextFormat);
 
 export const KiddoProvider = ({ children }) => {
   const [kiddo, _setKiddo] = useState(null);
+  const [hasKiddo, setHasKiddo] = useState(false);
   const [kiddoAge, setKiddoAge] = useState(null);
   const { user } = useAuth(); // Obtendo o usuário do contexto de autenticação
 
@@ -35,6 +36,9 @@ export const KiddoProvider = ({ children }) => {
         const data = await getKiddoInfo(user);
         _setKiddo(data);
         await AsyncStorage.setItem("@kiddo", JSON.stringify(data)); // Salvar no AsyncStorage
+        if (data) {
+          setHasKiddo(true);
+        }
       } catch (error) {
         console.error("Erro ao obter informações do kiddo:", error);
       }
@@ -47,6 +51,9 @@ export const KiddoProvider = ({ children }) => {
     try {
       const response = await setKiddoInfo(data, user);
       _setKiddo(response.data);
+      if (response.data) {
+        setHasKiddo(true);
+      }
       return response;
     } catch (error) {
       console.log("Erro ao guardar criança ", error);
@@ -55,7 +62,7 @@ export const KiddoProvider = ({ children }) => {
 
   return (
     <KiddoContext.Provider
-      value={{ setted: !!kiddo, kiddo, setKiddo, kiddoAge }}
+      value={{ setted: hasKiddo, kiddo, setKiddo, kiddoAge }}
     >
       {children}
     </KiddoContext.Provider>

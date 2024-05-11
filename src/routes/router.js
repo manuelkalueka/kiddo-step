@@ -10,6 +10,7 @@ import KiddoRouter from "./stack.config.kiddo.routes";
 
 export function Router() {
   const { signed, loading, isActive } = useAuth();
+  console.log("Usuário Logado: ", signed);
 
   if (loading) {
     return <LoadingComponent />;

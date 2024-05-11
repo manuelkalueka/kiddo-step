@@ -9,7 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   View,
-  ScrollView
+  ScrollView,
 } from "react-native";
 import { useAuth } from "../../contexts/auth";
 
@@ -36,9 +36,8 @@ const Schema = yup.object({
 });
 
 export default function Login({ navigation }) {
-  const [showpassword, setShowPassword] = useState(true);
-
   const { signIn } = useAuth();
+  const [showpassword, setShowPassword] = useState(true);
 
   const {
     control,
@@ -55,100 +54,107 @@ export default function Login({ navigation }) {
   return (
     <TouchableWithoutFeedback onPress={() => handleDisableKeyboard(Keyboard)}>
       <View style={styles.containerLogin}>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-        >
-        <KeyboardAvoidingView
-          enabled
-          behavior={Platform.OS == "ios" ? "padding" : null}
-        >
-          <View style={styles.headerLogin}>
-            <Image
-              style={styles.imageLogin}
-              source={require("../../../assets/img/login-image.jpg")}
-              resizeMode="cover"
-            />
-          </View>
-
-          <View style={styles.form}>
-            <View style={styles.containerInput}>
-              <FontAwesome5
-                size={25}
-                name="envelope"
-                color={defaultStyle.colors.mainColorBlue}
-              />
-
-              <Controller
-                name="email"
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    keyboardType="email-address"
-                    style={styles.textInput}
-                    placeholder="Email"
-                    placeholderTextColor={"#0009"}
-                    autoCapitalize="none"
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    value={value}
-                  />
-                )}
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <KeyboardAvoidingView
+            enabled
+            behavior={Platform.OS == "ios" ? "padding" : null}
+          >
+            <View style={styles.headerLogin}>
+              <Image
+                style={styles.imageLogin}
+                source={require("../../../assets/img/login-image.jpg")}
+                resizeMode="cover"
               />
             </View>
-            {errors.email && (
-              <Text style={styles.msgAlerta}>{errors.email?.message}</Text>
-            )}
-            <View style={styles.containerInput}>
-              <FontAwesome5
-                size={25}
-                name="lock"
-                color={defaultStyle.colors.mainColorBlue}
-              />
 
-              <Controller
-                name="password"
-                control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <TextInput
-                    style={styles.textInput}
-                    placeholder="Senha"
-                    placeholderTextColor={"#0009"}
-                    secureTextEntry={showpassword}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    value={value}
-                  />
-                )}
-              />
-            </View>
-            {errors.password && (
-              <Text style={styles.msgAlerta}>{errors.password?.message}</Text>
-            )}
+            <View style={styles.form}>
+              <View style={styles.containerInput}>
+                <FontAwesome5
+                  size={25}
+                  name="envelope"
+                  color={defaultStyle.colors.mainColorBlue}
+                />
 
-            <TouchableOpacity
-              style={styles.buttonSigIn}
-              onPress={handleSubmit(sendForm)}
-            >
-              <Text style={styles.TextSigIn}>Entrar</Text>
-            </TouchableOpacity>
+                <Controller
+                  name="email"
+                  control={control}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextInput
+                      keyboardType="email-address"
+                      style={styles.textInput}
+                      placeholder="Email"
+                      placeholderTextColor={"#0009"}
+                      autoCapitalize="none"
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                    />
+                  )}
+                />
+              </View>
+              {errors.email && (
+                <Text style={styles.msgAlerta}>{errors.email?.message}</Text>
+              )}
+              <View style={styles.containerInput}>
+                <FontAwesome5
+                  size={25}
+                  name="lock"
+                  color={defaultStyle.colors.mainColorBlue}
+                />
 
-            <TouchableOpacity
-              style={styles.containerForgotPassword}
-              onPress={() => navigation.navigate("ForgotPassword")}
-            >
-              <Text style={styles.textForgotPassword}>
-                Esqueci a minha senha
-              </Text>
-            </TouchableOpacity>
+                <Controller
+                  name="password"
+                  control={control}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <TextInput
+                      style={styles.textInput}
+                      placeholder="Senha"
+                      placeholderTextColor={"#0009"}
+                      secureTextEntry={showpassword}
+                      onChangeText={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                    />
+                  )}
+                />
+                {/* <TouchableOpacity>
+                <FontAwesome5
+                  size={25}
+                  name="eye"
+                  color={defaultStyle.colors.mainColorBlue}
+                />
+                </TouchableOpacity> */}
+              </View>
+              {errors.password && (
+                <Text style={styles.msgAlerta}>{errors.password?.message}</Text>
+              )}
 
-            <View style={styles.containerNewAccount}>
-              <Text style={styles.textDoYouNeed}>Deseja criar uma conta?</Text>
-              <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
-                <Text style={styles.textCreateAccount}> Criar</Text>
+              <TouchableOpacity
+                style={styles.buttonSigIn}
+                onPress={handleSubmit(sendForm)}
+              >
+                <Text style={styles.TextSigIn}>Entrar</Text>
               </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.containerForgotPassword}
+                onPress={() => navigation.navigate("ForgotPassword")}
+              >
+                <Text style={styles.textForgotPassword}>
+                  Esqueci a minha senha
+                </Text>
+              </TouchableOpacity>
+
+              <View style={styles.containerNewAccount}>
+                <Text style={styles.textDoYouNeed}>
+                  Deseja criar uma conta?
+                </Text>
+                <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
+                  <Text style={styles.textCreateAccount}> Criar</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        </KeyboardAvoidingView>
+          </KeyboardAvoidingView>
         </ScrollView>
       </View>
     </TouchableWithoutFeedback>

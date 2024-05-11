@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     async function loadStorageData() {
       //Criar dentro do useEffect (Como Gambiarra)
-      try { 
+      try {
         const storagedUser = await AsyncStorage.getItem("@KiddoStepAuth");
         const storagedToken = await AsyncStorage.getItem("@KiddoStepToken");
 
@@ -39,7 +39,6 @@ export const AuthProvider = ({ children }) => {
           if (newUser.isActive === true) {
             setIsActive(true);
           }
-          // await AsyncStorage.removeItem("@KiddoStepAuth");
           await AsyncStorage.setItem("@KiddoStepAuth", JSON.stringify(newUser));
         }
         setLoading(false);
