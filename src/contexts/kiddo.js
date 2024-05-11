@@ -6,7 +6,7 @@ const contextFormat = {
   setted: false,
   kiddo: {},
   getKiddo: () => {},
-  setKiddo: () => {},
+  // setKiddo: () => {},
   kiddoAge: 0,
 };
 const KiddoContext = createContext(contextFormat);
@@ -43,10 +43,10 @@ export const KiddoProvider = ({ children }) => {
     getKiddo();
   }, [user]);
 
-  async function setKiddo(data) {
+  async function setKiddo(data, user) {
     try {
-      console.log("Não estou caindo aqui");
       const response = await setKiddoInfo(data, user);
+      _setKiddo(response.data);
       return response;
     } catch (error) {
       console.log("Erro ao guardar criança ", error);

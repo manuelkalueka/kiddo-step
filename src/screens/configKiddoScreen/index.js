@@ -13,13 +13,13 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useAuth } from "../../contexts/auth";
+import { useKiddo } from "../../contexts/kiddo";
 
 import styles from "./styles";
 import { Picker } from "@react-native-picker/picker";
 import ActionButtom from "../../components/ActionButtom";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { formatDate } from "../../../utils/format-date";
-import { setKiddoInfo } from "../../services/kiddo-service";
 
 const Schema = yup.object({
   fullName: yup
@@ -48,6 +48,7 @@ const Schema = yup.object({
 
 const ConfigKiddoScreen = () => {
   const { user, updateUser } = useAuth();
+  const { setKiddo } = useKiddo();
   const [loading, setLoading] = useState(false);
 
   const {
@@ -90,7 +91,7 @@ const ConfigKiddoScreen = () => {
         alergics,
       };
       await updateUser(AuthData);
-      await setKiddoInfo(kiddoData, user);
+      await setKiddo(kiddoData, user);
       setLoading(false);
     } catch (error) {
       console.log("Erro ao concluir a configuração da conta ", error);

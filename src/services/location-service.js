@@ -10,6 +10,16 @@ async function getLocationHistory(kiddo) {
   }
 }
 
+async function getLocationsForAi() {
+  try {
+    const { data } = await ApiMananger.get(`/locations`);
+    const locations = data;
+    return locations;
+  } catch (error) {
+    console.log("Erro ao buscar localização para treinar.", error);
+  }
+}
+
 async function saveLocation(latitude, longitude, kiddo, timestamp) {
   try {
     const { data } = await ApiMananger.post(`/locations`, {
@@ -49,4 +59,5 @@ export {
   getLastLocation,
   getLocationHistory,
   saveLocation,
+  getLocationsForAi
 };

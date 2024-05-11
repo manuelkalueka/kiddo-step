@@ -14,6 +14,7 @@ const contextFormat = {
   isActive: false,
   signIn: () => {},
   signOut: () => {},
+  signOut: () => {},
 };
 
 const AuthContext = createContext(contextFormat);
@@ -26,7 +27,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     async function loadStorageData() {
       //Criar dentro do useEffect (Como Gambiarra)
-      try {
+      try { 
         const storagedUser = await AsyncStorage.getItem("@KiddoStepAuth");
         const storagedToken = await AsyncStorage.getItem("@KiddoStepToken");
 

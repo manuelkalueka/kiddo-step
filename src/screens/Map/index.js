@@ -102,9 +102,10 @@ const Map = () => {
       }
     }
     startLocationWatch();
-    return () => {
-      stopLocationUpdatesAsync("BACK_TRACKING");
-    };
+    // return () => {
+    //Parar rastreio, depende da localização background
+    //   stopLocationUpdatesAsync("BACK_TRACKING");
+    // };
   }, [trackingEnabled]); // depende do tracking
 
   async function handleLocationUpdate(locationAsync) {

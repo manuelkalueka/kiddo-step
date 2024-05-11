@@ -1,3 +1,4 @@
+import { Platform } from "react-native";
 import ApiMananger from "./api";
 
 async function getKiddoInfo(user) {
@@ -23,7 +24,8 @@ async function setKiddoInfo(kiddoData, user) {
     const response = await ApiMananger.post(`/kiddo`, {
       fullName,
       surname,
-      birthDate: new Date(birthDate.trim()),
+      birthDate:
+        Platform.OS === "android" ? new Date(birthDate.trim()) : birthDate,
       gendre,
       avatar,
       bloodType,
