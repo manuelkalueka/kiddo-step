@@ -21,33 +21,26 @@ const AuthContext = createContext(contextFormat);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [isActive, setIsActive] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
     async function loadStorageData() {
       //Criar dentro do useEffect (Como Gambiarra)
-      try {
-        const storagedUser = await AsyncStorage.getItem("@KiddoStepAuth");
-        const storagedToken = await AsyncStorage.getItem("@KiddoStepToken");
+      const storagedUser = await AsyncStorage.getItem("@KiddoStepAuth");
+      const storagedToken = await AsyncStorage.getItem("@KiddoStepToken");
 
-        if (storagedUser && storagedToken) {
-          setUser(JSON.parse(storagedUser));
-          ApiMananger.defaults.headers["x-access-token"] = `${storagedToken}`;
-          const myUser = JSON.parse(storagedUser);
-          const newUser = await getInfo(myUser);
-          if (newUser.isActive === true) {
-            setIsActive(true);
-          }
-          await AsyncStorage.setItem("@KiddoStepAuth", JSON.stringify(newUser));
+      if (storagedUser && storagedToken) {
+        setUser(JSON.parse(storagedUser));
+        ApiMananger.defaults.headers["x-access-token"] = `${storagedToken}`;
+        const myUser = JSON.parse(storagedUser);
+        const newUser = await getInfo(myUser);
+        if (newUser.isActive === true) {
+          setIsActive(true);
         }
-        setLoading(false);
-      } catch (error) {
-        console.log(
-          "Erro ao carregar informações do Usuário no CONTEXT ",
-          error
-        );
+        await AsyncStorage.setItem("@KiddoStepAuth", JSON.stringify(newUser)); //Guardar no Novo usuário pelo novo estado da conta
       }
+      setLoading(false);
     }
 
     loadStorageData();
@@ -66,6 +59,7 @@ export const AuthProvider = ({ children }) => {
       if (response.user.isActive === true) {
         setIsActive(true);
       }
+      setUser(response.user);
       ApiMananger.defaults.headers["x-access-token"] = `${response.token}`;
     } catch (error) {
       console.log("ERRO NO CONTEXTO:", error);
