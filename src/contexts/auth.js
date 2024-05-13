@@ -58,6 +58,8 @@ export const AuthProvider = ({ children }) => {
 
       if (response.user.isActive === true) {
         setIsActive(true);
+      } else {
+        setIsActive(false);
       }
       setUser(response.user);
       ApiMananger.defaults.headers["x-access-token"] = `${response.token}`;

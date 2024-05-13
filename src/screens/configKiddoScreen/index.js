@@ -8,6 +8,7 @@ import {
   Text,
   Alert,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -20,6 +21,7 @@ import { Picker } from "@react-native-picker/picker";
 import ActionButtom from "../../components/ActionButtom";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { formatDate } from "../../../utils/format-date";
+import { useNavigation } from "@react-navigation/native";
 
 const Schema = yup.object({
   fullName: yup
@@ -47,7 +49,7 @@ const Schema = yup.object({
 });
 
 const ConfigKiddoScreen = () => {
-  const { user, updateUser } = useAuth();
+  const { user, updateUser, signOut } = useAuth();
   const { setKiddo } = useKiddo();
   const [loading, setLoading] = useState(false);
 
@@ -100,6 +102,19 @@ const ConfigKiddoScreen = () => {
 
   const pickerRef = useRef();
   const pickerGenRef = useRef();
+  const navigation = useNavigation();
+
+  // navigation.setOptions({
+  //   HeaderRight: () => (
+  //     <TouchableOpacity
+  //       onPress={() => {
+  //         signOut();
+  //       }}
+  //     >
+  //       <Text>Terminar Sessão</Text>
+  //     </TouchableOpacity>
+  //   ),
+  // });
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
