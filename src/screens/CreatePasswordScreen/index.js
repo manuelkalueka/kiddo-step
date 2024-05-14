@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -12,7 +12,7 @@ import {
 import { useAuth } from "../../contexts/auth";
 
 import { handleDisableKeyboard } from "../../../utils/dismiss-keyboard";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5, Feather } from "@expo/vector-icons";
 import defaultStyle from "../../defaultStyle";
 
 import styles from "./styles";
@@ -56,6 +56,7 @@ const CreatePasswordScreen = ({ route, navigation }) => {
   };
 
   let { signUp } = useAuth();
+  const [showpassword, setShowPassword] = useState(false);
 
   return (
     <KeyboardAvoidingView
@@ -83,13 +84,21 @@ const CreatePasswordScreen = ({ route, navigation }) => {
               <TextInput
                 placeholder="Nova Senha"
                 style={styles.input}
-                secureTextEntry={true}
+                keyboardType="visible-password"
+                secureTextEntry={showpassword}
                 onChangeText={onChange}
                 onBlur={onBlur}
                 value={value}
               />
             )}
           />
+          <TouchableOpacity onPress={() => setShowPassword(!showpassword)}>
+            <Feather
+              size={25}
+              name={showpassword ? "eye" : "eye-off"}
+              color={defaultStyle.colors.mainColorBlue}
+            />
+          </TouchableOpacity>
         </View>
         {errors.password && (
           <Text style={styles.msgAlerta}>{errors.password?.message}</Text>
@@ -99,7 +108,7 @@ const CreatePasswordScreen = ({ route, navigation }) => {
             style={styles.inputIcon}
             name="lock"
             size={25}
-            color={defaultStyle.colors.grayAccent1}
+            color={defaultStyle.colors.mainColorBlue}
           />
           <Controller
             name="confirmPassword"
@@ -108,13 +117,21 @@ const CreatePasswordScreen = ({ route, navigation }) => {
               <TextInput
                 placeholder="Confirmar Senha"
                 style={styles.input}
-                secureTextEntry={true}
+                keyboardType="visible-password"
+                secureTextEntry={showpassword}
                 onChangeText={onChange}
                 onBlur={onBlur}
                 value={value}
               />
             )}
           />
+          <TouchableOpacity onPress={() => setShowPassword(!showpassword)}>
+            <Feather
+              size={25}
+              name={showpassword ? "eye" : "eye-off"}
+              color={defaultStyle.colors.mainColorBlue}
+            />
+          </TouchableOpacity>
         </View>
         {errors.confirmPassword && (
           <Text style={styles.msgAlerta}>

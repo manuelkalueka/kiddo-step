@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     borderRadius: defaultStyle.borderRadio.borderRadioInput,
     borderWidth: 1,
     marginVertical: 10,
-    paddingLeft: 10,
+    paddingHorizontal: 10,
   },
 
   input: {
@@ -69,9 +69,9 @@ const styles = StyleSheet.create({
   msgAlerta: {
     color: defaultStyle.colors.danger,
     fontSize: defaultStyle.sizes.bodyText,
-    alignSelf:'flex-start',
-    marginLeft:'2.5%'
-  }
+    alignSelf: "flex-start",
+    marginLeft: "2.5%",
+  },
 });
 
 export default styles;

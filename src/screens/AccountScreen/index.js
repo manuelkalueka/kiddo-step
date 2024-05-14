@@ -159,6 +159,31 @@ const AccountScreen = ({ navigation }) => {
               )}
             />
           </View>
+          <Text style={styles.label}>Número de Identidade</Text>
+
+          <View style={[styles.inputContainer, styles.inputDefault]}>
+            <FontAwesome5
+              style={styles.inputIcon}
+              name="users"
+              size={20}
+              color={defaultStyle.colors.mainColorBlue}
+            />
+            <Controller
+              name="identifyNumber"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  placeholder="Número de Identidade"
+                  style={[styles.input]}
+                  keyboardType="name-phone-pad"
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  defaultValue={user?.identifyNumber}
+                  value={value}
+                />
+              )}
+            />
+          </View>
           <View>
             <Text style={styles.sectionTitle}>Alterar Senha</Text>
             <View style={[styles.inputContainer, styles.inputDefault]}>
@@ -174,6 +199,7 @@ const AccountScreen = ({ navigation }) => {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     placeholder="Nova Senha"
+                    keyboardType="visible-password"
                     style={styles.input}
                     secureTextEntry={true}
                     onChangeText={onChange}
@@ -191,7 +217,7 @@ const AccountScreen = ({ navigation }) => {
                 style={styles.inputIcon}
                 name="lock"
                 size={25}
-                color={defaultStyle.colors.grayAccent1}
+                color={defaultStyle.colors.mainColorBlue}
               />
               <Controller
                 name="confirmPassword"
@@ -200,6 +226,7 @@ const AccountScreen = ({ navigation }) => {
                   <TextInput
                     placeholder="Confirmar Senha"
                     style={styles.input}
+                    keyboardType="visible-password"
                     secureTextEntry={true}
                     onChangeText={onChange}
                     onBlur={onBlur}

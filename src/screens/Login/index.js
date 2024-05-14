@@ -19,7 +19,7 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
-import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5, Feather } from "@expo/vector-icons";
 
 import { styles } from "./style";
 import defaultStyle from "../../defaultStyle";
@@ -110,6 +110,7 @@ export default function Login({ navigation }) {
                       style={styles.textInput}
                       placeholder="Senha"
                       placeholderTextColor={"#0009"}
+                      keyboardType="visible-password"
                       secureTextEntry={showpassword}
                       onChangeText={onChange}
                       onBlur={onBlur}
@@ -117,13 +118,15 @@ export default function Login({ navigation }) {
                     />
                   )}
                 />
-                {/* <TouchableOpacity>
-                <FontAwesome5
-                  size={25}
-                  name="eye"
-                  color={defaultStyle.colors.mainColorBlue}
-                />
-                </TouchableOpacity> */}
+                <TouchableOpacity
+                  onPress={() => setShowPassword(!showpassword)}
+                >
+                  <Feather
+                    size={25}
+                    name={showpassword ? "eye" : "eye-off"}
+                    color={defaultStyle.colors.mainColorBlue}
+                  />
+                </TouchableOpacity>
               </View>
               {errors.password && (
                 <Text style={styles.msgAlerta}>{errors.password?.message}</Text>
