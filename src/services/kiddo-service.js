@@ -41,10 +41,11 @@ async function setKiddoInfo(kiddoData, user) {
 
 async function editKiddoInfo(id, kiddoData) {
   try {
-    const { fullName, gendre, bloodType, alergics, surname } = kiddoData;
+    const { fullName, gendre, bloodType, alergics, surname,birthDate } = kiddoData;
     const { data } = await ApiMananger.put(`/kiddo/${id}`, {
       fullName,
       surname,
+      birthDate,
       gendre,
       bloodType,
       alergics,

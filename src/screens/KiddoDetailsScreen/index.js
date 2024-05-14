@@ -31,6 +31,7 @@ import { StatusBar } from "expo-status-bar";
 import { handleDisableKeyboard } from "../../../utils/dismiss-keyboard";
 import { useKiddo } from "../../contexts/kiddo";
 import ActionButtom from "../../components/ActionButtom";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const Schema = yup.object({
   fullName: yup
@@ -41,7 +42,7 @@ const Schema = yup.object({
       return /\s/.test(value);
     }),
   surname: yup.string(),
-  // birthDate: yup.date().required("Data de Nascimento Obrigatório"),
+  birthDate: Platform.OS === "android" ? yup.string() : yup.date(),
   gendre: yup.string(),
   avatar: yup.string(),
   bloodType: yup.string(),
@@ -56,7 +57,14 @@ const KiddoDetailsScreen = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    defaultValues: { gendre: kiddo?.gendre, fullName: kiddo?.fullName },
+    defaultValues: {
+      gendre: kiddo?.gendre,
+      fullName: kiddo?.fullName,
+      birthDate:
+        Platform.OS === "ios"
+          ? new Date(kiddo?.birthDate)
+          : new Date(kiddo?.birthDate).toDateString(),
+    },
     resolver: yupResolver(Schema),
   });
 
@@ -242,14 +250,38 @@ const KiddoDetailsScreen = () => {
           </View>
           <View>
             <Text style={styles.labels}>Data de Nascimento</Text>
-            <TextInput
-              defaultValue={formatDate(kiddo?.birthDate)}
-              style={[
-                styles.input,
-                { borderColor: defaultStyle.colors.grayAccent1 },
-              ]}
-              editable={false}
+            <Controller
+              name="birthDate"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) =>
+                Platform.OS === "ios" ? (
+                  <DateTimePicker
+                    value={value || new Date(kiddo?.birthDate)}
+                    mode="date"
+                    display="default"
+                    onChange={(event, selectedDate) => {
+                      const currentDate = selectedDate || value;
+                      onChange(currentDate);
+                    }}
+                    style={styles.input}
+                  />
+                ) : (
+                  <TextInput
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    defaultValue={`${formatDate(kiddo?.birthDate)}`}
+                    value={value}
+                    placeholder={`Data de nascimento Ex.: ${formatDate(
+                      new Date()
+                    )}`}
+                    style={styles.input}
+                  />
+                )
+              }
             />
+            {errors.birthDate && (
+              <Text style={styles.msgAlerta}>{errors.birthDate?.message}</Text>
+            )}
           </View>
           <View>
             <Text style={styles.labels}>Género</Text>
