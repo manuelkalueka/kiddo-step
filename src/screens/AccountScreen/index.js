@@ -164,7 +164,7 @@ const AccountScreen = ({ navigation }) => {
           <View style={[styles.inputContainer, styles.inputDefault]}>
             <FontAwesome5
               style={styles.inputIcon}
-              name="users"
+              name="id-card"
               size={20}
               color={defaultStyle.colors.mainColorBlue}
             />

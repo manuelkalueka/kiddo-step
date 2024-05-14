@@ -9,6 +9,7 @@ import {
   Keyboard,
   ScrollView,
   Platform,
+  Alert,
 } from "react-native";
 import { useBatteryLevel } from "expo-battery";
 import * as Network from "expo-network";
@@ -34,13 +35,13 @@ import ActionButtom from "../../components/ActionButtom";
 const Schema = yup.object({
   fullName: yup
     .string()
-    .required("Nome é obrigatório")
+    .required("Nome Completo é obrigatório")
     .test("fullName", "Insira um nome completo válido", (value) => {
       // Verifica se o valor contém pelo menos um espaço em branco
       return /\s/.test(value);
     }),
-  surname: yup.string().required("Alcunha Obrigatória"),
-  birthDate: yup.date().required("Data de Nascimento Obrigatório"),
+  surname: yup.string(),
+  // birthDate: yup.date().required("Data de Nascimento Obrigatório"),
   gendre: yup.string(),
   avatar: yup.string(),
   bloodType: yup.string(),
@@ -48,19 +49,24 @@ const Schema = yup.object({
 });
 
 const KiddoDetailsScreen = () => {
-  const { kiddo, kiddoAge } = useKiddo();
+  const { kiddo, kiddoAge, editUser } = useKiddo();
 
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm({
-    defaultValues: { gendre: "Masculino" },
+    defaultValues: { gendre: kiddo?.gendre, fullName: kiddo?.fullName },
     resolver: yupResolver(Schema),
   });
 
-  const sendForm = (data) => {
-    console.log(data);
+  const sendForm = async (data) => {
+    try {
+      await editUser(data);
+      handleModalClose();
+    } catch (error) {
+      Alert.alert("Ocorreu um erro ao salvar dados da Criança");
+    }
   };
 
   const navigation = useNavigation();
@@ -213,12 +219,36 @@ const KiddoDetailsScreen = () => {
                 />
               )}
             />
+            {errors.fullName && (
+              <Text style={styles.msgAlerta}>{errors.fullName?.message}</Text>
+            )}
+          </View>
+          <View>
+            <Text style={styles.labels}>Alcunha</Text>
+            <Controller
+              name="surname"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <TextInput
+                  placeholder="Digite a Alcunha"
+                  defaultValue={kiddo?.surname}
+                  style={styles.input}
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  value={value}
+                />
+              )}
+            />
           </View>
           <View>
             <Text style={styles.labels}>Data de Nascimento</Text>
             <TextInput
               defaultValue={formatDate(kiddo?.birthDate)}
-              style={styles.input}
+              style={[
+                styles.input,
+                { borderColor: defaultStyle.colors.grayAccent1 },
+              ]}
+              editable={false}
             />
           </View>
           <View>
@@ -229,7 +259,7 @@ const KiddoDetailsScreen = () => {
               render={({ field: { onChange, onBlur, value } }) => (
                 <Picker
                   ref={pickerRef}
-                  selectedValue={value || "Masculino"}
+                  selectedValue={value || kiddo?.gendre}
                   onValueChange={onChange}
                   onBlur={onBlur}
                   style={styles.input}
@@ -285,7 +315,7 @@ const KiddoDetailsScreen = () => {
         <View style={styles.mainButtonContainer}>
           <ActionButtom
             textButton="Salvar Alterações"
-            onPress={() => handleSubmit(sendForm)}
+            onPress={() => handleSubmit(sendForm)()}
           />
         </View>
       </ScrollView>

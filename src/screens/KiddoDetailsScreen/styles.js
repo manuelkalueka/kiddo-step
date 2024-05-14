@@ -169,6 +169,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: Platform.OS === "ios" ? "8%" : "10%",
   },
+  msgAlerta: {
+    color: defaultStyle.colors.danger,
+    fontSize: defaultStyle.sizes.bodyText,
+    alignSelf: "flex-start",
+  },
 });
 
 export default styles;

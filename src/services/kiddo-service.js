@@ -39,27 +39,17 @@ async function setKiddoInfo(kiddoData, user) {
   }
 }
 
-async function editKiddoInfo(id, user, kiddoData) {
+async function editKiddoInfo(id, kiddoData) {
   try {
-    const {
+    const { fullName, gendre, bloodType, alergics, surname } = kiddoData;
+    const { data } = await ApiMananger.put(`/kiddo/${id}`, {
       fullName,
       surname,
-      birthDate,
       gendre,
-      avatar,
       bloodType,
       alergics,
-    } = kiddoData;
-    await ApiMananger.put(`/kiddo/${id}`, {
-      fullName,
-      surname,
-      birthDate,
-      gendre,
-      avatar,
-      bloodType,
-      alergics,
-      parent: user._id,
     });
+    return data;
   } catch (error) {
     console.log("Erro ao Alterar dados da Criança ", error);
   }

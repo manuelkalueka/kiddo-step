@@ -1,7 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useAuth } from "./auth"; // Supondo que você tenha um contexto de autenticação
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getKiddoInfo, setKiddoInfo } from "../services/kiddo-service";
+import {
+  editKiddoInfo,
+  getKiddoInfo,
+  setKiddoInfo,
+} from "../services/kiddo-service";
 const contextFormat = {
   setted: true,
   kiddo: {},
@@ -60,9 +64,19 @@ export const KiddoProvider = ({ children }) => {
     }
   }
 
+  async function editUser(data) {
+    try {
+      const newKiddo = await editKiddoInfo(kiddo._id, data);
+      _setKiddo(newKiddo);
+      await AsyncStorage.setItem("@kiddo", JSON.stringify(newKiddo)); // Salvar no AsyncStorage
+    } catch (error) {
+      console.log("Erro no contexto editar criança ", error);
+    }
+  }
+
   return (
     <KiddoContext.Provider
-      value={{ setted: hasKiddo, kiddo, setKiddo, kiddoAge }}
+      value={{ setted: hasKiddo, kiddo, setKiddo, kiddoAge, editUser }}
     >
       {children}
     </KiddoContext.Provider>
