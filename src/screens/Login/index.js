@@ -3,7 +3,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  TouchableWithoutFeedback,
+  Pressable,
   Keyboard,
   Image,
   KeyboardAvoidingView,
@@ -52,8 +52,11 @@ export default function Login({ navigation }) {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={() => handleDisableKeyboard(Keyboard)}>
-      <View style={styles.containerLogin}>
+    <Pressable
+      onPress={() => handleDisableKeyboard(Keyboard)}
+      style={styles.containerLogin}
+    >
+      <View>
         <ScrollView showsVerticalScrollIndicator={false}>
           <KeyboardAvoidingView
             enabled
@@ -160,6 +163,6 @@ export default function Login({ navigation }) {
           </KeyboardAvoidingView>
         </ScrollView>
       </View>
-    </TouchableWithoutFeedback>
+    </Pressable>
   );
 }
