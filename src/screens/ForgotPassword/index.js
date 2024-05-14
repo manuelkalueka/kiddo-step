@@ -115,6 +115,7 @@ export default function ForgotPassword() {
 
   const verifyCode = (data) => {
     SetActive(false);
+    dismissModal();
     navigation.navigate("CreatePassword");
   };
 
