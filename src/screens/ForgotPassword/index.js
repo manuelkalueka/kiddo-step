@@ -78,31 +78,32 @@ export default function ForgotPassword() {
     try {
       const { email } = data;
 
-      await confirmEmail(email);
+      const { data: user } = await confirmEmail(email);
 
       //Fazer a verificação do email existente no banco de dados ou não para assim privilegiar a recuperação de senha
+      if (user) {
+        handlerNotify();
+        setVisModal(true);
 
-      handlerNotify();
-      setVisModal(true);
+        setTimeout(() => {
+          SetActive(false);
+          //Preenchimento automático dos inputs de code
+          const max = 9;
+          const min = 0;
 
-      setTimeout(() => {
-        SetActive(false);
-        //Preenchimento automático dos inputs de code
-        const max = 9;
-        const min = 0;
+          //Constantes com as funcões para gerarem números aleatórios
+          const code1 = Math.floor(Math.random() * (max - min + 1) + min);
+          const code2 = Math.floor(Math.random() * (max - min + 1) + min);
+          const code3 = Math.floor(Math.random() * (max - min + 1) + min);
+          const code4 = Math.floor(Math.random() * (max - min + 1) + min);
 
-        //Constantes com as funcões para gerarem números aleatórios
-        const code1 = Math.floor(Math.random() * (max - min + 1) + min);
-        const code2 = Math.floor(Math.random() * (max - min + 1) + min);
-        const code3 = Math.floor(Math.random() * (max - min + 1) + min);
-        const code4 = Math.floor(Math.random() * (max - min + 1) + min);
-
-        //Setando os números gerados no states
-        setCode1(code1);
-        setCode2(code2);
-        setCode3(code3);
-        setCode4(code4);
-      }, 2000);
+          //Setando os números gerados no states
+          setCode1(code1);
+          setCode2(code2);
+          setCode3(code3);
+          setCode4(code4);
+        }, 2000);
+      }
     } catch (error) {
       console.log("Erro ao confirmar email ", error);
     }

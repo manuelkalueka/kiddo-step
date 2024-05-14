@@ -57,13 +57,15 @@ async function updateUserService(infoUser, user) {
   }
 }
 
-const confirmEmail = async (data) => {
-  const { email } = data;
+const confirmEmail = async (email) => {
   try {
     //Comunicacação com Backend
-    const response = await ApiMananger.post(`/users/find/${email}`);
+    const response  = await ApiMananger.post(`/users/find/${email}`);
     return response;
   } catch (error) {
+    if (error.response) {
+      Alert.alert("Usuário não encontrado", "Verifique o Email!");
+    }
     console.log(error);
   }
 };
