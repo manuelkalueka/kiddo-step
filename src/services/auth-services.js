@@ -8,10 +8,20 @@ async function signInService(email, password) {
     //LOGICA PARA MANDAR NA API
     const { data } = await ApiMananger.post("/users/login", reqUser);
 
-    const { user, token, infoUser } = data;
+    const { user, token } = data;
     return { user, token };
   } catch (error) {
-    Alert.alert(error?.message, "Tente Novamente!");
+    if (error.response) {
+      if (error.response.status === 401) {
+        Alert.alert("Verifique o Email e/ou Senha", "Tente Novamente!");
+      }
+    } else if (error.request) {
+      Alert.alert(error?.message, "Tente Novamente!");
+      console.log(error.request);
+    } else {
+      Alert.alert(error?.message, "Tente Novamente!");
+      console.log("Error", error.message);
+    }
   }
 }
 
@@ -30,7 +40,6 @@ async function signUpService({ fullName, email, password, phone }) {
     Alert.alert("Erro ao Cadastro", "Tente Novamente!");
     return false;
   } catch (error) {
-    console.log(error);
     Alert.alert(error?.message, "Tente Novamente!");
   }
 }
@@ -41,10 +50,7 @@ async function updateUserService(infoUser, user) {
     //   `https://angolaapi.onrender.com/api/v1/validate/bi/${infoUser.identifyNumber}`
     // );
     // console.log("Resultado da Verificação do BI ", data);
-    const response = await ApiMananger.put(
-      `/users/edit/${user._id}`,
-      infoUser
-    );
+    const response = await ApiMananger.put(`/users/edit/${user._id}`, infoUser);
     return response;
   } catch (error) {
     console.log("Erro ao Actualizar o usuário", error);
@@ -55,7 +61,8 @@ const confirmEmail = async (data) => {
   const { email } = data;
   try {
     //Comunicacação com Backend
-    const response = await ApiMananger.post("/", { email });
+    const response = await ApiMananger.post(`/users/find/${email}`);
+    return response;
   } catch (error) {
     console.log(error);
   }

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Platform,
   Pressable,
@@ -6,7 +6,6 @@ import {
   ScrollView,
   View,
   Text,
-  Alert,
   ActivityIndicator,
   TouchableOpacity,
 } from "react-native";
@@ -59,7 +58,7 @@ const ConfigKiddoScreen = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      birthDate: new Date(),
+      birthDate: Platform.OS === "ios" ? new Date() : new Date().toDateString(),
       gendre: "Masculino",
       relationship: "Pai",
     },
@@ -104,22 +103,28 @@ const ConfigKiddoScreen = () => {
   const pickerGenRef = useRef();
   const navigation = useNavigation();
 
-  // navigation.setOptions({
-  //   HeaderRight: () => (
-  //     <TouchableOpacity
-  //       onPress={() => {
-  //         signOut();
-  //       }}
-  //     >
-  //       <Text>Terminar Sessão</Text>
-  //     </TouchableOpacity>
-  //   ),
-  // });
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={() => {
+            signOut();
+          }}
+          style={{ padding: 10 }}
+        >
+          <Text style={{ color: "white" }}>Cancelar</Text>
+        </TouchableOpacity>
+      ),
+    });
+  }, []);
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.top}>
-        <Text style={styles.warnTitle}>Seja Bem Vindo {user?.fullName}</Text>
+        <Text style={styles.warnTitle}>
+          Seja Bem {user?.gendre === "Masculino" ? "Vindo" : "Vinda"}{" "}
+          {user?.fullName}
+        </Text>
         <Text style={styles.textCall}>
           Termine de Configurar seus dados e do seu Kiddo, para começar a
           Rastrear...
@@ -306,7 +311,7 @@ const ConfigKiddoScreen = () => {
         />
         <ActionButtom
           textButton={
-            loading ? <ActivityIndicator color="blue" /> : "Começar a Rastrear"
+            loading ? <ActivityIndicator color="white" /> : "Começar a Rastrear"
           }
           onPress={handleSubmit(sendForm)}
         />

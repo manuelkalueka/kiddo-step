@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import ConfigKiddoScreen from "../screens/ConfigKiddoScreen";
 import defaultStyle from "../defaultStyle";
 import Header from "../components/Header";
+import { Text } from "react-native";
 const { Screen, Navigator } = createNativeStackNavigator();
 const KiddoRouter = () => {
   return (
