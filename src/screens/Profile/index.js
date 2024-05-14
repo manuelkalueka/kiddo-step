@@ -67,7 +67,7 @@ export default function Profile({ navigation }) {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.menuItem}
-          onPress={() => Alert.alert("Tela Futura...", "OK")}
+          onPress={() => navigation.navigate("Address")}
         >
           <View style={styles.itemDesc}>
             <View style={styles.itemIcon}>

@@ -9,28 +9,32 @@ import AccountScreen from "./../screens/AccountScreen";
 import ContactScreen from "../screens/ContactScreen";
 import TermsAndPrivacyScreen from "../screens/TermsAndPrivacyScreen";
 import ContactUsScreen from "../screens/ContactUsScreen";
+import AddressScreen from "../screens/AddressScreen";
 
 const SettingStack = () => {
-  return(
-  <Navigator screenOptions={{
-    headerShown:false
-  }}>
-    <Screen name="Setting" component={SettingScreen} />
-    <Screen name="TermsAndPrivacy" component={TermsAndPrivacyScreen} />
-    <Screen name="ContactUs" component={ContactUsScreen} />
-  </Navigator>)
+  return (
+    <Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Screen name="SetNested" component={SettingScreen} />
+      <Screen name="TermsAndPrivacy" component={TermsAndPrivacyScreen} />
+      <Screen name="ContactUs" component={ContactUsScreen} />
+    </Navigator>
+  );
 };
 
 const ProfileStack = () => {
   return (
     <Navigator
-      initialRouteName="Profile"
       screenOptions={{
         headerShown: false,
       }}
     >
-      <Screen name="Profile" component={Profile} />
+      <Screen name="ProfNested" component={Profile} />
       <Screen name="Account" component={AccountScreen} />
+      <Screen name="Address" component={AddressScreen} />
       <Screen name="Contact" component={ContactScreen} />
       <Screen name="Setting" component={SettingStack} />
     </Navigator>

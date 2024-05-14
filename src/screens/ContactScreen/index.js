@@ -9,6 +9,7 @@ import {
   Pressable,
   Keyboard,
   RefreshControl,
+  Alert,
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 
@@ -110,7 +111,12 @@ const ContactScreen = () => {
         }
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.contactContainer}>
+          <TouchableOpacity
+            style={styles.contactContainer}
+            onPress={() =>
+              Alert.alert("Funcionalidade Futura", "VER/EDITAR CONTACTO")
+            }
+          >
             <Text style={styles.labelName}>{item.name}</Text>
             <Text style={styles.labelAddress}>{item.address}</Text>
             <Text style={styles.labelPhone}>{item.phone}</Text>
