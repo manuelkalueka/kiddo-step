@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   FlatList,
   RefreshControl,
+  ScrollView,
 } from "react-native";
 
 import LoadingComponent from "../../components/LoadingComponent";
@@ -33,9 +34,7 @@ export default function AlertScreen() {
   }, []);
 
   async function getAlerts() {
-    const geoFecingId = "662e46543fa5166d5e52a999"; //Tornar Dinamico
-
-    listAlertsService(geoFecingId) //Ajustar a chamada
+    listAlertsService() //Ajustar a chamada
       .then((res) => {
         setData(res);
         setLoadingAlert(false);
@@ -56,9 +55,16 @@ export default function AlertScreen() {
   ) : (
     <View style={styles.container}>
       {data == "" ? (
-        <View style={styles.containerNo}>
-          <Text style={styles.titleContainerNo}> Sem alertas disponíveis </Text>
-        </View>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          <View style={styles.containerNo}>
+            <Text style={styles.titleContainerNo}>Sem alertas disponíveis</Text>
+          </View>
+        </ScrollView>
       ) : (
         <View style={styles.body}>
           <TouchableOpacity

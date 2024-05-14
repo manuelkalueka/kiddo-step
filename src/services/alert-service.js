@@ -1,8 +1,8 @@
 import ApiMananger from "./api";
 
-async function listAlertsService(geoFence) {
+async function listAlertsService() {
   try {
-    const { data } = await ApiMananger.get(`/alertSchedule/${geoFence}`); //Ajustar a chamada
+    const { data } = await ApiMananger.get(`/alertSchedule`); //Ajustar a chamada
     return data;
   } catch (error) {
     console.log("Erro ao buscar alertas", error);

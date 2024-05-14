@@ -121,6 +121,7 @@ const AccountScreen = ({ navigation }) => {
                 <TextInput
                   placeholder="Email"
                   style={[styles.input]}
+                  editable={false}
                   keyboardType="email-address"
                   autoCapitalize="none"
                   onChangeText={onChange}
@@ -177,6 +178,7 @@ const AccountScreen = ({ navigation }) => {
                   style={[styles.input]}
                   keyboardType="name-phone-pad"
                   onChangeText={onChange}
+                  editable={false}
                   onBlur={onBlur}
                   defaultValue={user?.identifyNumber}
                   value={value}
