@@ -58,7 +58,7 @@ const ConfigKiddoScreen = () => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      birthDate: Platform.OS === "ios" ? new Date() : new Date().toDateString(),
+      birthDate: Platform.OS === "ios" ? new Date() : formatDate(new Date()),
       gendre: "Masculino",
       relationship: "Pai",
     },
@@ -121,10 +121,7 @@ const ConfigKiddoScreen = () => {
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.top}>
-        <Text style={styles.warnTitle}>
-          Seja Bem {user?.gendre === "Masculino" ? "Vindo" : "Vinda"}{" "}
-          {user?.fullName}
-        </Text>
+        <Text style={styles.warnTitle}>Seja Bem Vindo {user?.fullName}</Text>
         <Text style={styles.textCall}>
           Termine de Configurar seus dados e do seu Kiddo, para começar a
           Rastrear...

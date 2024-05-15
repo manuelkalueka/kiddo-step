@@ -56,7 +56,7 @@ const CreatePasswordScreen = ({ route, navigation }) => {
   };
 
   let { signUp } = useAuth();
-  const [showpassword, setShowPassword] = useState(false);
+  const [showpassword, setShowPassword] = useState(true);
 
   return (
     <KeyboardAvoidingView
@@ -84,7 +84,6 @@ const CreatePasswordScreen = ({ route, navigation }) => {
               <TextInput
                 placeholder="Nova Senha"
                 style={styles.input}
-                keyboardType="visible-password"
                 secureTextEntry={showpassword}
                 onChangeText={onChange}
                 onBlur={onBlur}
@@ -95,7 +94,7 @@ const CreatePasswordScreen = ({ route, navigation }) => {
           <TouchableOpacity onPress={() => setShowPassword(!showpassword)}>
             <Feather
               size={25}
-              name={showpassword ? "eye" : "eye-off"}
+              name={!showpassword ? "eye" : "eye-off"}
               color={defaultStyle.colors.mainColorBlue}
             />
           </TouchableOpacity>
@@ -117,7 +116,6 @@ const CreatePasswordScreen = ({ route, navigation }) => {
               <TextInput
                 placeholder="Confirmar Senha"
                 style={styles.input}
-                keyboardType="visible-password"
                 secureTextEntry={showpassword}
                 onChangeText={onChange}
                 onBlur={onBlur}
@@ -128,7 +126,7 @@ const CreatePasswordScreen = ({ route, navigation }) => {
           <TouchableOpacity onPress={() => setShowPassword(!showpassword)}>
             <Feather
               size={25}
-              name={showpassword ? "eye" : "eye-off"}
+              name={!showpassword ? "eye" : "eye-off"}
               color={defaultStyle.colors.mainColorBlue}
             />
           </TouchableOpacity>

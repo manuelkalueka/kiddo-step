@@ -63,7 +63,7 @@ const KiddoDetailsScreen = () => {
       birthDate:
         Platform.OS === "ios"
           ? new Date(kiddo?.birthDate)
-          : new Date(kiddo?.birthDate).toDateString(),
+          : formatDate(new Date(kiddo?.birthDate)),
     },
     resolver: yupResolver(Schema),
   });
@@ -269,7 +269,7 @@ const KiddoDetailsScreen = () => {
                   <TextInput
                     onChangeText={onChange}
                     onBlur={onBlur}
-                    defaultValue={`${formatDate(kiddo?.birthDate)}`}
+                    defaultValue={`${formatDate(new Date(kiddo?.birthDate))}`}
                     value={value}
                     placeholder={`Data de nascimento Ex.: ${formatDate(
                       new Date()

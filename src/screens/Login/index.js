@@ -113,7 +113,6 @@ export default function Login({ navigation }) {
                       style={styles.textInput}
                       placeholder="Senha"
                       placeholderTextColor={"#0009"}
-                      keyboardType="visible-password"
                       secureTextEntry={showpassword}
                       onChangeText={onChange}
                       onBlur={onBlur}
@@ -126,7 +125,7 @@ export default function Login({ navigation }) {
                 >
                   <Feather
                     size={25}
-                    name={showpassword ? "eye" : "eye-off"}
+                    name={!showpassword ? "eye" : "eye-off"}
                     color={defaultStyle.colors.mainColorBlue}
                   />
                 </TouchableOpacity>
