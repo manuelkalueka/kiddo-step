@@ -108,7 +108,13 @@ export default function NewFecing() {
 
         //Inicia o monitoramento da Cerca em android ainda
         Platform.OS === "android" &&
-          (await GeofencingActivity(data.name, latitude, longitude, radius));
+          (await GeofencingActivity(
+            data.name,
+            latitude,
+            longitude,
+            radius,
+            data.status
+          ));
       } else {
         Alert.alert("Erro", "Tente Novamente!");
       }
@@ -216,15 +222,18 @@ export default function NewFecing() {
 
   // Função para iniciar o monitoramento da cerca virtual
 
-  async function GeofencingActivity(nome, latitude, longitude, radius) {
+  async function GeofencingActivity(nome, latitude, longitude, radius, status) {
     try {
+      const entry = status === true ? true : false;
+      const exit = status !== entry ? true : false;
+
       const geofence = {
         identifier: nome,
         latitude,
         longitude,
         radius,
-        notifyOnEnter: true,
-        notifyOnExit: true,
+        notifyOnEnter: entry,
+        notifyOnExit: exit,
       };
       startGeofencingAsync("geofencing", [geofence]);
       Alert.alert("Geofencing iniciado com sucesso");
