@@ -17,8 +17,14 @@ import ActionButtom from "../../components/ActionButtom";
 import MapView, { Marker, Circle } from "react-native-maps";
 import {
   requestForegroundPermissionsAsync, //Serve para pedir a Localização enquanto o App é Executado
-  getCurrentPositionAsync, //Pega a Localização Actual
+  getCurrentPositionAsync,
+  requestBackgroundPermissionsAsync,
+  stopGeofencingAsync,
+  startGeofencingAsync,
+  GeofencingEventType, //Pega a Localização Actual
 } from "expo-location";
+
+import * as TaskManager from "expo-task-manager";
 
 import styles from "./styles";
 import defaultStyle from "../../defaultStyle";
@@ -99,6 +105,10 @@ export default function NewFecing() {
       if (status === 200 || status === 201) {
         //Mudar de Tela de Tudo Correr Bem
         navigation.navigate("Mapa");
+
+        //Inicia o monitoramento da Cerca em android ainda
+        Platform.OS === "android" &&
+          (await GeofencingActivity(data.name, latitude, longitude, radius));
       } else {
         Alert.alert("Erro", "Tente Novamente!");
       }
@@ -139,6 +149,92 @@ export default function NewFecing() {
   };
 
   const mapRef = useRef();
+
+  async function requestBackLocation() {
+    try {
+      const { status: backgroundStatus } =
+        await requestBackgroundPermissionsAsync();
+      if (backgroundStatus === "granted") {
+        await startLocationUpdatesAsync("BACK_TRACKING", {
+          accuracy: Location.Accuracy.Balanced,
+        });
+      }
+    } catch (error) {
+      console.log("Não permitido localização background ", error);
+    }
+  }
+
+  //Cria Localização BackGround Apenas em Dispositivos android neste momemnto
+  Platform.OS === "android" &&
+    useEffect(() => {
+      requestBackLocation();
+    }, []);
+
+  Platform.OS === "android" &&
+    TaskManager.defineTask("BACK_TRACKING", ({ data, error }) => {
+      if (error) {
+        // Error occurred - check `error.message` for more details.
+        console.log(error?.message);
+        return;
+      }
+      if (data) {
+        const { locations } = data;
+        console.log("Localizações no Back", locations);
+      }
+    });
+
+  // Função para parar o monitoramento da cerca virtual
+  const stopGeofencing = () => {
+    stopGeofencingAsync("geofencing")
+      .then(() => console.log("Geofencing parado com sucesso"))
+      .catch((error) => console.error("Erro ao parar geofencing:", error));
+  };
+  Platform.OS === "android" &&
+    useEffect(() => {
+      stopGeofencing();
+    }, [handleSubmit]);
+
+  Platform.OS === "android" &&
+    TaskManager.defineTask(
+      //ESCOPO GLOBAL
+      "geofencing",
+      ({ data: { eventType, region }, error }) => {
+        if (error) {
+          // check `error.message` for more details.
+          console.log("Erro no gestor de tarefas");
+          return;
+        }
+        if (eventType === GeofencingEventType.Enter) {
+          //Alertas Aqui
+          console.log("You've entered region:", region);
+        } else if (eventType === GeofencingEventType.Exit) {
+          //Alertas Aqui
+          console.log("You've left region:", region);
+        }
+      }
+    );
+
+  // Função para iniciar o monitoramento da cerca virtual
+
+  async function GeofencingActivity(nome, latitude, longitude, radius) {
+    try {
+      const geofence = {
+        identifier: nome,
+        latitude,
+        longitude,
+        radius,
+        notifyOnEnter: true,
+        notifyOnExit: true,
+      };
+      startGeofencingAsync("geofencing", [geofence]);
+      Alert.alert("Geofencing iniciado com sucesso");
+    } catch (error) {
+      Alert.alert(
+        "Erro ao iniciar o monitoramento da Área Segura",
+        error?.message
+      );
+    }
+  }
 
   return (
     <View style={styles.container}>
