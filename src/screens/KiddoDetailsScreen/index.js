@@ -10,6 +10,7 @@ import {
   ScrollView,
   Platform,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { useBatteryLevel } from "expo-battery";
 import * as Network from "expo-network";
@@ -20,6 +21,8 @@ import { Picker } from "@react-native-picker/picker";
 import { useNavigation } from "@react-navigation/native";
 
 import { Entypo, MaterialIcons, FontAwesome } from "@expo/vector-icons";
+
+import * as ImagePicker from "expo-image-picker";
 
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -80,6 +83,28 @@ const KiddoDetailsScreen = () => {
   const navigation = useNavigation();
 
   const [netInfo, setNetInfo] = useState(false);
+  const [selectedImageUri, setSelectedImageUri] = useState("");
+  const [isLoadingImagem, setIsLoadingImage] = useState(false);
+
+  async function handleSelectImagem() {
+    setIsLoadingImage(true);
+
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+      });
+
+      if (!result.canceled) {
+        const { uri } = result.assets[0];
+        setSelectedImageUri(uri);
+      }
+    } catch (error) {
+      console.log("Erro ao buscar imagem");
+    } finally {
+      setIsLoadingImage(false);
+    }
+  }
 
   const pickerRef = useRef();
 
@@ -130,14 +155,27 @@ const KiddoDetailsScreen = () => {
       >
         <View style={styles.detailContainer}>
           <View>
-            <Image source={kiddoAvatar} style={styles.avatar} />
-            <TouchableOpacity style={styles.buttonChangeImg}>
-              <Entypo
-                name="camera"
-                size={18}
-                color={defaultStyle.colors.blueLightColor1}
+            <Image
+              source={selectedImageUri ? selectedImageUri : kiddoAvatar}
+              style={styles.avatar}
+            />
+            {isLoadingImagem ? (
+              <ActivityIndicator
+                size={"small"}
+                color={defaultStyle.colors.mainBlue}
               />
-            </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={styles.buttonChangeImg}
+                onPress={() => handleSelectImagem()}
+              >
+                <Entypo
+                  name="camera"
+                  size={18}
+                  color={defaultStyle.colors.blueLightColor1}
+                />
+              </TouchableOpacity>
+            )}
           </View>
           <View style={styles.infoContainer}>
             <View>

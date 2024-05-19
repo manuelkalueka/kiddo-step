@@ -76,7 +76,7 @@ const runTraining = async () => {
   const model = await loadModel();
   await trainModel(model, inputData, outputData);
 
-  console.log("Model trained successfully");
+  console.log("Modelo do Kiddo Step Treinado com sucesso!");
 };
 
 // Função para fazer a predição

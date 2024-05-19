@@ -140,23 +140,23 @@ export default function TabRoutes() {
 
   const [notificationCount, setNotificationCount] = useState(0);
 
-  useEffect(() => {
-    const getNotifications = async () => {
-      const { notifications } =
-        await Notifications.getAllScheduledNotificationsAsync();
-      setNotificationCount(notifications.length);
-    };
+  // useEffect(() => {
+  //   const getNotifications = async () => {
+  //     const { notifications } =
+  //       await Notifications.getAllScheduledNotificationsAsync();
+  //     setNotificationCount(notifications.length);
+  //   };
 
-    getNotifications();
+  //   getNotifications();
 
-    const subscription = Notifications.addNotificationReceivedListener(() => {
-      getNotifications();
-    });
+  //   const subscription = Notifications.addNotificationReceivedListener(() => {
+  //     getNotifications();
+  //   });
 
-    return () => {
-      subscription.remove();
-    };
-  }, []);
+  //   return () => {
+  //     subscription.remove();
+  //   };
+  // }, []);
 
   return (
     <>

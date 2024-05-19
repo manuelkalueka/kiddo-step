@@ -11,11 +11,10 @@ import {
   requestForegroundPermissionsAsync,
   getCurrentPositionAsync,
   watchPositionAsync,
-  stopLocationUpdatesAsync,
   LocationAccuracy,
 } from "expo-location"; //Módulo de localização
 import getDistance from "geolib/es/getDistance"; //calculo de distancia
-import { getLastLocation, saveLocation } from "../../services/location-service"; //Serviço para interagir com a API
+import { getLastLocation, saveLocation } from "../../services/location-service"; //Serviço para interagir com a API no endpoint de location
 import MapView, { Marker } from "react-native-maps";
 import { FontAwesome } from "@expo/vector-icons";
 
@@ -23,6 +22,7 @@ import styles from "./styles";
 import defaultStyle from "../../defaultStyle";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useKiddo } from "../../contexts/kiddo";
+import { predictLocation, runTraining } from "../../services/ai";
 
 const Map = () => {
   const [location, setLocation] = useState(null); //Localização actual
@@ -31,6 +31,7 @@ const Map = () => {
   const [markerPosition, setMarkerPosition] = useState(null);
   const [knownLocation, setKnownLocation] = useState(null);
   const [trackingEnabled, setTrackingEnabled] = useState(false);
+  const [predictedLocation, setPredictedLocation] = useState(null); // Variável para a predição
 
   async function toggleSetMapType() {
     if (mapType === "hybrid") {
@@ -44,6 +45,7 @@ const Map = () => {
   const { kiddo } = useKiddo();
 
   const mapRef = useRef();
+  const recentLocations = useRef([]); // Guardar as últimas 3 localizações
 
   const focusOnMarker = () => {
     if (mapRef.current) {
@@ -127,8 +129,14 @@ const Map = () => {
       // Calcula a distância entre a localização atual e a última localização salva
       const distance = getDistance(geoInput, geoOutput, 1);
 
+      recentLocations.current.push([geoOutput.latitude, geoOutput.longitude]);
+      if (recentLocations.current?.length > 3) {
+        // Elimina a última localização recente ou seja na posição 0 do Array
+        recentLocations.current?.shift();
+      }
+
       if (distance >= 50) {
-        //TEstar 50 metros pelo erro do telefone e rede
+        //TEstar 50 metros pelo erro do rastreador, rede e servidor local
         //VERIFICAR A DISTANCIA A CADA LOCALIZAÇÃO SALVA
         // Salva a nova localização na base de dados
         try {
@@ -139,6 +147,17 @@ const Map = () => {
             locationAsync.timestamp
           );
           console.log("Localização salva com sucesso.");
+
+          // Treinar e fazer predição com o modelo de IA
+          const model = await runTraining();
+          if (model && recentLocations.current.length === 3) {
+            const predictedCoords = await predictLocation(
+              model,
+              recentLocations.current
+            );
+            console.log("Localização preditiva: ", predictedCoords);
+            setPredictedLocation(predictedCoords);
+          }
         } catch (error) {
           console.error("Erro ao salvar localização:", error);
         }
@@ -236,6 +255,18 @@ const Map = () => {
               title={kiddo?.surname}
               description="Última Localização Registada"
             />
+
+            {predictedLocation && (
+              <Marker
+                coordinate={{
+                  latitude: -8.83833,
+                  longitude: 13.2344,
+                }}
+                title="Previsão por IA"
+                description={`Está é uma localização prevista para o ${kiddo?.surname}`}
+                pinColor={defaultStyle.colors.mainColorBlue}
+              />
+            )}
           </MapView>
         </>
       ) : (
