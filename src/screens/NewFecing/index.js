@@ -180,8 +180,8 @@ const NewFencing = () => {
           return;
         }
         if (data) {
-          const { locations } = data;
-          console.log("Localizações no Back", locations);
+          // const { locations } = data;
+          console.log("Localizações no Back");
         }
       });
     }
@@ -193,11 +193,11 @@ const NewFencing = () => {
       .catch((error) => console.error("Erro ao parar geofencing:", error));
   };
 
-  useEffect(() => {
-    if (Platform.OS === "android") {
-      return () => stopGeofencing();
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (Platform.OS === "android") {
+  //     return () => stopGeofencing();
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (Platform.OS === "android") {
