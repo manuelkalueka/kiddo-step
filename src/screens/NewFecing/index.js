@@ -16,46 +16,46 @@ import Slider from "@react-native-community/slider";
 import ActionButtom from "../../components/ActionButtom";
 import MapView, { Marker, Circle } from "react-native-maps";
 import {
-  requestForegroundPermissionsAsync, //Serve para pedir a Localização enquanto o App é Executado
+  requestForegroundPermissionsAsync,
   getCurrentPositionAsync,
   requestBackgroundPermissionsAsync,
   stopGeofencingAsync,
   startGeofencingAsync,
-  GeofencingEventType, //Pega a Localização Actual
+  GeofencingEventType,
+  startLocationUpdatesAsync,
+  Accuracy,
+  stopLocationUpdatesAsync,
 } from "expo-location";
-
 import * as TaskManager from "expo-task-manager";
-
-import styles from "./styles";
-import defaultStyle from "../../defaultStyle";
-
+import * as Notify from "expo-notifications";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { handleDisableKeyboard } from "../../../utils/dismiss-keyboard";
-import { getKiddoInfo } from "../../services/kiddo-service"; //Pegar a Criança na DB
+import { getKiddoInfo } from "../../services/kiddo-service";
 import { useAuth } from "../../contexts/auth";
 import { useNavigation } from "@react-navigation/native";
-import { createGeoFence } from "../../services/geo-fencing-service"; //Criar Geo Cerca
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createGeoFence } from "../../services/geo-fencing-service";
+import styles from "./styles";
+import defaultStyle from "../../defaultStyle";
 
-const Schema = yup.object({
+const schema = yup.object({
   name: yup.string().required("Informe um nome de identificação"),
   target: yup.bool(),
   status: yup.bool(),
 });
 
-export default function NewFecing() {
+const NewFencing = () => {
   const navigation = useNavigation();
-  const [kiddo, setKiddo] = useState(null);
   const { user } = useAuth();
-
+  const [kiddo, setKiddo] = useState(null);
   const [location, setLocation] = useState(null);
   const [markerPosition, setMarkerPosition] = useState(null);
-  const [radius, setRadius] = useState(100); // Valor padrão do raio da GeoFence
+  const [radius, setRadius] = useState(100);
   const [loadingMap, setLoadingMap] = useState(true);
   const [mapType, setMapType] = useState("standard");
+  const mapRef = useRef();
 
   const kiddoAvatar =
     kiddo?.gendre === "Masculino"
@@ -63,20 +63,19 @@ export default function NewFecing() {
       : require("../../../assets/img/girl-avatar.png");
 
   useEffect(() => {
-    async function getKiddo() {
+    const fetchKiddo = async () => {
       const newKiddo = await getKiddoInfo(user);
       setKiddo(newKiddo);
-    }
-    getKiddo();
+    };
+    fetchKiddo();
   }, [user]);
 
   useEffect(() => {
-    async function loadMapType() {
+    const loadMapType = async () => {
       const mtype = await AsyncStorage.getItem("@MapType");
-      setMapType(mtype);
-    }
-
-    loadMapType;
+      if (mtype) setMapType(mtype);
+    };
+    loadMapType();
   }, []);
 
   const {
@@ -86,10 +85,10 @@ export default function NewFecing() {
   } = useForm({
     defaultValues: {
       status: true,
-      target: true, // Definindo o valor padrão do campo 'status' como true
+      target: true,
       geoType: true,
     },
-    resolver: yupResolver(Schema),
+    resolver: yupResolver(schema),
   });
 
   const sendForm = async (data) => {
@@ -101,20 +100,18 @@ export default function NewFecing() {
       longitude,
     };
     try {
-      const status = await createGeoFence(geoFenceData, kiddo._id); //Salvar a Fence
+      const status = await createGeoFence(geoFenceData, kiddo._id);
       if (status === 200 || status === 201) {
-        //Mudar de Tela de Tudo Correr Bem
         navigation.navigate("Mapa");
-
-        //Inicia o monitoramento da Cerca em android ainda
-        Platform.OS === "android" &&
-          (await GeofencingActivity(
+        if (Platform.OS === "android") {
+          await GeofencingActivity(
             data.name,
             latitude,
             longitude,
             radius,
             data.status
-          ));
+          );
+        }
       } else {
         Alert.alert("Erro", "Tente Novamente!");
       }
@@ -124,109 +121,113 @@ export default function NewFecing() {
   };
 
   useEffect(() => {
+    const getLocationAsync = async () => {
+      try {
+        const { granted } = await requestForegroundPermissionsAsync();
+        if (granted) {
+          const currentPosition = await getCurrentPositionAsync();
+          setLocation(currentPosition);
+          setMarkerPosition({
+            latitude: currentPosition.coords.latitude,
+            longitude: currentPosition.coords.longitude,
+          });
+          setLoadingMap(false);
+        } else {
+          Alert.alert(
+            "Permissão de localização negada",
+            "O aplicativo precisa de permissão de localização para funcionar corretamente."
+          );
+        }
+      } catch (error) {
+        console.log("Erro ao buscar localização no Fencing ", error);
+      }
+    };
     getLocationAsync();
+    return () => {
+      stopLocationUpdatesAsync("BACK_TRACKING");
+    };
   }, []);
 
-  const getLocationAsync = async () => {
-    try {
-      const { granted } = await requestForegroundPermissionsAsync();
-      if (granted) {
-        const currentPosition = await getCurrentPositionAsync();
-        setLocation(currentPosition);
-        setMarkerPosition({
-          latitude: currentPosition.coords.latitude,
-          longitude: currentPosition.coords.longitude,
-        });
-        setLoadingMap(false);
-      } else {
-        Alert.alert(
-          "Permissão de localização negada",
-          "O aplicativo precisa de permissão de localização para funcionar corretamente."
-        );
-      }
-    } catch (error) {
-      console.log("Erro ao buscar localização no Fencing ", error);
-    }
-  };
-
   const handleMapPress = (e) => {
-    //Captura no Evento de Click no Mapa e Muda o Pin para a localização Clicada
     setMarkerPosition(e.nativeEvent.coordinate);
   };
 
-  const mapRef = useRef();
-
-  async function requestBackLocation() {
+  const requestBackLocation = async () => {
     try {
       const { status: backgroundStatus } =
         await requestBackgroundPermissionsAsync();
       if (backgroundStatus === "granted") {
         await startLocationUpdatesAsync("BACK_TRACKING", {
-          accuracy: Location.Accuracy.Balanced,
+          accuracy: Accuracy.Balanced,
         });
       }
     } catch (error) {
       console.log("Não permitido localização background ", error);
     }
-  }
+  };
 
-  //Cria Localização BackGround Apenas em Dispositivos android neste momemnto
-  Platform.OS === "android" &&
-    useEffect(() => {
+  useEffect(() => {
+    if (Platform.OS === "android") {
       requestBackLocation();
-    }, []);
+    }
+  }, []);
 
-  Platform.OS === "android" &&
-    TaskManager.defineTask("BACK_TRACKING", ({ data, error }) => {
-      if (error) {
-        // Error occurred - check `error.message` for more details.
-        console.log(error?.message);
-        return;
-      }
-      if (data) {
-        const { locations } = data;
-        console.log("Localizações no Back", locations);
-      }
-    });
+  useEffect(() => {
+    if (Platform.OS === "android") {
+      TaskManager.defineTask("BACK_TRACKING", ({ data, error }) => {
+        if (error) {
+          console.log(error.message);
+          return;
+        }
+        if (data) {
+          const { locations } = data;
+          console.log("Localizações no Back", locations);
+        }
+      });
+    }
+  }, []);
 
-  // Função para parar o monitoramento da cerca virtual
   const stopGeofencing = () => {
     stopGeofencingAsync("geofencing")
       .then(() => console.log("Geofencing parado com sucesso"))
       .catch((error) => console.error("Erro ao parar geofencing:", error));
   };
-  Platform.OS === "android" &&
-    useEffect(() => {
-      stopGeofencing();
-    }, [handleSubmit]);
 
-  Platform.OS === "android" &&
-    TaskManager.defineTask(
-      //ESCOPO GLOBAL
-      "geofencing",
-      ({ data: { eventType, region }, error }) => {
-        if (error) {
-          // check `error.message` for more details.
-          console.log("Erro no gestor de tarefas");
-          return;
+  useEffect(() => {
+    if (Platform.OS === "android") {
+      return () => stopGeofencing();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (Platform.OS === "android") {
+      TaskManager.defineTask(
+        "geofencing",
+        ({ data: { eventType, region }, error }) => {
+          if (error) {
+            console.log("Erro no gestor de tarefas ", error);
+            return;
+          }
+          if (eventType === GeofencingEventType.Enter) {
+            console.log("You've entered region:", region);
+          } else if (eventType === GeofencingEventType.Exit) {
+            console.log("You've left region:", region);
+          }
         }
-        if (eventType === GeofencingEventType.Enter) {
-          //Alertas Aqui
-          console.log("You've entered region:", region);
-        } else if (eventType === GeofencingEventType.Exit) {
-          //Alertas Aqui
-          console.log("You've left region:", region);
-        }
-      }
-    );
+      );
+    }
+  }, []);
 
-  // Função para iniciar o monitoramento da cerca virtual
-
-  async function GeofencingActivity(nome, latitude, longitude, radius, status) {
+  const GeofencingActivity = async (
+    nome,
+    latitude,
+    longitude,
+    radius,
+    status
+  ) => {
     try {
       const entry = status === true ? true : false;
       const exit = status !== entry ? true : false;
-
       const geofence = {
         identifier: nome,
         latitude,
@@ -235,15 +236,48 @@ export default function NewFecing() {
         notifyOnEnter: entry,
         notifyOnExit: exit,
       };
-      startGeofencingAsync("geofencing", [geofence]);
-      Alert.alert("Geofencing iniciado com sucesso");
+      await startGeofencingAsync("geofencing", [geofence]);
+      await handlerNotify(geofence);
     } catch (error) {
       Alert.alert(
         "Erro ao iniciar o monitoramento da Área Segura",
-        error?.message
+        error.message
       );
     }
-  }
+  };
+
+  const requestNotifyPermissions = async () => {
+    try {
+      const { status } = await Notify.requestPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert("Precisa Fornecer permissão para os alertas");
+        return;
+      }
+    } catch (error) {
+      console.log("Erro ao dar permissão das notificações ", error);
+    }
+  };
+
+  Notify.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+    }),
+  });
+
+  const handlerNotify = async (geocerca) => {
+    await requestNotifyPermissions();
+    await Notify.scheduleNotificationAsync({
+      content: {
+        title:
+          "Área Segura para " + geocerca.identifier + " de " + kiddo?.surname,
+        body: "As Próximas Notificações serão de entrada e/ou Saída desta área",
+        data: { data: geocerca.latitude },
+      },
+      trigger: null,
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -261,12 +295,11 @@ export default function NewFecing() {
                 : location.coords.longitude,
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421,
-              pitch: 45, // Inclinação da câmera em graus (0 é vista de cima)
-              heading: 90, // Direção da câmera em graus em relação ao norte
+              pitch: 45,
+              heading: 90,
             }}
             onPress={handleMapPress}
             onMapReady={() => {
-              // Centralize a câmera no marcador e ajuste o zoom para incluir o marcador na visualização
               if (markerPosition) {
                 mapRef.current?.fitToCoordinates([markerPosition], {
                   edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
@@ -274,11 +307,10 @@ export default function NewFecing() {
                 });
               }
             }}
-            mapType={"hybrid"} //Mudar dinamicamente em função ao Mapa Principal
+            mapType={"hybrid"}
           >
             {markerPosition && (
               <>
-                {/* Funciona como o Fragment*/}
                 <Circle
                   center={markerPosition}
                   radius={radius}
@@ -329,8 +361,8 @@ export default function NewFecing() {
           )}
 
           <Slider
-            style={styles.slider} //Estlizar para android
-            minimumValue={25}
+            style={styles.slider}
+            minimumValue={1}
             maximumValue={1000}
             thumbTintColor={defaultStyle.colors.white}
             minimumTrackTintColor={defaultStyle.colors.mainColorBlue}
@@ -339,7 +371,7 @@ export default function NewFecing() {
                 ? defaultStyle.colors.blueLightColor1
                 : defaultStyle.colors.blueDarkColor2
             }
-            step={25}
+            step={10}
             value={radius}
             onValueChange={(value) => setRadius(value)}
           />
@@ -403,9 +435,15 @@ export default function NewFecing() {
               </View>
             </View>
           </View>
-          <ActionButtom textButton="Salvar" onPress={handleSubmit(sendForm)} />
+          <ActionButtom
+            textButton="Salvar"
+            onPress={handleSubmit(sendForm)}
+            disabled={loadingMap ? true : false}
+          />
         </Pressable>
       </ScrollView>
     </View>
   );
-}
+};
+
+export default NewFencing;

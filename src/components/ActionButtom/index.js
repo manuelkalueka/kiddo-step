@@ -6,7 +6,7 @@ import styles from "./styles";
 const ActionButtom = (props) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.MainButton} {...props}>
+      <TouchableOpacity style={styles.MainButton} {...props} >
         <Text style={styles.textButton}>{props.textButton}</Text>
       </TouchableOpacity>
     </View>

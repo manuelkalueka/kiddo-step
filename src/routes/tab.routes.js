@@ -22,6 +22,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import * as Notifications from "expo-notifications";
 
 import { useNavigation } from "@react-navigation/native";
 
@@ -137,6 +138,25 @@ export default function TabRoutes() {
     setDate(currentDate);
   };
 
+  const [notificationCount, setNotificationCount] = useState(0);
+
+  useEffect(() => {
+    const getNotifications = async () => {
+      const { notifications } =
+        await Notifications.getAllScheduledNotificationsAsync();
+      setNotificationCount(notifications.length);
+    };
+
+    getNotifications();
+
+    const subscription = Notifications.addNotificationReceivedListener(() => {
+      getNotifications();
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   return (
     <>
@@ -228,7 +248,7 @@ export default function TabRoutes() {
                 />
               </TouchableOpacity>
             ),
-            tabBarBadge: 3, //Não deixar estático
+            tabBarBadge: notificationCount > 0 ? notificationCount : null,
             tabBarLabel: "Alertas",
           }}
         />
