@@ -166,12 +166,16 @@ const Map = () => {
           console.log("Localização salva com sucesso.");
 
           if (trainedModel && recentLocations.current.length === 3) {
-            const predictedCoords = await predictLocation(
-              trainedModel,
-              recentLocations.current
-            );
-            console.log("Localização preditiva: ", predictedCoords);
-            setPredictedLocation(predictedCoords);
+            try {
+              const predictedCoords = await predictLocation(
+                trainedModel,
+                recentLocations.current
+              );
+              console.log("Localização preditiva: ", predictedCoords);
+              setPredictedLocation(predictedCoords);
+            } catch (error) {
+              console.error("Erro ao fazer a predição:", error);
+            }
           }
         } catch (error) {
           console.error("Erro ao salvar localização:", error);
