@@ -106,6 +106,8 @@ const KiddoDetailsScreen = () => {
     }
   }
 
+  async function imageClassification(imageUri) {}
+
   const pickerRef = useRef();
 
   async function getNetInfoOnDevice() {
@@ -156,7 +158,9 @@ const KiddoDetailsScreen = () => {
         <View style={styles.detailContainer}>
           <View>
             <Image
-              source={selectedImageUri ? selectedImageUri : kiddoAvatar}
+              source={
+                selectedImageUri ? { uri: selectedImageUri } : kiddoAvatar
+              }
               style={styles.avatar}
             />
             {isLoadingImagem ? (

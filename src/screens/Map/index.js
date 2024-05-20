@@ -31,6 +31,7 @@ const Map = () => {
   const [markerPosition, setMarkerPosition] = useState(null);
   const [knownLocation, setKnownLocation] = useState(null);
   const [trackingEnabled, setTrackingEnabled] = useState(false);
+  const [trainedModel, setTrainedModel] = useState(null);
   const [predictedLocation, setPredictedLocation] = useState(null); // Variável para a predição
 
   async function toggleSetMapType() {
@@ -78,6 +79,22 @@ const Map = () => {
 
   useEffect(() => {
     requestLocationPermissions();
+  }, []);
+
+  useEffect(() => {
+    const trainAndSetModel = async () => {
+      try {
+        const model = await runTraining();
+        setTrainedModel(model);
+      } catch (error) {
+        console.error("Erro ao treinar o modelo:", error);
+      }
+    };
+
+    // Verificar se o modelo já foi treinado antes de treiná-lo novamente
+    if (!trainedModel) {
+      trainAndSetModel();
+    }
   }, []);
 
   useEffect(() => {
@@ -148,11 +165,9 @@ const Map = () => {
           );
           console.log("Localização salva com sucesso.");
 
-          // Treinar e fazer predição com o modelo de IA
-          const model = await runTraining();
-          if (model && recentLocations.current.length === 3) {
+          if (trainedModel && recentLocations.current.length === 3) {
             const predictedCoords = await predictLocation(
-              model,
+              trainedModel,
               recentLocations.current
             );
             console.log("Localização preditiva: ", predictedCoords);

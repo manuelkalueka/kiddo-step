@@ -362,7 +362,7 @@ const NewFencing = () => {
 
           <Slider
             style={styles.slider}
-            minimumValue={1}
+            minimumValue={10}
             maximumValue={1000}
             thumbTintColor={defaultStyle.colors.white}
             minimumTrackTintColor={defaultStyle.colors.mainColorBlue}
